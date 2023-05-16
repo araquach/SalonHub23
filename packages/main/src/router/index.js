@@ -1,14 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import MainIndex from '../front/views/Index.vue'
+import FinanceRoutes from "finance/src/router/index"
+// import PerformanceRoutes from "../performance/router"
+// import RecruitmentRoutes from "../recruitment/router"
+// import ReviewsRoutes from "../reviews/router"
+// import StockRoutes from "../stock/router"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
-    }
+      name: 'main-index',
+      component: MainIndex
+    },
+    ...FinanceRoutes
+    // ...PerformanceRoutes,
+    // ...RecruitmentRoutes,
+    // ...ReviewsRoutes,
+    // ...StockRoutes
   ]
 })
 
