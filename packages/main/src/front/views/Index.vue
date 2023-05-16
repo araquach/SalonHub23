@@ -8,7 +8,7 @@
                     <div class="box" :class="'has-background-' + cat.tag">
                         <h3 class="title is-5 has-text-white">{{ cat.name }}</h3>
                         <figure class="image is-square">
-                            <img :alt="cat.name" :src="'/img/icons/' + cat.tag + '.svg'">
+                            <img :alt="cat.name" :src="'./dist/img/icons/' + cat.tag + '.svg'">
                         </figure>
                         <p>{{ cat.name }}</p>
                     </div>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {useDashboardStore} from "../../stores/dashboardStore"
+import {useDashboardStore} from "@/stores/dashboardStore"
 
 export default {
     setup() {

@@ -1,7 +1,4 @@
 <template>
-  <RouterView />
+    <h1>Finance Wrapper</h1>
+    <RouterView/>
 </template>
-
-<script setup>
-
-</script>

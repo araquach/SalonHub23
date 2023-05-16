@@ -1,5 +1,4 @@
 <template>
-  <h1 class="title is-3">Finance</h1>
-  <p>This is the finance page</p>
+  <h2 class="title is-3">Finance Index</h2>
     <RouterView />
 </template>

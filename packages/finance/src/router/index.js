@@ -7,7 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'main-index',
+      name: 'finance-index',
       component: FinanceIndex
     },
     ...FinanceRoutes

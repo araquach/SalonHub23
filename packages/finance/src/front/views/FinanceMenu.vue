@@ -1,5 +1,5 @@
 <template>
   <div>
-    <h1 class="title">Finance</h1>
+    <h3 class="title">Finance Menu</h3>
   </div>
 </template>
