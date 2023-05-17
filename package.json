@@ -5,6 +5,13 @@
     "packages/*"
   ],
   "devDependencies": {
-    "lerna": "^6.6.2"
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vuepic/vue-datepicker": "^5.1.1",
+    "chartjs": "^0.3.24",
+    "lerna": "^6.6.2",
+    "vue-chartjs": "^5.2.0"
+  },
+  "dependencies": {
+    "chart.js": "^4.3.0"
   }
 }
