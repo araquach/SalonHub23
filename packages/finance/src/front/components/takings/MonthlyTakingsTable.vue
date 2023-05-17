@@ -40,8 +40,8 @@
   </div>
 </template>
 <script>
-  import { useMainStore } from "@/stores/main";
-  import { useTakingsStore } from "@/stores/takings";
+  import { useMainStore } from "../../../stores/main";
+  import { useTakingsStore } from "../../../stores/takings";
 
   export default {
     setup() {

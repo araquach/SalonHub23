@@ -12,8 +12,8 @@
 <script>
 import { Line } from "vue-chartjs";
 import { Chart as ChartJS, Title, Tooltip, Legend, PointElement, LineElement, CategoryScale, LinearScale } from 'chart.js'
-import { useMainStore } from "@/stores/main";
-import { useTakingsStore } from "@/stores/takings";
+import { useMainStore } from "../../../stores/main";
+import { useTakingsStore } from "../../../stores/takings";
 ChartJS.register(Title, Tooltip, Legend, PointElement, LineElement, CategoryScale, LinearScale)
 
 export default {

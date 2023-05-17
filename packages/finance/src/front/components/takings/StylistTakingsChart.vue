@@ -24,8 +24,8 @@ import {
 } from "chart.js";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LineElement, CategoryScale, LinearScale);
-import { useMainStore } from "@/stores/main";
-import { useTakingsStore } from "@/stores/takings";
+import { useMainStore } from "../../../stores/main";
+import { useTakingsStore } from "../../../stores/takings";
 
 export default {
   // eslint-disable-next-line vue/no-reserved-component-names

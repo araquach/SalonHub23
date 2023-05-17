@@ -3,5 +3,5 @@
     <RouterView />
 </template>
 <script setup>
-import Header from "./front/components/Header.vue"
+import Header from "./front/components/MainHeader.vue"
 </script>

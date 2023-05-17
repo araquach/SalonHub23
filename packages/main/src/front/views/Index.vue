@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {useDashboardStore} from "@/stores/dashboardStore"
+import {useDashboardStore} from "../../stores/dashboardStore"
 
 export default {
     setup() {
