@@ -2,8 +2,8 @@ import {createRouter, createWebHistory} from 'vue-router'
 import MainIndex from '../front/views/Index.vue'
 import FinanceRoutes from "finance/src/router/finance"
 import TimeRoutes from "time/src/router/timeRoutes";
-// import PerformanceRoutes from "../performance/router"
-// import RecruitmentRoutes from "../recruitment/router"
+import PerformanceRoutes from "performance/src/router/performanceRoutes"
+import RecruitmentRoutes from "recruitment/src/router/recruitmentRoutes";
 // import ReviewsRoutes from "../reviews/router"
 // import StockRoutes from "../stock/router"
 
@@ -16,9 +16,9 @@ const router = createRouter({
             component: MainIndex
         },
         ...FinanceRoutes,
-        ...TimeRoutes
-        // ...PerformanceRoutes,
-        // ...RecruitmentRoutes,
+        ...TimeRoutes,
+        ...PerformanceRoutes,
+        ...RecruitmentRoutes,
         // ...ReviewsRoutes,
         // ...StockRoutes
     ]

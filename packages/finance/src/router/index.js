@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import FinanceRoutes from "finance/src/router/finance"
+import FinanceRoutes from "../router/finance"
 import FinanceIndex from '../front/views/FinanceIndex.vue'
 
 const router = createRouter({

@@ -1,3 +1,3 @@
 <template>
-    <h1>Time Index</h1>
+    <h2 class="title is-3">Time Index</h2>
 </template>

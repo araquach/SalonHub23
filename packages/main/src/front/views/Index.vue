@@ -1,6 +1,5 @@
 <template>
     <div class="dashboard section">
-        <h1 class="title is-4">Main Dashboard</h1>
         <div class="columns is-mobile is-multiline section">
             <div v-for="cat in dashboardStore.categories" :key="cat.id"
                  class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
