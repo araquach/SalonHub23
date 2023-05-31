@@ -1,4 +1,5 @@
 import TimeIndex from "../front/views/TimeIndex.vue";
+import holidayRoutes from "../router/holidayRoutes";
 
 export default [
     {
@@ -6,7 +7,7 @@ export default [
         name: 'time',
         component: TimeIndex,
         children: [
-
+            ...holidayRoutes
         ]
     },
 ]

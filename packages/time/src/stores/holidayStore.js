@@ -15,7 +15,6 @@ export const useHolidayStore = defineStore('holiday', {
     },
 
     getters: {
-        entitlement: state => state.entitlement,
         holidayTotal: state => state.holidays.reduce(function (accumulator, currentValue) {
             return accumulator + currentValue.hours_requested
         }, initialValue),
@@ -31,7 +30,7 @@ export const useHolidayStore = defineStore('holiday', {
 
     actions: {
         async loadHolidays() {
-            const authStore = useAuthStore();
+            // const authStore = useAuthStore();
             try {
                 const data = await axios.get(`http://localhost:8060/api/`);
                 this.holidays = data.data;

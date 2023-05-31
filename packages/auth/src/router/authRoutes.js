@@ -1,4 +1,6 @@
 import AuthIndex from "../front/views/AuthIndex.vue";
+import Login from "../front/views/Login.vue";
+import Register from "../front/views/Register.vue";
 
 export default [
     {
@@ -7,27 +9,14 @@ export default [
         component: AuthIndex,
         children: [
             {
-                path: '/login',
+                path: 'login',
                 name: 'login',
                 component: Login
             },
             {
-                path: '/register',
+                path: 'register',
                 name: 'register',
                 component: Register
-            },
-            {
-                path: '',
-                name: 'home',
-                component: MainDashboard,
-                meta: {
-                    requiresAuth: true
-                }
-            },
-            {
-                path: '/dashboard',
-                name: 'dashboard',
-                component: MainDashboard
             }
         ]
     },

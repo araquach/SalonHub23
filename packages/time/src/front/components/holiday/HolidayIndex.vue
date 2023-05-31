@@ -13,23 +13,24 @@
 </template>
 
 <script>
-import {mapGetters, mapState} from "vuex"
 import HolidayInd from './HolidayInd'
+import {useHolidayStore} from "../../../stores/holidayStore";
 
 export default {
   components: {HolidayInd},
 
+  setup() {
+    const holidayStore = useHolidayStore();
+    return {
+      holidayStore: holidayStore,
+      holidays: holidayStore.holidays,
+      approvedHolidays: holidayStore.approvedHolidays,
+      awaitingHolidays: holidayStore.awaitingHolidays,
+      deniedHolidays: holidayStore.deniedHolidays
+    }
+  },
+
   computed: {
-    ...mapState({
-      holidays: state => state.holiday.holidays
-    }),
-
-    ...mapGetters([
-      'approvedHolidays',
-      'awaitingHolidays',
-      'deniedHolidays'
-    ]),
-
     filteredByStatus() {
       switch (this.$route.params.filter) {
         case "approved":

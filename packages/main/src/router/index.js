@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import MainIndex from '../front/views/Index.vue'
-import FinanceRoutes from "finance/src/router/finance"
+import FinanceRoutes from "finance/src/router/financeRoutes"
 import TimeRoutes from "time/src/router/timeRoutes";
 import PerformanceRoutes from "performance/src/router/performanceRoutes"
 import RecruitmentRoutes from "recruitment/src/router/recruitmentRoutes";

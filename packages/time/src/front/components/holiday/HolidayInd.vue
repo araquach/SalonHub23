@@ -16,12 +16,12 @@
         </div>
       </div>
 
-      <img v-show="holiday.prebooked" src="/dist/img/icons/prebooked.svg" width="40">
-      <img v-show="holiday.saturday === 0.5" src="/dist/img/icons/half_sat.svg" width="40">
-      <img v-show="holiday.saturday === 1.0 " src="/dist/img/icons/1_sat.svg" width="40">
-      <img v-show="holiday.saturday === 1.5" src="/dist/img/icons/1_half_sat.svg" width="40">
-      <img v-show="holiday.saturday === 2.0" src="/dist/img/icons/2_sat.svg" width="40">
-      <img v-if="!holiday.prebooked" src="/dist/img/icons/empty.png" width="40">
+      <img v-show="holiday.prebooked" src="main/dist/img/icons/prebooked.svg" width="40">
+      <img v-show="holiday.saturday === 0.5" src="main/dist/img/icons/half_sat.svg" width="40">
+      <img v-show="holiday.saturday === 1.0 " src="main/dist/img/icons/1_sat.svg" width="40">
+      <img v-show="holiday.saturday === 1.5" src="main/dist/img/icons/1_half_sat.svg" width="40">
+      <img v-show="holiday.saturday === 2.0" src="main/dist/img/icons/2_sat.svg" width="40">
+      <img v-if="!holiday.prebooked" src="main/dist/img/icons/empty.png" width="40">
     </div>
   </router-link>
 </template>

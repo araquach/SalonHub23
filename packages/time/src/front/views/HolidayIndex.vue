@@ -1,4 +1,4 @@
 <template>
-  <h1>Auth Index</h1>
+  <h1>Holiday Index</h1>
   <router-view/>
 </template>

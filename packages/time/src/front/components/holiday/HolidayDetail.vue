@@ -53,8 +53,23 @@
 </template>
 
 <script>
-import {mapState} from "vuex"
+
+
+import {useHolidayStore} from "../../../stores/holidayStore";
+import {useAuthStore} from "auth/src/stores/authStore";
+import axios from "axios";
+
 export default {
+  setup() {
+    const holidayStore = useHolidayStore();
+    const authStore = useAuthStore();
+    return {
+      authStore: authStore,
+      holidayStore: holidayStore,
+      user: authStore.user
+    };
+  },
+
   data() {
     return {
       holiday: {}
@@ -62,10 +77,6 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      user: state => state.auth.user
-    }),
-
     isPrebooked() {
       if (this.holiday.prebooked) {
         return "Yes"
@@ -100,8 +111,6 @@ export default {
           console.log(error)
         })
   }
-
 }
-
 </script>
 

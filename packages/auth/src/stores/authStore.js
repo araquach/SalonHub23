@@ -5,7 +5,7 @@ export const useAuthStore = defineStore('auth', {
     // arrow function recommended for full type inference
     state: () => {
         return {
-            user: null
+            user: {}
         }
     },
 
