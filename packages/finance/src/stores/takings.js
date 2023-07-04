@@ -307,7 +307,7 @@ export const useTakingsStore = defineStore("takingsStore", {
   actions: {
     async loadTakingsYearByYear() {
       try {
-        const data = await axios.get("http://localhost:8060/api/takings-by-year");
+        const data = await axios.get("http://localhost:8060/api/finance/takings-by-year");
         this.takingsYearByYearLoaded = true;
         this.takingsYearByYear.jakata = data.data.jakata;
         this.takingsYearByYear.pk = data.data.pk;
@@ -322,7 +322,7 @@ export const useTakingsStore = defineStore("takingsStore", {
     async loadTakingsMonthByMonth() {
       const mainStore = useMainStore();
       try {
-        const data = await axios.get(`http://localhost:8060/api/monthly-takings-by-date-range/${mainStore.startDate}/${mainStore.endDate}`);
+        const data = await axios.get(`http://localhost:8060/api/finance/monthly-takings-by-date-range/${mainStore.startDate}/${mainStore.endDate}`);
         this.takingsByMonth = data.data;
         this.takingsByMonthLoaded = true;
       } catch (error) {
@@ -334,7 +334,7 @@ export const useTakingsStore = defineStore("takingsStore", {
     async loadStylistTakingsMonthByMonth() {
       const mainStore = useMainStore();
       try {
-        const data = await axios.get(`http://localhost:8060/api/stylist-takings-month-by-month/${mainStore.teamMember.first_name}/${mainStore.teamMember.last_name}/${mainStore.startDate}/${mainStore.endDate}`);
+        const data = await axios.get(`http://localhost:8060/api/finance/stylist-takings-month-by-month/${mainStore.teamMember.first_name}/${mainStore.teamMember.last_name}/${mainStore.startDate}/${mainStore.endDate}`);
         this.stylistTakingsByMonth = data.data;
         this.stylistTakingsByMonthLoaded = true;
       } catch (error) {
@@ -346,7 +346,7 @@ export const useTakingsStore = defineStore("takingsStore", {
     async loadTakingsByStylistComparison() {
       const mainStore = useMainStore();
       try {
-        const data = await axios.get(`http://localhost:8060/api/takings-by-stylist-comparison/${mainStore.getSalonToLower}/${mainStore.startDate}/${mainStore.endDate}`);
+        const data = await axios.get(`http://localhost:8060/api/finance/takings-by-stylist-comparison/${mainStore.getSalonToLower}/${mainStore.startDate}/${mainStore.endDate}`);
         this.takingsByStylistComparison = data.data;
         this.takingsByStylistComparisonLoaded = true;
       } catch (error) {

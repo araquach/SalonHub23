@@ -250,7 +250,7 @@ export const useCostsStore = defineStore("costsStore", {
     async loadCostsYearByYear() {
       try {
         const data = await axios.get(
-          "http://localhost:8060/api/costs-year-by-year"
+          "http://localhost:8060/api/finance/costs-year-by-year"
         );
         this.costsByYear = data.data;
         this.costsByYearLoaded = true
@@ -264,7 +264,7 @@ export const useCostsStore = defineStore("costsStore", {
       const mainStore = useMainStore();
       try {
         const data = await axios.get(
-          `http://localhost:8060/api/costs-month-by-month/${mainStore.startDate}/${mainStore.endDate}`
+          `http://localhost:8060/api/finance/costs-month-by-month/${mainStore.startDate}/${mainStore.endDate}`
         );
         this.costsByMonth = data.data;
         this.costsByMonthLoaded = true
@@ -278,7 +278,7 @@ export const useCostsStore = defineStore("costsStore", {
       const mainStore = useMainStore();
       try {
         const data = await axios.get(
-          `http://localhost:8060/api/costs-by-cat/${mainStore.salon.name.toLowerCase()}/${mainStore.startDate}/${mainStore.endDate}`
+          `http://localhost:8060/api/finance/costs-by-cat/${mainStore.salon.name.toLowerCase()}/${mainStore.startDate}/${mainStore.endDate}`
         );
         this.costsByCat = data.data;
         this.costsByCatLoaded = true
@@ -292,7 +292,7 @@ export const useCostsStore = defineStore("costsStore", {
       const mainStore = useMainStore();
       try {
         const data = await axios.get(
-          `http://localhost:8060/api/ind-cost-month-by-month/${this.category}/${mainStore.startDate}/${mainStore.endDate}`
+          `http://localhost:8060/api/finance/ind-cost-month-by-month/${this.category}/${mainStore.startDate}/${mainStore.endDate}`
         );
         this.indCostsByMonth = data.data;
         this.indCostsByMonthLoaded = true

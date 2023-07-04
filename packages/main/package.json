@@ -12,6 +12,7 @@
   "dependencies": {
     "auth": "*",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.2.0",
     "finance": "*",
     "performance": "*",
     "pinia": "^2.0.36",

@@ -16,7 +16,7 @@ export const useIncomeStore = defineStore("incomeStore", {
     async loadIncomeByMonth() {
       const mainStore = useMainStore();
       try {
-        const data = await axios.get(`http://localhost:8060/api/income-by-month/${mainStore.startDate}/${mainStore.endDate}`);
+        const data = await axios.get(`http://localhost:8060/api/finance/income-by-month/${mainStore.startDate}/${mainStore.endDate}`);
         this.incomeByMonth = data.data;
         this.incomeByMonthLoaded = true;
       } catch (error) {

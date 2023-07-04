@@ -15,44 +15,38 @@
         <form @submit.prevent="addHoliday">
           <div v-if="submitStatus !== 'OK'">
             <div class="field">
-              <div class="field has-addons">
-                <label class="label has-text-white">Select Date Range</label>
-                <p class="control">
-                  <VueDatePicker v-model="dateRange" placeholder="Date Range" :enable-time-picker="false"
-                                 :format="dateFormatter"></VueDatePicker>
-                </p>
+              <label class="label has-text-white">Select Date Range</label>
+              <div class="control">
+                <VueDatePicker v-model="dateRange" placeholder="Date Range" :enable-time-picker="false"
+                               :format="dateFormatter"></VueDatePicker>
               </div>
-              <div
-                  class="help is-danger"
-                  v-if="submitStatus === 'ERROR' && !v$.dateRange.required"
-              >
-                <p v-if="!v$.dateRange.required">Date Range is required</p>
-                <p v-if="!v$.dateRange.maxWeeks">You cannot book more than 3 weeks in a block</p>
-                <p v-if="!v$.dateRange.maxSat">Too many Saturdays in a block</p>
-              </div>
+              <p class="help is-danger"
+                 v-if="submitStatus === 'ERROR' && !v$.dateRange.required">
+                <span v-if="!v$.dateRange.required">Date Range is required</span>
+                <span v-if="!v$.dateRange.maxWeeks">You cannot book more than 3 weeks in a block</span>
+                <span v-if="!v$.dateRange.maxSat">Too many Saturdays in a block</span>
+              </p>
             </div>
 
-            <b-field :message="[
-                  {'Days Requested required' : !v$.hours_requested.required},
-                  {'You cannot book more than 3 weeks in a block' : !v$.hours_requested.maxValue},
-                  {'You can only book half day or more holiday' : !v$.hours_requested.minValue},
-                  {'You don\'t have enough holidays': !v$.hours_requested.withinEntitlement}
-                ]"
-                     :type="{ 'is-danger': v$.hours_requested.$error }"
-                     label="Days">
-              <b-numberinput v-model.trim.number="v$.hours_requested.$model"
-                             :step=".5"
-                             placeholder="Days Requested">
-              </b-numberinput>
-            </b-field>
+            <div class="field" :class="{ 'has-error': v$.hours_requested.$error }">
+              <label class="label has-text-white">Days</label>
+              <div class="control">
+                <input v-model.number.trim="v$.hours_requested.$model"
+                       type="number"
+                       :step=".5"
+                       class="input"
+                       placeholder="Days Requested">
+              </div>
+              <p class="help is-danger" v-if="v$.hours_requested.$error">
+                <span v-if="!v$.hours_requested.required">Days Requested is required</span>
+                <span v-if="!v$.hours_requested.maxValue">You cannot book more than 3 weeks in a block</span>
+                <span v-if="!v$.hours_requested.minValue">You can only book half day or more holiday</span>
+                <span v-if="!v$.hours_requested.withinEntitlement">You don't have enough holidays</span>
+              </p>
+            </div>
 
-            <b-field v-show="saturday" :message="[
-                    {'Description is required' : !v$.saturday.required},
-                    {'You don\'t have enough Saturdays left' : !v$.saturday.withinEntitlement},
-                    {'You can only book 2 consecutive Saturdays ' : !v$saturday.maxSat}
-                  ]"
-                     :type="{ 'is-danger': v$.saturday.$error }"
-                     label="Saturdays">
+            <div class="field" v-show="saturday" :class="{ 'has-error': v$.saturday.$error }">
+              <label class="label has-text-white">Saturdays</label>
               <div class="column is-4 is-5-mobile">
                 <div class="level">
                   <div class="level-left">
@@ -66,25 +60,33 @@
                     </div>
                   </div>
                 </div>
+                <p class="help is-danger" v-if="v$.saturday.$error">
+                  <span v-if="!v$.saturday.required">Description is required</span>
+                  <span v-if="!v$.saturday.withinEntitlement">You don't have enough Saturdays left</span>
+                  <span v-if="!v$.saturday.maxSat">You can only book 2 consecutive Saturdays</span>
+                </p>
               </div>
-            </b-field>
+            </div>
 
-            <b-field :message="{'Description is required' : !v$.description.required}"
-                     :type="{ 'is-danger': v$.description.$error }"
-                     label="Description">
-              <b-input v-model.trim="v$.description.$model"
+            <div class="field" :class="{ 'has-error': v$.description.$error }">
+              <label class="label has-text-white">Description</label>
+              <div class="control">
+                <input v-model.trim="v$.description.$model"
+                       type="text"
+                       class="input"
                        placeholder="Description">
-              </b-input>
-            </b-field>
+              </div>
+              <p class="help is-danger" v-if="!v$.description.required">Description is required</p>
+            </div>
             <p class="is-size-7">Saturdays in date range: {{ totalSat }}</p>
             <br>
-            <b-field>
+            <div class="field">
               <div class="control">
                 <button :disabled="submitStatus === 'PENDING'" class="button is-outlined is-white" type="submit">Book
                   Holiday
                 </button>
               </div>
-            </b-field>
+            </div>
           </div>
           <div v-if="submitStatus === 'OK'">
             <p class="is-size-4 has-text-white">Holiday request submitted</p>
@@ -94,6 +96,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import VueDatePicker from "@vuepic/vue-datepicker";
