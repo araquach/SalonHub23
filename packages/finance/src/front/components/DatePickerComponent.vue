@@ -45,8 +45,7 @@ import {
   endOfMonth,
   subYears,
   startOfYear,
-  endOfYear,
-  startOfQuarter
+  endOfYear
 } from "date-fns";
 
 export default {

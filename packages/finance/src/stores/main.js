@@ -41,7 +41,7 @@ export const useMainStore = defineStore("mainStore", {
     async loadStylists() {
       try {
         const data = await axios.get(
-          "http://localhost:8060/api/team-members"
+          "http://localhost:8060/api/team/team-members"
         );
         this.teamMembers = data.data;
       } catch (error) {

@@ -17,9 +17,9 @@
     </div>
     <br>
     <div class="transition-container">
-<!--      <transition name="fade" mode="out-in">-->
-<!--        <component :is="toggledView ? 'monthly-takings-chart' : 'monthly-takings-table'"></component>-->
-<!--      </transition>-->
+      <transition name="fade" mode="out-in">
+        <component :is="toggledView ? 'monthly-takings-chart' : 'monthly-takings-table'"></component>
+      </transition>
     </div>
   </div>
 </template>

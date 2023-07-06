@@ -1,4 +1,7 @@
 <template>
-  <h2 class="title is-3">Finance Index</h2>
-    <RouterView />
+  <header-finance/>
+  <RouterView />
 </template>
+<script setup>
+import HeaderFinance from "../../front/components/HeaderFinance.vue";
+</script>
