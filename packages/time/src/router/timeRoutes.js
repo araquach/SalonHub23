@@ -4,7 +4,7 @@ import holidayRoutes from "../router/holidayRoutes";
 export default [
     {
         path: '/time',
-        name: 'time',
+        name: 'time-index',
         component: TimeIndex,
         children: [
             ...holidayRoutes

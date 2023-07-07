@@ -5,7 +5,7 @@ import Register from "../front/views/Register.vue";
 export default [
     {
         path: '/auth',
-        name: 'auth',
+        name: 'auth-index',
         component: AuthIndex,
         children: [
             {

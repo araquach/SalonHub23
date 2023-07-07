@@ -12,7 +12,7 @@ import ProfitLoss from "../front/views/profitLoss/ProfitLoss.vue";
 export default [
     {
         path: '/finance',
-        name: 'finance',
+        name: 'finance-index',
         component: FinanceIndex,
         children: [
             {

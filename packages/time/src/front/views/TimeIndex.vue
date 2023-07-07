@@ -1,4 +1,5 @@
 <template>
+  <HeaderTime/>
   <div class="dashboard section">
     <div class="columns is-mobile is-multiline">
       <div v-for="cat in categories" :key="cat.id"  class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
@@ -17,11 +18,13 @@
 </template>
 
 <script>
+import HeaderTime from "../../front/components/HeaderTime.vue";
 import {useHolidayStore} from "../../stores/holidayStore";
 import {useAuthStore} from "auth/src/stores/authStore";
 import {useDashboardStore} from "main/src/stores/dashboardStore";
 
 export default {
+  components: {HeaderTime},
   setup() {
     const dashboardStore = useDashboardStore()
     const holidayStore = useHolidayStore();
