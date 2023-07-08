@@ -29,7 +29,7 @@
             Lieu
           </a>
           <div class="navbar-dropdown">
-            <router-link :to="{ name: 'lieu-dashboard' }" v-slot="{ navigate }" class="navbar-item">
+            <router-link :to="{ name: 'lieu-dashboard', params: { filter: 'all' } }" v-slot="{ navigate }" class="navbar-item">
               <p @click="closeDropdown(navigate, $event)">Dashboard</p>
             </router-link>
             <router-link :to="{ name: 'lieu-create' }" v-slot="{ navigate }" class="navbar-item">
@@ -42,7 +42,7 @@
             Free Time
           </a>
           <div class="navbar-dropdown">
-            <router-link :to="{ name: 'free-time-dashboard' }" v-slot="{ navigate }" class="navbar-item">
+            <router-link :to="{ name: 'free-time-dashboard', params: { filter: 'all' } }" v-slot="{ navigate }" class="navbar-item">
               <p @click="closeDropdown(navigate, $event)">Dashboard</p>
             </router-link>
             <router-link :to="{ name: 'free-time-create' }" v-slot="{ navigate }" class="navbar-item">
@@ -55,7 +55,7 @@
             Sick
           </a>
           <div class="navbar-dropdown">
-            <router-link :to="{ name: 'sick-dashboard' }" v-slot="{ navigate }" class="navbar-item">
+            <router-link :to="{ name: 'sick-dashboard', params: { filter: 'all' } }" v-slot="{ navigate }" class="navbar-item">
               <p @click="closeDropdown(navigate, $event)">Dashboard</p>
             </router-link>
             <router-link :to="{ name: 'sick-create' }" v-slot="{ navigate }" class="navbar-item">

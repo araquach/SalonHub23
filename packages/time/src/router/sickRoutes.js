@@ -10,12 +10,12 @@ export default [
         component: SickIndex,
         children: [
             {
-                path: '',
+                path: ':filter',
                 name: 'sick-dashboard',
                 component: SickDashboard
             },
             {
-                path: ':id',
+                path: 'detail/:id',
                 name: 'sick-detail',
                 component: SickDetail,
                 params: true

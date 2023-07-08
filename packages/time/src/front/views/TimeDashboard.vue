@@ -12,7 +12,7 @@
         </router-link>
       </div>
       <div class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
-        <router-link :to="{ name: 'lieu-dashboard' }">
+        <router-link :to="{ name: 'lieu-dashboard', params: { filter: 'all' } }">
           <div class="box has-background-lieu">
             <h3 class="title is-5 has-text-white">Lieu Hours</h3>
             <figure class="image is-square">
@@ -22,7 +22,7 @@
         </router-link>
       </div>
       <div class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
-        <router-link :to="{ name: 'free-time-dashboard' }">
+        <router-link :to="{ name: 'free-time-dashboard', params: { filter: 'all' } }">
           <div class="box has-background-free-time">
             <h3 class="title is-5 has-text-white">Free Time</h3>
             <figure class="image is-square">
@@ -32,7 +32,7 @@
         </router-link>
       </div>
       <div class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
-        <router-link :to="{ name: 'sick-dashboard' }">
+        <router-link :to="{ name: 'sick-dashboard', params: { filter: 'all' } }">
           <div class="box has-background-sick">
             <h3 class="title is-5 has-text-white">Sick Days</h3>
             <figure class="image is-square">

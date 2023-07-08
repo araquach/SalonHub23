@@ -10,12 +10,12 @@ export default [
         component: FreeTimeIndex,
         children: [
             {
-                path: '',
+                path: ':filter',
                 name: 'free-time-dashboard',
                 component: FreeTimeDashboard
             },
             {
-                path: ':id',
+                path: 'detail/:id',
                 name: 'free-time-detail',
                 component: FreeTimeDetail,
                 params: true

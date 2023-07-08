@@ -1,5 +1,35 @@
 <template>
-  <h1 class="title is-3">Sick Dashboard</h1>
+  <div id="sick">
+    <div class="hero is-sick">
+      <div class="hero-body">
+        <div class="columns">
+          <div class="column is-3">
+            <img :src="'/dist/img/icons/sick.svg'" alt="Sick" width="200">
+          </div>
+          <div class="column">
+            <p class="is-size-3">Total Sick: 3 days</p>
+          </div>
+        </div>
+        <div class="buttons">
+          <router-link :to="{ name: 'sick-dashboard', params: { filter: 'deducted' } }"
+                       class="button is-white is-outlined is-small"
+                       tag="button">
+            Deducted
+          </router-link>
+          <router-link :to="{ name: 'sick-dashboard', params: { filter: 'awaiting' } }"
+                       class="button is-white is-outlined is-small"
+                       tag="button">
+            Awaiting
+          </router-link>
+          <router-link :to="{ name: 'sick-dashboard', params: { filter: 'all' } }"
+                       class="button is-white is-outlined is-small"
+                       tag="button">
+            All Sick
+          </router-link>
+        </div>
+      </div>
+    </div>
+  </div>
   <SickInd/>
 </template>
 <script>

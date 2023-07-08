@@ -10,12 +10,12 @@ export default [
         component: LieuIndex,
         children: [
             {
-                path: '',
+                path: ':filter',
                 name: 'lieu-dashboard',
                 component: LieuDashboard,
             },
             {
-                path: ':id',
+                path: 'detail/:id',
                 name: 'lieu-detail',
                 component: LieuDetail,
                 params: true
