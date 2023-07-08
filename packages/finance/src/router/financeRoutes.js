@@ -8,13 +8,18 @@ import MonthlyCosts from "../front/views/costs/MonthlyCosts.vue";
 import CostsComparison from "../front/views/costs/CostsComparison.vue";
 import CostsIndividual from "../front/views/costs/CostsIndividual.vue";
 import ProfitLoss from "../front/views/profitLoss/ProfitLoss.vue";
+import FinanceDashboard from "../front/views/FinanceDashboard.vue";
 
 export default [
     {
         path: '/finance',
-        name: 'finance-index',
         component: FinanceIndex,
         children: [
+            {
+                path: '',
+                name: 'finance-dashboard',
+                component: FinanceDashboard,
+            },
             {
                 path: "takings/yearly",
                 name: "yearly-takings",

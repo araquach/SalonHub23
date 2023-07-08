@@ -16,16 +16,16 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          <router-link :to="{ name: 'finance-index' }" class="navbar-item">
+          <router-link :to="{ name: 'finance-dashboard' }" class="navbar-item">
             <p>Finance</p>
           </router-link>
-          <router-link :to="{ name: 'time-index' }" class="navbar-item">
+          <router-link :to="{ name: 'time-dashboard' }" class="navbar-item">
             <p>Time</p>
           </router-link>
-          <router-link :to="{ name: 'performance-index' }" class="navbar-item">
+          <router-link :to="{ name: 'performance-dashboard' }" class="navbar-item">
             <p>Performance</p>
           </router-link>
-          <router-link :to="{ name: 'recruitment-index' }" class="navbar-item">
+          <router-link :to="{ name: 'recruitment-dashboard' }" class="navbar-item">
             <p>Recruitment</p>
           </router-link>
           <div class="navbar-item has-dropdown is-hoverable">

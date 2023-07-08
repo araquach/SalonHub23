@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import HolidayInd from './HolidayInd'
+import HolidayInd from './HolidayInd.vue'
 import {useHolidayStore} from "../../../stores/holidayStore";
 
 export default {

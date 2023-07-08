@@ -48,7 +48,7 @@
   </div>
 </template>
 <script>
-import {useHolidayStore} from "../../stores/holidayStore";
+import {useHolidayStore} from "../../../stores/holidayStore";
 import holidayIcon from "main/dist/img/icons/holiday.svg";
 
 export default {
