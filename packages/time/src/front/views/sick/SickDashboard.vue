@@ -3,8 +3,8 @@
     <div class="hero is-sick">
       <div class="hero-body">
         <div class="columns">
-          <div class="column is-3">
-            <img :src="'/dist/img/icons/sick.svg'" alt="Sick" width="200">
+          <div class="column is-2">
+            <img :src="'/dist/img/icons/sick.svg'" alt="Sick">
           </div>
           <div class="column">
             <p class="is-size-3">Total Sick: 3 days</p>

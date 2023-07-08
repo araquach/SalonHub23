@@ -3,8 +3,8 @@
     <div class="hero is-lieu">
       <div class="hero-body">
         <div class="columns">
-          <div class="column is-3">
-            <img :src="'/dist/img/icons/lieu.svg'" alt="Lieu Hours" width="200">
+          <div class="column is-2">
+            <img :src="'/dist/img/icons/lieu.svg'" alt="Lieu Hours">
           </div>
           <div class="column">
             <p class="is-size-3">Total Lieu: 10 hours</p>

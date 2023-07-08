@@ -3,13 +3,13 @@
     <div class="hero is-free-time">
       <div class="hero-body">
         <div class="columns">
-          <div class="column is-3">
-            <img :src="'/dist/img/icons/free-time.svg'" width="200">
+          <div class="column is-2">
+            <img :src="'/dist/img/icons/free-time.svg'" alt="Free Time">
           </div>
           <div class="column">
             <p class="is-size-4">Free Time: 30 hours</p>
             <p class="is-size-4">Used Time: 20 hours</p>
-            <p class="is-size-4"><strong>Remaining: 10 hours</strong></p>
+            <p class="is-size-3">Remaining: 10 hours</p>
           </div>
         </div>
         <div>

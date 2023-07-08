@@ -3,14 +3,14 @@
     <div class="hero is-holiday">
       <div class="hero-body">
         <div class="columns">
-          <div class="column is-3">
-            <img :src="'/dist/img/icons/holiday.svg'" width="200">
+          <div class="column is-2">
+            <img :src="'/dist/img/icons/holiday.svg'" alt="Holidays">
           </div>
           <div class="column">
             <p class="is-size-4">Holiday Entitlement: 28 days</p>
             <p class="is-size-4">Total Booked: 20 days</p>
-            <p class="is-size-4">Days remaining: 10</p>
-            <p class="is-size-4">Remaining Saturdays: 3</p>
+            <p class="is-size-3">Days remaining: 10</p>
+            <p class="is-size-3">Remaining Saturdays: 3</p>
           </div>
         </div>
         <div class="navbar is-transparent">
