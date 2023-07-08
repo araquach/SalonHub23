@@ -15,17 +15,11 @@
             Holidays
           </a>
           <div class="navbar-dropdown">
-            <router-link :to="{ name: 'yearly-takings' }" v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Yearly Takings</p>
+            <router-link :to="{ name: 'holiday-dashboard' }" v-slot="{ navigate }" class="navbar-item">
+              <p @click="closeDropdown(navigate, $event)">Dashboard</p>
             </router-link>
-            <router-link :to="{ name: 'monthly-takings' }" v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Monthly Takings</p>
-            </router-link>
-            <router-link :to="{ name: 'stylist-comparison' }"  v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Stylist Comparison</p>
-            </router-link>
-            <router-link :to="{ name: 'stylist-takings' }"  v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Stylist Takings</p>
+            <router-link :to="{ name: 'holiday-create' }" v-slot="{ navigate }" class="navbar-item">
+              <p @click="closeDropdown(navigate, $event)">Book Holiday</p>
             </router-link>
           </div>
         </div>
@@ -35,17 +29,11 @@
             Lieu
           </a>
           <div class="navbar-dropdown">
-            <router-link :to="{ name: 'yearly-costs' }" v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Yearly Costs</p>
+            <router-link :to="{ name: 'lieu-dashboard' }" v-slot="{ navigate }" class="navbar-item">
+              <p @click="closeDropdown(navigate, $event)">Dashboard</p>
             </router-link>
-            <router-link :to="{ name: 'monthly-costs' }" v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Monthly Costs</p>
-            </router-link>
-            <router-link :to="{ name: 'costs-comparison' }" v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Costs Comparison</p>
-            </router-link>
-            <router-link :to="{ name: 'costs-individual' }" v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Individual Costs</p>
+            <router-link :to="{ name: 'lieu-create' }" v-slot="{ navigate }" class="navbar-item">
+              <p @click="closeDropdown(navigate, $event)">Add/Remove Lieu</p>
             </router-link>
           </div>
         </div>
@@ -54,8 +42,11 @@
             Free Time
           </a>
           <div class="navbar-dropdown">
-            <router-link :to="{ name: 'monthly-profit-loss' }" v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Monthly Profit/Loss</p>
+            <router-link :to="{ name: 'free-time-dashboard' }" v-slot="{ navigate }" class="navbar-item">
+              <p @click="closeDropdown(navigate, $event)">Dashboard</p>
+            </router-link>
+            <router-link :to="{ name: 'free-time-create' }" v-slot="{ navigate }" class="navbar-item">
+              <p @click="closeDropdown(navigate, $event)">Book Free Time</p>
             </router-link>
           </div>
         </div>
@@ -64,8 +55,11 @@
             Sick
           </a>
           <div class="navbar-dropdown">
-            <router-link :to="{ name: 'monthly-profit-loss' }" v-slot="{ navigate }" class="navbar-item">
-              <p @click="closeDropdown(navigate, $event)">Monthly Profit/Loss</p>
+            <router-link :to="{ name: 'sick-dashboard' }" v-slot="{ navigate }" class="navbar-item">
+              <p @click="closeDropdown(navigate, $event)">Dashboard</p>
+            </router-link>
+            <router-link :to="{ name: 'sick-create' }" v-slot="{ navigate }" class="navbar-item">
+              <p @click="closeDropdown(navigate, $event)">Log Sickness</p>
             </router-link>
           </div>
         </div>

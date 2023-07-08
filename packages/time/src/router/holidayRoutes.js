@@ -1,7 +1,7 @@
 import HolidayIndex from "../front/views/holiday/HolidayIndex.vue";
-import HolidayCreate from "../front/components/holiday/HolidayCreate.vue";
-import HolidayDetail from "../front/components/holiday/HolidayDetail.vue";
 import HolidayDashboard from "../front/views/holiday/HolidayDashboard.vue";
+import HolidayCreate from "../front/views/holiday/HolidayCreate.vue";
+import HolidayDetail from "../front/views/holiday/HolidayDetail.vue";
 
 export default [
     {
@@ -10,34 +10,21 @@ export default [
         component: HolidayIndex,
         children: [
             {
-                path: 'dashboard',
+                path: '',
                 name: 'holiday-dashboard',
                 component: HolidayDashboard
             },
-            // {
-            //     path: 'bookings/:filter',
-            //     name: 'holiday-index',
-            //     component: HolidayIndex,
-            //     // meta: {
-            //     //     requiresAuth: true
-            //     // }
-            // },
-            // {
-            //     path: 'booking',
-            //     name: 'holiday-create',
-            //     component: HolidayCreate,
-            //     // meta: {
-            //     //     requiresAuth: true
-            //     // }
-            // },
-            // {
-            //     path: 'detail/:id',
-            //     name: 'holiday-detail',
-            //     component: HolidayDetail,
-            //     // meta: {
-            //     //     requiresAuth: true
-            //     // }
-            // }
+            {
+                path: ':id',
+                name: 'holiday-detail',
+                component: HolidayDetail,
+                params: true
+            },
+            {
+                path: 'create',
+                name: 'holiday-create',
+                component: HolidayCreate
+            }
         ]
     }
 ]

@@ -1,6 +1,9 @@
 import TimeIndex from "../front/views/TimeIndex.vue";
-import holidayRoutes from "../router/holidayRoutes";
+import holidayRoutes from "./holidayRoutes";
 import TimeDashboard from "../front/views/TimeDashboard.vue";
+import freeTimeRoutes from "../router/freeTimeRoutes";
+import sickRoutes from "../router/sickRoutes";
+import lieuRoutes from "../router/lieuRoutes";
 
 export default [
     {
@@ -12,7 +15,10 @@ export default [
                 name: 'time-dashboard',
                 component: TimeDashboard
             },
-            ...holidayRoutes
+            ...holidayRoutes,
+            ...lieuRoutes,
+            ...freeTimeRoutes,
+            ...sickRoutes
         ]
     },
 ]
