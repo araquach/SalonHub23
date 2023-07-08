@@ -2,7 +2,7 @@
   <div class="dashboard section">
     <div class="columns is-mobile is-multiline section">
       <div class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
-        <router-link :to="{ name: 'holiday-dashboard' }">
+        <router-link :to="{ name: 'holiday-dashboard', params: { filter: 'all' } }">
           <div class="box has-background-holiday">
             <h3 class="title is-5 has-text-white">Holidays</h3>
             <figure class="image is-square">

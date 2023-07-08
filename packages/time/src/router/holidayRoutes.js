@@ -10,12 +10,12 @@ export default [
         component: HolidayIndex,
         children: [
             {
-                path: '',
+                path: ':filter',
                 name: 'holiday-dashboard',
                 component: HolidayDashboard
             },
             {
-                path: ':id',
+                path: 'detail/:id',
                 name: 'holiday-detail',
                 component: HolidayDetail,
                 params: true

@@ -15,7 +15,7 @@
             Holidays
           </a>
           <div class="navbar-dropdown">
-            <router-link :to="{ name: 'holiday-dashboard' }" v-slot="{ navigate }" class="navbar-item">
+            <router-link :to="{ name: 'holiday-dashboard', params: { filter: 'all' } }" v-slot="{ navigate }" class="navbar-item">
               <p @click="closeDropdown(navigate, $event)">Dashboard</p>
             </router-link>
             <router-link :to="{ name: 'holiday-create' }" v-slot="{ navigate }" class="navbar-item">
