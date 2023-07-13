@@ -1,9 +1,35 @@
 <template>
-  <router-link :to="{ name: 'free-time-detail', params: { id: 123 } }">
-    <div class="column is-3">
-      <div class="box">
-        <h1 class="title is-3 has-text-black">Free Time Individual</h1>
+  <router-link :to="{ name: 'free-time-detail', params: { id: freeTime.id } }"
+               class="column is-6-mobile is-4-tablet is-3-desktop">
+    <div :class="statusColour" class="box has-background-free-time">
+      <h2 class="title is-5">{{ freeTime.description }}</h2>
+      <div class="columns">
+        <div class="column">
+          <p>Date:</p>
+          <p>Hours:</p>
+        </div>
+        <div class="column">
+          <p>{{ freeTime.date_regarding }}</p>
+          <p>{{ freeTime.free_time_hours }}</p>
+        </div>
       </div>
     </div>
   </router-link>
 </template>
+
+<script>
+
+export default {
+  props: ['freeTime'],
+
+  computed: {
+    statusColour() {
+      if (this.freeTime.approved === 1) {
+        return 'approved'
+      } else if (this.freeTime.approved === 2) {
+        return 'denied'
+      } else return 'pending'
+    }
+  }
+}
+</script>

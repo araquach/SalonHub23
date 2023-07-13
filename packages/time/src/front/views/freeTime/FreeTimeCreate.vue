@@ -1,3 +1,71 @@
 <template>
-  <h1 class="title is-3">Free Time Create</h1>
+  <div class="columns section">
+    <div class="column is-7">
+      <div class="box has-background-free-time">
+        <div class="columns">
+          <div class="column">
+            <h3 class="title is-4 has-text-white">Book Free Time</h3>
+          </div>
+          <div class="column is-3">
+            <figure class="image">
+              <img alt="Free Time" :src="'/dist/img/icons/free-time.svg'">
+            </figure>
+          </div>
+        </div>
+        <form>
+          <div>
+            <div class="field">
+              <VueDatePicker v-model="freeTime.date_regarding" :enable-time-picker="false"></VueDatePicker>
+            </div>
+
+            <div class="field">
+              <BaseInput
+                  v-model="freeTime.free_time_hours"
+                  label="Time Requested"
+                  type="number"
+              />
+            </div>
+
+            <div class="field">
+              <BaseInput
+                  v-model="freeTime.description"
+                  label="Description"
+                  type="text"
+              />
+            </div>
+
+            <br>
+            <div class="field">
+              <div class="control">
+                <button class="button is-outlined is-white" type="submit">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-if="submitStatus">
+            <p class="is-size-4 has-text-white">Free Time request submitted</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
+<script>
+import VueDatePicker from "@vuepic/vue-datepicker";
+import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
+
+export default {
+  components: {BaseInput, VueDatePicker},
+  data() {
+    return {
+      freeTime: {
+        free_time_hours: 0,
+        description: '',
+        date_regarding: null
+      },
+      submitStatus: false
+    }
+  }
+}
+</script>

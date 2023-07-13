@@ -11,7 +11,7 @@
           </div>
         </div>
         <div class="buttons">
-          <router-link :to="{ name: 'lieu-create' }" class="button is-small">
+          <router-link :to="{ name: 'lieu-create' }" class="button is-small is-white">
             Book Lieu Hours
           </router-link>
           <router-link :to="{ name: 'lieu-dashboard', params: { filter: 'approved' } }"
@@ -34,14 +34,38 @@
       </div>
     </div>
   </div>
-  <LieuInd/>
+  <div class="section">
+    <div v-if="lieuStore.lieuHours.length" class="columns is-mobile is-multiline">
+      <lieuInd v-for="(lieu, index) in lieuStore.lieuHours"
+                  :key="index"
+                  :lieu="lieu"
+      />
+    </div>
+    <div v-else>
+      <p class="is-size-4 has-text-white">There are no lieu requests yet</p>
+    </div>
+  </div>
 </template>
 <script>
-import {defineComponent} from "vue";
 import LieuInd from "../../../front/components/lieu/LieuInd.vue";
+import {useLieuStore} from "../../../stores/lieuStore";
 
-export default defineComponent({
-  components: {LieuInd}
-})
+export default {
+  components: {LieuInd},
+
+  setup() {
+    const lieuStore = useLieuStore();
+    lieuStore.loadLieuHours();
+    return {
+      lieuStore
+    }
+  }
+}
 
 </script>
+
+<style scoped>
+.section {
+  padding: 1rem;
+}
+</style>

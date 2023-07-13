@@ -40,15 +40,39 @@
         </div>
       </div>
     </div>
-    <HolidayInd/>
+    <div class="section">
+      <div v-if="holidayStore.holidays.length" class="columns is-mobile is-multiline">
+        <holidayInd v-for="(holiday, index) in holidayStore.holidays"
+                    :key="index"
+                    :holiday="holiday"
+        />
+      </div>
+      <div v-else>
+        <p class="is-size-4 has-text-white">There are no holiday bookings yet</p>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import {defineComponent} from "vue";
+
 import HolidayInd from "../../../front/components/holiday/HolidayInd.vue";
+import {useHolidayStore} from "../../../stores/holidayStore";
 
-export default defineComponent({
-  components: {HolidayInd}
-})
+export default {
+  components: {HolidayInd},
 
+  setup() {
+    const holidayStore = useHolidayStore();
+    holidayStore.loadHolidays()
+    return {
+      holidayStore,
+      holidays: holidayStore.holidays
+    }
+  }
+}
 </script>
+<style scoped>
+.section {
+  padding: 1rem;
+}
+</style>

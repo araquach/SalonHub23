@@ -37,15 +37,37 @@
         </div>
       </div>
     </div>
-    <FreeTimeInd/>
+    <div class="section">
+      <div v-if="freeTimeStore.freeTimes.length" class="columns is-mobile is-multiline">
+        <freeTimeInd v-for="(freeTime, index) in freeTimeStore.freeTimes"
+                    :key="index"
+                    :freeTime="freeTime"
+        />
+      </div>
+      <div v-else>
+        <p class="is-size-4 has-text-white">You have no free time requests yet</p>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import {defineComponent} from "vue";
 import FreeTimeInd from "../../../front/components/freeTime/FreeTimeInd.vue";
+import {useFreeTimeStore} from "../../../stores/freeTimeStore";
 
-export default defineComponent({
-  components: {FreeTimeInd}
-})
+export default {
+  components: {FreeTimeInd},
 
+  setup() {
+    const freeTimeStore = useFreeTimeStore();
+    freeTimeStore.loadFreeTimes()
+    return {
+      freeTimeStore
+    }
+  }
+}
 </script>
+<style scoped>
+.section {
+  padding: 1rem;
+}
+</style>
