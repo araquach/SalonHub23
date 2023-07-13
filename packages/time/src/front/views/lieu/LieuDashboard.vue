@@ -35,7 +35,10 @@
     </div>
   </div>
   <div class="section">
-    <div v-if="lieuStore.lieuHours.length" class="columns is-mobile is-multiline">
+    <div v-if="loading" class="columns section">
+      <p class="is-size-4">Loading lieu hours...</p>
+    </div>
+    <div v-else-if="lieuStore.lieuHours.length" class="columns is-mobile is-multiline">
       <lieuInd v-for="(lieu, index) in lieuStore.lieuHours"
                   :key="index"
                   :lieu="lieu"
@@ -49,15 +52,23 @@
 <script>
 import LieuInd from "../../../front/components/lieu/LieuInd.vue";
 import {useLieuStore} from "../../../stores/lieuStore";
+import {ref} from "vue";
 
 export default {
   components: {LieuInd},
 
   setup() {
     const lieuStore = useLieuStore();
-    lieuStore.loadLieuHours();
+   const  loading = ref(true)
+    lieuStore.loadLieuHours().then(() => {
+      loading.value = false;
+    }).catch(error => {
+      console.error('Failed to load holiday: ', error);
+      // Here you can handle the error in some way, like showing a message to the user
+    });
     return {
-      lieuStore
+      lieuStore,
+      loading
     }
   }
 }

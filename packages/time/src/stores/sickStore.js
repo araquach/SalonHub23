@@ -5,7 +5,8 @@ export const useSickStore = defineStore('sick', {
     // arrow function recommended for full type inference
     state: () => {
         return {
-            sickDays: []
+            sickDays: [],
+            sickDay: {}
         }
     },
 
@@ -15,9 +16,22 @@ export const useSickStore = defineStore('sick', {
             try {
                 const data = await axios.get(`http://localhost:8060/api/time/sick-days/1`);
                 this.sickDays = data.data;
+                return this.sickDays
             } catch (error) {
-                alert(error);
                 console.log(error);
+                throw error
+            }
+        },
+
+        async loadSickDay(id) {
+            // const authStore = useAuthStore();
+            try {
+                const data = await axios.get(`http://localhost:8060/api/time/sick-day/${id}`);
+                this.sickDay = data.data;
+                return this.sickDay
+            } catch (error) {
+                console.log(error);
+                throw error
             }
         },
 

@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { useAuthStore } from "auth/src/stores/authStore"
 import axios from "axios";
-import {useRoute} from "vue-router";
 
 const initialValue = 0
 
@@ -11,7 +10,6 @@ export const useHolidayStore = defineStore('holiday', {
         return {
             holidays: [],
             holiday: {},
-            holidaysLoaded: false,
             entitlement: 28
         }
     },
@@ -36,10 +34,10 @@ export const useHolidayStore = defineStore('holiday', {
             try {
                 const data = await axios.get(`http://localhost:8060/api/time/holidays/1`);
                 this.holidays = data.data;
-                this.holidaysLoaded = true;
+                return this.holidays
             } catch (error) {
-                alert(error);
                 console.log(error);
+                throw error
             }
         },
 
@@ -48,9 +46,10 @@ export const useHolidayStore = defineStore('holiday', {
             try {
                 const data = await axios.get(`http://localhost:8060/api/time/holiday/${id}`);
                 this.holiday = data.data;
+                return this.holiday;
             } catch (error) {
-                alert(error);
                 console.log(error);
+                throw error;
             }
         },
 

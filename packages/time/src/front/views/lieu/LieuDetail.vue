@@ -1,30 +1,30 @@
 <template>
-  <div class="columns section">
+  <div v-if="loading" class="columns section">
+    <p class="is-size-4">Loading lieu...</p>
+  </div>
+  <div v-else-if="lieu" class="columns section">
     <div class="column is-9">
       <div :class="'pending'" class="box has-background-lieu">
         <div class="columns">
           <div class="column">
-            <h3 class="title is-3 has-text-white">Lieu Request</h3>
+            <h2 class="title is-3 has-text-white">Lieu Request</h2>
+            <h3 class="title is-4">{{ lieu.description }}</h3>
             <table class="table has-background-lieu has-text-white is-size-5">
               <tr>
                 <td>Request made:</td>
-                <td>15/11/22</td>
+                <td>{{ formatDate(lieu.created_at) }}</td>
               </tr>
               <tr>
                 <td>Date Regarding:</td>
-                <td>13th April 2023</td>
+                <td>{{ formatDate(lieu.date_regarding) }}</td>
               </tr>
               <tr>
                 <td>Number of hours:</td>
-                <td>4</td>
-              </tr>
-              <tr>
-                <td>Description:</td>
-                <td>Stayed Late to do a client</td>
+                <td>{{ lieu.lieu_hours }}</td>
               </tr>
               <tr>
                 <td>Approved:</td>
-                <td>Pending</td>
+                <td>{{ lieu.approved }}</td>
               </tr>
             </table>
             <router-link :to="{ name: 'lieu-dashboard', params: {filter: 'all'} }" class="button is-small is-white">Back to All Lieu Requests</router-link>
@@ -40,14 +40,41 @@
   </div>
 </template>
 <script>
+import {useLieuStore} from "../../../stores/lieuStore";
+import {useRoute} from "vue-router";
+import {computed, ref} from "vue";
+import { format } from "date-fns"
+
 export default {
-  data() {
+  setup() {
+    const route = useRoute()
+    const lieuStore = useLieuStore();
+    const lieu = computed(() => lieuStore.lieuHour)
+    const id = route.params.id
+    const loading = ref(true)
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return format(date, 'do MMMM yyyy');
+    }
+
+    lieuStore.loadLieuHour(id).then(() => {
+      loading.value = false;  // Once the data has loaded, we set loading to false
+    }).catch(error => {
+      console.error('Failed to load holiday: ', error);
+      // Here you can handle the error in some way, like showing a message to the user
+    });
+
     return {
-      lieuId: null
-    };
-  },
-  created() {
-    this.lieuId = this.$route.params.id;
+      lieuStore,
+      lieu,
+      formatDate,
+      loading
+    }
   }
 };
 </script>
+<style scoped>
+.table td {
+  border-bottom: 1px solid #fff;
+}
+</style>

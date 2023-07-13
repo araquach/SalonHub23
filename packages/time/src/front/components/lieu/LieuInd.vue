@@ -8,7 +8,7 @@
           <p>Hours:</p>
         </div>
         <div class="column">
-          <p>{{ lieu.date_regarding }}</p>
+          <p>{{ formatDate(lieu.date_regarding) }}</p>
           <p>{{ lieu.lieu_hours }}</p>
         </div>
       </div>
@@ -17,7 +17,18 @@
 </template>
 
 <script>
+import {format} from "date-fns";
 export default {
+  setup() {
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return format(date, 'dd/MM/yyyy');
+    }
+    return {
+      formatDate
+    }
+  },
+
   props: ['lieu'],
 
   computed: {

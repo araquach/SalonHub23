@@ -9,8 +9,8 @@
           <p>Days:</p>
         </div>
         <div class="column">
-          <p>{{sick.sick_from }}</p>
-          <p>{{sick.sick_to }}</p>
+          <p>{{formatDate(sick.sick_from) }}</p>
+          <p>{{ formatDate(sick.sick_to) }}</p>
           <p>{{sick.sick_hours / 8}}</p>
         </div>
       </div>
@@ -19,7 +19,19 @@
 </template>
 
 <script>
+import {format} from "date-fns";
+
 export default {
+  setup() {
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return format(date, 'dd/MM/yyyy');
+    }
+    return {
+      formatDate
+    }
+  },
+
   props: ['sick', 'filter'],
 
   computed: {

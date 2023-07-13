@@ -10,8 +10,8 @@
         </div>
         <div class="column">
           <p>{{ holiday.hours_requested / 8 }}</p>
-          <p>{{ holiday.request_date_from }}</p>
-          <p>{{ holiday.request_date_to }}</p>
+          <p>{{ formatDate(holiday.request_date_from) }}</p>
+          <p>{{ formatDate(holiday.request_date_to) }}</p>
         </div>
       </div>
 
@@ -25,7 +25,18 @@
 </template>
 
 <script>
+import {format} from "date-fns";
 export default {
+  setup() {
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return format(date, 'dd/MM/yyyy');
+    }
+    return {
+      formatDate
+    }
+  },
+
   props: ['holiday'],
 
   computed: {

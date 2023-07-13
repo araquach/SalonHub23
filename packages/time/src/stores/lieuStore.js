@@ -5,7 +5,8 @@ export const useLieuStore = defineStore('lieu', {
     // arrow function recommended for full type inference
     state: () => {
         return {
-            lieuHours: []
+            lieuHours: [],
+            lieuHour: {}
         }
     },
 
@@ -15,9 +16,22 @@ export const useLieuStore = defineStore('lieu', {
             try {
                 const data = await axios.get(`http://localhost:8060/api/time/lieu-hours/1`);
                 this.lieuHours = data.data;
+                return this.lieuHours
             } catch (error) {
-                alert(error);
                 console.log(error);
+                throw error
+            }
+        },
+
+        async loadLieuHour(id) {
+            // const authStore = useAuthStore();
+            try {
+                const data = await axios.get(`http://localhost:8060/api/time/lieu-hour/${id}`);
+                this.lieuHour = data.data;
+                return this.lieuHour
+            } catch (error) {
+                console.log(error);
+                throw error;
             }
         },
 

@@ -38,7 +38,10 @@
       </div>
     </div>
     <div class="section">
-      <div v-if="freeTimeStore.freeTimes.length" class="columns is-mobile is-multiline">
+      <div v-if="loading" class="columns section">
+        <p class="is-size-4">Loading free time...</p>
+      </div>
+      <div v-else-if="freeTimeStore.freeTimes.length" class="columns is-mobile is-multiline">
         <freeTimeInd v-for="(freeTime, index) in freeTimeStore.freeTimes"
                     :key="index"
                     :freeTime="freeTime"
@@ -53,15 +56,23 @@
 <script>
 import FreeTimeInd from "../../../front/components/freeTime/FreeTimeInd.vue";
 import {useFreeTimeStore} from "../../../stores/freeTimeStore";
+import {ref} from "vue";
 
 export default {
   components: {FreeTimeInd},
 
   setup() {
     const freeTimeStore = useFreeTimeStore();
-    freeTimeStore.loadFreeTimes()
+    const loading = ref(true)
+    freeTimeStore.loadFreeTimes().then(() => {
+      loading.value = false;
+    }).catch(error => {
+      console.error('Failed to load holiday: ', error);
+      // Here you can handle the error in some way, like showing a message to the user
+    });
     return {
-      freeTimeStore
+      freeTimeStore,
+      loading
     }
   }
 }

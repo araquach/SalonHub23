@@ -9,8 +9,8 @@
           <p>Hours:</p>
         </div>
         <div class="column">
-          <p>{{ freeTime.date_regarding }}</p>
-          <p>{{ freeTime.free_time_hours }}</p>
+          <p>{{ formatDate(freeTime.date_regarding) }}</p>
+          <p>{{ formatDate(freeTime.free_time_hours) }}</p>
         </div>
       </div>
     </div>
@@ -19,7 +19,19 @@
 
 <script>
 
+import {format} from "date-fns";
+
 export default {
+  setup() {
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return format(date, 'dd/MM/yyyy');
+    }
+    return {
+      formatDate
+    }
+  },
+
   props: ['freeTime'],
 
   computed: {

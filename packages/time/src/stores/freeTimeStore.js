@@ -6,7 +6,6 @@ export const useFreeTimeStore = defineStore('freeTime', {
     state: () => {
         return {
             freeTimes: [],
-            freeTimesLoaded: false,
             freeTime: {},
             freeTimeEntitlement: 12
         }
@@ -18,10 +17,22 @@ export const useFreeTimeStore = defineStore('freeTime', {
             try {
                 const data = await axios.get(`http://localhost:8060/api/time/free-times/1`);
                 this.freeTimes = data.data;
-                this.freeTimesLoaded = true;
+                return this.freeTimes
             } catch (error) {
-                alert(error);
                 console.log(error);
+                throw error
+            }
+        },
+
+        async loadFreeTime(id) {
+            // const authStore = useAuthStore();
+            try {
+                const data = await axios.get(`http://localhost:8060/api/time/free-time/${id}`);
+                this.freeTime = data.data;
+                return this.freeTime;
+            } catch (error) {
+                console.log(error);
+                throw error;
             }
         },
 

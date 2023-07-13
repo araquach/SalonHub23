@@ -41,7 +41,10 @@
       </div>
     </div>
     <div class="section">
-      <div v-if="holidayStore.holidays.length" class="columns is-mobile is-multiline">
+      <div v-if="loading" class="columns section">
+        <p class="is-size-4">Loading holidays...</p>
+      </div>
+      <div v-else-if="holidayStore.holidays.length" class="columns is-mobile is-multiline">
         <holidayInd v-for="(holiday, index) in holidayStore.holidays"
                     :key="index"
                     :holiday="holiday"
@@ -57,16 +60,24 @@
 
 import HolidayInd from "../../../front/components/holiday/HolidayInd.vue";
 import {useHolidayStore} from "../../../stores/holidayStore";
+import {ref} from "vue";
 
 export default {
   components: {HolidayInd},
 
   setup() {
     const holidayStore = useHolidayStore();
-    holidayStore.loadHolidays()
+    const loading = ref(true)
+    holidayStore.loadHolidays().then(() => {
+      loading.value = false;
+    }).catch(error => {
+      console.error('Failed to load holiday: ', error);
+      // Here you can handle the error in some way, like showing a message to the user
+    });
     return {
       holidayStore,
-      holidays: holidayStore.holidays
+      holidays: holidayStore.holidays,
+      loading
     }
   }
 }
