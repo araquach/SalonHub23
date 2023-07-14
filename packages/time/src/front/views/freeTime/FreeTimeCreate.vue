@@ -72,7 +72,7 @@ export default {
   data() {
     return {
       freeTime: {
-        staff_id: this.authStore.staff_id,
+        staff_id: this.authStore.user.staff_id,
         free_time_hours: 0,
         description: '',
         date_regarding: null

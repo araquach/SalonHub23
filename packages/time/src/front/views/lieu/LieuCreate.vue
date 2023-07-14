@@ -58,13 +58,24 @@
 import VueDatePicker from "@vuepic/vue-datepicker";
 import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
 import {useLieuStore} from "../../../stores/lieuStore";
+import {useAuthStore} from "auth/src/stores/authStore";
 
 export default {
   components: {BaseInput, VueDatePicker},
+
+  setup() {
+    const lieuStore = useLieuStore()
+    const authStore = useAuthStore()
+    return {
+      lieuStore,
+      authStore
+    }
+  },
+
   data() {
     return {
       lieu: {
-        staff_id: 1,
+        staff_id: this.authStore.user.staff_id,
         lieu_hours: 0,
         description: '',
         date_regarding: null
@@ -80,11 +91,8 @@ export default {
 
   methods: {
     async submitForm() {
-      const store = useLieuStore()
-
       try {
-        console.log(this.lieu)
-        await store.submitLieu(this.lieu)
+        await this.lieuStore.submitLieu(this.lieu)
       } catch (error) {
         // handle the error here
         console.error(error)
