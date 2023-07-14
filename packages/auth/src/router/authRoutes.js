@@ -1,6 +1,6 @@
 import AuthIndex from "../front/views/AuthIndex.vue";
-import Login from "../front/views/Login.vue";
-import Register from "../front/views/Register.vue";
+import Login from "../front/views/UserLogin.vue";
+import Register from "../front/views/UserRegister.vue";
 
 export default [
     {

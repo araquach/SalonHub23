@@ -38,7 +38,7 @@
       />
     </div>
     <div v-else>
-      <p class="is-size-4 has-text-white">There are no holiday bookings yet</p>
+      <p class="is-size-4 has-text-white">There are no sick logs yet</p>
     </div>
   </div>
 </template>

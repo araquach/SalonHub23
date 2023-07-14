@@ -4,7 +4,7 @@
   </div>
   <div v-else-if="freeTime" class="columns section">
     <div class="column is-9">
-      <div :class="'denied'" class="box has-background-free-time">
+      <div :class="statusColour" class="box has-background-free-time">
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Free Time Booking</h2>
@@ -28,7 +28,7 @@
               </tr>
               <tr>
                 <td>Approval Status:</td>
-                <td>{{ freeTime.approved }}</td>
+                <td>{{ approvalStatus }}</td>
               </tr>
             </table>
             <router-link :to="{ name: 'free-time-dashboard', params: {filter: 'all'} }" class="button is-small is-white">Back to All Free Time</router-link>
@@ -74,6 +74,26 @@ export default {
       formatDate,
       loading
     }
+  },
+
+  computed: {
+    approvalStatus() {
+      if (this.freeTime.approved === 2) {
+        return "Denied"
+      } else if (this.freeTime.approved === 1) {
+        return "Approved"
+      } else {
+        return "Pending"
+      }
+    },
+
+    statusColour() {
+      if (this.freeTime.approved === 1) {
+        return 'approved'
+      } else if (this.freeTime.approved === 2) {
+        return 'denied'
+      } else return 'pending'
+    },
   }
 };
 </script>

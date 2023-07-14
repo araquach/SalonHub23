@@ -12,7 +12,7 @@
             </figure>
           </div>
         </div>
-        <form>
+        <form v-on:submit.prevent="submitForm">
           <div>
             <div class="field">
               <VueDatePicker v-model="freeTime.date_regarding" :enable-time-picker="false"></VueDatePicker>
@@ -20,7 +20,7 @@
 
             <div class="field">
               <BaseInput
-                  v-model="freeTime.free_time_hours"
+                  v-model.number="freeTime.free_time_hours"
                   label="Time Requested"
                   type="number"
               />
@@ -54,17 +54,46 @@
 <script>
 import VueDatePicker from "@vuepic/vue-datepicker";
 import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
+import {useFreeTimeStore} from "../../../stores/freeTimeStore";
+import {useAuthStore} from "auth/src/stores/authStore";
 
 export default {
   components: {BaseInput, VueDatePicker},
+
+  setup() {
+    const freeTimeStore = useFreeTimeStore();
+    const authStore = useAuthStore();
+    return {
+      freeTimeStore,
+      authStore
+    }
+  },
+
   data() {
     return {
       freeTime: {
+        staff_id: this.authStore.staff_id,
         free_time_hours: 0,
         description: '',
         date_regarding: null
-      },
-      submitStatus: false
+      }
+    }
+  },
+
+  computed: {
+    submitStatus() {
+      return useFreeTimeStore().submitStatus
+    }
+  },
+
+  methods: {
+    async submitForm() {
+      try {
+        await this.freeTimeStore.submitFreeTime(this.freeTime)
+      } catch (error) {
+        // handle the error here
+        console.error(error)
+      }
     }
   }
 }

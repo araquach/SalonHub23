@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from "axios";
+import {useAuthStore} from "auth/src/stores/authStore";
 
 export const useSickStore = defineStore('sick', {
     // arrow function recommended for full type inference
@@ -12,9 +13,10 @@ export const useSickStore = defineStore('sick', {
 
     actions: {
         async loadSickDays() {
-            // const authStore = useAuthStore();
+            const authStore = useAuthStore()
+            const id = authStore.user.staff_id
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/sick-days/1`);
+                const data = await axios.get(`http://localhost:8060/api/time/sick-days/${id}`);
                 this.sickDays = data.data;
                 return this.sickDays
             } catch (error) {

@@ -60,6 +60,7 @@
 
 import HolidayInd from "../../../front/components/holiday/HolidayInd.vue";
 import {useHolidayStore} from "../../../stores/holidayStore";
+import {useAuthStore} from "auth/src/stores/authStore";
 import {ref} from "vue";
 
 export default {
@@ -67,6 +68,7 @@ export default {
 
   setup() {
     const holidayStore = useHolidayStore();
+    const authStore = useAuthStore()
     const loading = ref(true)
     holidayStore.loadHolidays().then(() => {
       loading.value = false;
@@ -76,6 +78,7 @@ export default {
     });
     return {
       holidayStore,
+      authStore,
       holidays: holidayStore.holidays,
       loading
     }

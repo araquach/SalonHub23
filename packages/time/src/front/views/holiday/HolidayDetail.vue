@@ -4,7 +4,7 @@
   </div>
   <div v-else-if="holiday" class="columns section">
     <div class="column is-9">
-      <div :class="'approved'" class="box has-background-holiday">
+      <div :class="statusColour" class="box has-background-holiday">
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Holiday Booking</h2>
@@ -32,7 +32,7 @@
               </tr>
               <tr>
                 <td>Approval Status:</td>
-                <td>{{ holiday.approved }}</td>
+                <td>{{ approvalStatus }}</td>
               </tr>
             </table>
             <router-link :to="{ name: 'holiday-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
@@ -81,6 +81,25 @@ export default {
       formatDate,
       loading
     }
+  },
+  computed: {
+    approvalStatus() {
+      if (this.holiday.approved === 2) {
+        return "Denied"
+      } else if (this.holiday.approved === 1) {
+        return "Approved"
+      } else {
+        return "Pending"
+      }
+    },
+
+    statusColour() {
+      if (this.holiday.approved === 1) {
+        return 'approved'
+      } else if (this.holiday.approved === 2) {
+        return 'denied'
+      } else return 'pending'
+    },
   }
 };
 </script>

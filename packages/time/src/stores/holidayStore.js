@@ -10,7 +10,8 @@ export const useHolidayStore = defineStore('holiday', {
         return {
             holidays: [],
             holiday: {},
-            entitlement: 28
+            entitlement: 28,
+            submitStatus: null
         }
     },
 
@@ -30,9 +31,11 @@ export const useHolidayStore = defineStore('holiday', {
 
     actions: {
         async loadHolidays() {
+            const authStore = useAuthStore()
+            const id = authStore.user.staff_id
             // const authStore = useAuthStore();
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/holidays/1`);
+                const data = await axios.get(`http://localhost:8060/api/time/holidays/${id}`);
                 this.holidays = data.data;
                 return this.holidays
             } catch (error) {
@@ -53,10 +56,15 @@ export const useHolidayStore = defineStore('holiday', {
             }
         },
 
-        // async addHoliday (payload) {
-        //     axios.post('/api/holiday', payload).then(_ => {
-        //         commit('ADD_HOLIDAY', payload)
-        //     })
-        // }
+        async submitHoliday(holiday) {
+            try {
+                const response = await axios.post('http://localhost:8060/api/time/holiday-create', holiday)
+                this.submitStatus = true
+                return console.log(response)
+            } catch (error) {
+                console.error(error)
+                this.submitStatus = false
+            }
+        }
     }
 })

@@ -5,54 +5,53 @@ export const useAuthStore = defineStore('auth', {
     // arrow function recommended for full type inference
     state: () => {
         return {
-            user: {}
+            user: JSON.parse(localStorage.getItem('user')) || {}
         }
     },
 
     getters: {
-        loggedIn (state) {
-            return !!state.user
+        loggedIn(state) {
+            return !!state.user;
         },
-
-        isAdmin (state) {
-            if (state.user.admin_level === 2) {
-                return true
-            }
+        isAdmin(state) {
+            return state.user.admin_level === 2;
         }
     },
 
     actions: {
-        async register() {
+        async register(userCredentials) {
             try {
                 const data = await axios.post(
-                    "http://localhost:8060/api/auth/register"
+                    "http://localhost:8060/api/auth/register",
+                    userCredentials
                 );
-                this.state.user = data.data
-                localStorage.setItem('user', JSON.stringify(data.data))
-                axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`
+                this.user = data.data;
+                localStorage.setItem('user', JSON.stringify(data.data));
+                axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
             } catch (error) {
-                alert(error);
                 console.log(error);
+                throw error;
             }
         },
 
-        async login() {
+        async login(user) {
             try {
                 const data = await axios.post(
-                    "http://localhost:8060/api/auth/login"
+                    "http://localhost:8060/api/auth/login", user
                 );
-                this.state.user = data.data
-                localStorage.setItem('user', JSON.stringify(data.data))
-                axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`
+                this.user = data.data;
+                localStorage.setItem('user', JSON.stringify(data.data));
+                axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
+                console.log(data.data);
             } catch (error) {
-                alert(error);
                 console.log(error);
+                throw error;
             }
         },
 
-        logout () {
-            localStorage.removeItem('user')
-            location.reload()
+        logout() {
+            localStorage.removeItem('user');
+            location.reload();
         }
     }
-})
+});

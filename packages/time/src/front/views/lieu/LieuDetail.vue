@@ -4,7 +4,7 @@
   </div>
   <div v-else-if="lieu" class="columns section">
     <div class="column is-9">
-      <div :class="'pending'" class="box has-background-lieu">
+      <div :class="statusColour" class="box has-background-lieu">
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Lieu Request</h2>
@@ -24,7 +24,7 @@
               </tr>
               <tr>
                 <td>Approved:</td>
-                <td>{{ lieu.approved }}</td>
+                <td>{{ approvalStatus }}</td>
               </tr>
             </table>
             <router-link :to="{ name: 'lieu-dashboard', params: {filter: 'all'} }" class="button is-small is-white">Back to All Lieu Requests</router-link>
@@ -70,6 +70,26 @@ export default {
       formatDate,
       loading
     }
+  },
+
+  computed: {
+    approvalStatus() {
+      if (this.lieu.approved === 2) {
+        return "Denied"
+      } else if (this.lieu.approved === 1) {
+        return "Approved"
+      } else {
+        return "Pending"
+      }
+    },
+
+    statusColour() {
+      if (this.lieu.approved === 1) {
+        return 'approved'
+      } else if (this.lieu.approved === 2) {
+        return 'denied'
+      } else return 'pending'
+    },
   }
 };
 </script>

@@ -4,7 +4,7 @@
   </div>
   <div v-else-if="sick" class="columns section">
     <div class="column is-9">
-      <div :class="'approved'" class="box has-background-sick">
+      <div :class="statusColour" class="box has-background-sick">
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Sick Log</h2>
@@ -28,7 +28,7 @@
               </tr>
               <tr>
                 <td>Deducted:</td>
-                <td>{{ sick.deducted }}</td>
+                <td>{{ deductionStatus }}</td>
               </tr>
             </table>
             <router-link :to="{ name: 'sick-dashboard', params: {filter: 'all'} }" class="button is-small is-white">Back to All Sick Days</router-link>
@@ -74,6 +74,24 @@ export default {
       formatDate,
       loading
     }
+  },
+
+  computed: {
+    deductionStatus() {
+      if (this.sick.deducted) {
+        return "Yes"
+      } else {
+        return "No"
+      }
+    },
+
+    statusColour() {
+      if (this.sick.deducted) {
+        return 'approved'
+      } else {
+        return 'pending'
+      }
+    },
   }
 };
 </script>

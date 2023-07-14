@@ -12,7 +12,7 @@
             </figure>
           </div>
         </div>
-        <form>
+        <form v-on:submit.prevent="submitForm">
           <div>
             <p class="label">Date Regarding</p>
             <div class="field has-addons">
@@ -23,7 +23,7 @@
 
             <div class="field">
               <BaseInput
-                  v-model="lieu.lieu_hours"
+                  v-model.number="lieu.lieu_hours"
                   label="Lieu Hours"
                   type="number"
               />
@@ -57,17 +57,38 @@
 <script>
 import VueDatePicker from "@vuepic/vue-datepicker";
 import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
+import {useLieuStore} from "../../../stores/lieuStore";
 
 export default {
   components: {BaseInput, VueDatePicker},
   data() {
     return {
       lieu: {
+        staff_id: 1,
         lieu_hours: 0,
         description: '',
         date_regarding: null
-      },
-      submitStatus: false
+      }
+    }
+  },
+
+  computed: {
+    submitStatus() {
+      return useLieuStore().submitStatus
+    }
+  },
+
+  methods: {
+    async submitForm() {
+      const store = useLieuStore()
+
+      try {
+        console.log(this.lieu)
+        await store.submitLieu(this.lieu)
+      } catch (error) {
+        // handle the error here
+        console.error(error)
+      }
     }
   }
 }

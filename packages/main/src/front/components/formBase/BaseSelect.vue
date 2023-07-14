@@ -3,22 +3,28 @@
   <div class="control">
     <div class="select is-fullwidth">
       <select
-        :value="modelValue"
-        v-bind="{
+          :value="modelValue"
+          v-bind="{
           ...$attrs,
-          onChange: ($event) => { $emit('update:modelValue', $event.target.value) }
+          onChange: ($event) => {
+            // Convert the value to a number if possible
+            const value = isNaN(Number($event.target.value)) ? $event.target.value : Number($event.target.value);
+            $emit('update:modelValue', value);
+          }
         }"
       >
         <option
             v-for="option in options"
-            :value="option"
-            :key="option"
-            :selected="option === modelValue"
-        >{{ option }}</option>
+            :value="option.value"
+            :key="option.key"
+            :selected="option.value === modelValue"
+        >{{ option.key }}</option>
       </select>
     </div>
   </div>
 </template>
+
+
 <script>
 export default {
   props: {

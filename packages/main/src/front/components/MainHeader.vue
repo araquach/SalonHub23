@@ -50,9 +50,12 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-light">
+              <router-link :to="{name: 'login'}" class="button is-light">
                 Log in
-              </a>
+              </router-link>
+              <button @click="logout" class="button">
+                Log out
+              </button>
             </div>
           </div>
         </div>
@@ -62,17 +65,20 @@
 </template>
 
 <script>
-// import {authComputed} from '../store/helpers'
-//
-// export default {
-//   computed: {
-//     ...authComputed
-//   },
-//
-//   methods: {
-//     logout() {
-//       this.$store.dispatch('logout')
-//     }
-//   },
-// }
+import {useAuthStore} from "auth/src/stores/authStore";
+
+export default {
+  setup() {
+    const authStore = useAuthStore()
+    return {
+      authStore
+    }
+  },
+
+  methods: {
+    logout() {
+      this.authStore.logout()
+    }
+  },
+}
 </script>

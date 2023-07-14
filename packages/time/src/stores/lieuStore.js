@@ -1,20 +1,23 @@
 import { defineStore } from 'pinia'
 import axios from "axios";
+import {useAuthStore} from "auth/src/stores/authStore";
 
 export const useLieuStore = defineStore('lieu', {
     // arrow function recommended for full type inference
     state: () => {
         return {
             lieuHours: [],
-            lieuHour: {}
+            lieuHour: {},
+            submitStatus: null
         }
     },
 
     actions: {
         async loadLieuHours() {
-            // const authStore = useAuthStore();
+            const authStore = useAuthStore()
+            const id = authStore.user.staff_id
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/lieu-hours/1`);
+                const data = await axios.get(`http://localhost:8060/api/time/lieu-hours/${id}`);
                 this.lieuHours = data.data;
                 return this.lieuHours
             } catch (error) {
@@ -34,6 +37,17 @@ export const useLieuStore = defineStore('lieu', {
                 throw error;
             }
         },
+
+        async submitLieu(lieu) {
+            try {
+                const response = await axios.post('http://localhost:8060/api/time/lieu-hour-create', lieu)
+                this.submitStatus = true
+                return console.log(response)
+            } catch (error) {
+                console.error(error)
+                this.submitStatus = false
+            }
+        }
 
         // async addLieuHours (payload) {
         //     axios.post('/api/holiday', payload).then(_ => {
