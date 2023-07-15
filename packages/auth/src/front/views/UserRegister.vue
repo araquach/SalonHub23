@@ -111,7 +111,9 @@ export default {
   methods: {
     async register() {
       try {
-        await this.authStore.register(this.user)
+        await this.authStore.register(this.user).then(()=>{
+          this.$router.push({name: 'main-index'})
+        })
       } catch (error) {
         // handle the error here
         console.error(error)

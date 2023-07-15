@@ -14,7 +14,10 @@ const router = createRouter({
         {
             path: '/',
             name: 'main-index',
-            component: MainIndex
+            component: MainIndex,
+            meta: {
+                requiresAuth: true
+            }
         },
         ...FinanceRoutes,
         ...TimeRoutes,
