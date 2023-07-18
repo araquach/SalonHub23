@@ -13,7 +13,10 @@ export default [
             {
                 path: '',
                 name: 'time-dashboard',
-                component: TimeDashboard
+                component: TimeDashboard,
+                meta: {
+                    requiresAuth: true
+                }
             },
             ...holidayRoutes,
             ...lieuRoutes,

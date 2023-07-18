@@ -12,18 +12,27 @@ export default [
             {
                 path: ':filter',
                 name: 'sick-dashboard',
-                component: SickDashboard
+                component: SickDashboard,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'detail/:id',
                 name: 'sick-detail',
                 component: SickDetail,
-                params: true
+                params: true,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'create',
                 name: 'sick-create',
-                component: SickCreate
+                component: SickCreate,
+                meta: {
+                    requiresAuth: true
+                }
             }
         ]
     }

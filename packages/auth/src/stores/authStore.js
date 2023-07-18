@@ -5,7 +5,7 @@ export const useAuthStore = defineStore('auth', {
     // arrow function recommended for full type inference
     state: () => {
         return {
-            user: JSON.parse(localStorage.getItem('user')) || {}
+            user: null
         }
     },
 
@@ -52,6 +52,10 @@ export const useAuthStore = defineStore('auth', {
         logout() {
             localStorage.removeItem('user');
             location.reload();
+        },
+
+        setUserData(userData) {
+            this.user = userData
         }
     }
 });

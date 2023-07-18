@@ -14,56 +14,89 @@ export default [
     {
         path: '/finance',
         component: FinanceIndex,
+        meta: {
+            requiresAuth: true
+        },
         children: [
             {
                 path: '',
                 name: 'finance-dashboard',
                 component: FinanceDashboard,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "takings/yearly",
                 name: "yearly-takings",
-                component: YearlyTakings
+                component: YearlyTakings,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "takings/monthly",
                 name: "monthly-takings",
-                component: MonthlyTakings
+                component: MonthlyTakings,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "takings/stylist",
                 name: "stylist-takings",
-                component: StylistTakings
+                component: StylistTakings,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "takings/comparison",
                 name: "stylist-comparison",
-                component: StylistComparison
+                component: StylistComparison,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "costs/yearly",
                 name: "yearly-costs",
-                component: YearlyCosts
+                component: YearlyCosts,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "costs/monthly",
                 name: "monthly-costs",
-                component: MonthlyCosts
+                component: MonthlyCosts,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "costs/comparison",
                 name: "costs-comparison",
-                component: CostsComparison
+                component: CostsComparison,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "costs/individual",
                 name: "costs-individual",
-                component: CostsIndividual
+                component: CostsIndividual,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: "profit-loss/monthly",
                 name: "monthly-profit-loss",
-                component: ProfitLoss
+                component: ProfitLoss,
+                meta: {
+                    requiresAuth: true
+                }
             },
         ]
     },

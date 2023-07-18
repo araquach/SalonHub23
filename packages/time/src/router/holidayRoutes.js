@@ -12,18 +12,26 @@ export default [
             {
                 path: ':filter',
                 name: 'holiday-dashboard',
-                component: HolidayDashboard
+                component: HolidayDashboard,meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'detail/:id',
                 name: 'holiday-detail',
                 component: HolidayDetail,
-                params: true
+                params: true,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'create',
                 name: 'holiday-create',
-                component: HolidayCreate
+                component: HolidayCreate,
+                meta: {
+                    requiresAuth: true
+                }
             }
         ]
     }

@@ -74,7 +74,9 @@ export default {
   methods: {
       async login() {
         try {
-          await this.authStore.login(this.user)
+          await this.authStore.login(this.user).then(()=>{
+            this.$router.push({name: 'main-index'})
+          })
         } catch (error) {
           // handle the error here
           console.error(error)

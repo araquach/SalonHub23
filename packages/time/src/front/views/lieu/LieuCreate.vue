@@ -92,7 +92,9 @@ export default {
   methods: {
     async submitForm() {
       try {
-        await this.lieuStore.submitLieu(this.lieu)
+        await this.lieuStore.submitLieu(this.lieu).then(()=>{
+          this.$router.push({name: 'lieu-dashboard', params: {filter: 'all'}})
+        })
       } catch (error) {
         // handle the error here
         console.error(error)

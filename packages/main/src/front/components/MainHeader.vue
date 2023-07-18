@@ -14,7 +14,7 @@
         </a>
       </div>
 
-      <div id="navbarBasicExample" class="navbar-menu">
+      <div v-if="authStore.loggedIn" id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
           <router-link :to="{ name: 'finance-dashboard' }" class="navbar-item">
             <p>Finance</p>
@@ -50,10 +50,10 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <router-link :to="{name: 'login'}" class="button is-light">
+              <router-link v-if="!authStore.loggedIn" :to="{name: 'login'}" class="button is-light">
                 Log in
               </router-link>
-              <button @click="logout" class="button">
+              <button v-if="authStore.loggedIn" @click="logout" class="button is-light">
                 Log out
               </button>
             </div>

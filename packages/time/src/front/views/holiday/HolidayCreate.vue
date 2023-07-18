@@ -108,7 +108,9 @@ export default {
   methods: {
     async submitForm() {
       try {
-        await this.holidayStore.submitHoliday(this.holiday)
+        await this.holidayStore.submitHoliday(this.holiday).then(()=>{
+          this.$router.push({name: 'holiday-dashboard', params: {filter: 'all'}})
+        })
       } catch (error) {
         // handle the error here
         console.error(error)

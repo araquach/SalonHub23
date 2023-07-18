@@ -13,17 +13,26 @@ export default [
                 path: ':filter',
                 name: 'lieu-dashboard',
                 component: LieuDashboard,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'detail/:id',
                 name: 'lieu-detail',
                 component: LieuDetail,
-                params: true
+                params: true,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'create',
                 name: 'lieu-create',
                 component: LieuCreate,
+                meta: {
+                    requiresAuth: true
+                }
             }
         ]
     }

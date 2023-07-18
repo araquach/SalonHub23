@@ -89,7 +89,9 @@ export default {
   methods: {
     async submitForm() {
       try {
-        await this.freeTimeStore.submitFreeTime(this.freeTime)
+        await this.freeTimeStore.submitFreeTime(this.freeTime).then(()=>{
+          this.$router.push({name: 'free-time-dashboard', params: {filter: 'all'}})
+        })
       } catch (error) {
         // handle the error here
         console.error(error)

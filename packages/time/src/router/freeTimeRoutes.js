@@ -12,18 +12,27 @@ export default [
             {
                 path: ':filter',
                 name: 'free-time-dashboard',
-                component: FreeTimeDashboard
+                component: FreeTimeDashboard,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'detail/:id',
                 name: 'free-time-detail',
                 component: FreeTimeDetail,
-                params: true
+                params: true,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'create',
                 name: 'free-time-create',
-                component: FreeTimeCreate
+                component: FreeTimeCreate,
+                meta: {
+                    requiresAuth: true
+                }
             }
         ]
     }
