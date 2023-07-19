@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import axios from "axios";
-import {useTimeStore} from "time/src/stores/timeStore";
 
 export const useAuthStore = defineStore('auth', {
     // arrow function recommended for full type inference
@@ -36,7 +35,6 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async login(user) {
-            const timeStore = useTimeStore()
             try {
                 const data = await axios.post(
                     "http://localhost:8060/api/auth/login", user
@@ -44,7 +42,6 @@ export const useAuthStore = defineStore('auth', {
                 this.user = data.data;
                 localStorage.setItem('user', JSON.stringify(data.data));
                 axios.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
-                timeStore.loadTimeDetails(user.staff_id)
                 console.log(data.data);
             } catch (error) {
                 console.log(error);

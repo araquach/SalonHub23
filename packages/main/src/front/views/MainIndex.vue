@@ -22,7 +22,7 @@ import {useDashboardStore} from "../../stores/dashboardStore"
 
 export default {
   setup() {
-    const dashboardStore = useDashboardStore();
+    const dashboardStore = useDashboardStore()
 
     return {
       dashboardStore
