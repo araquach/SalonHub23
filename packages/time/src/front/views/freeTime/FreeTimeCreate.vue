@@ -15,6 +15,14 @@
         <form v-on:submit.prevent="submitForm">
           <div>
             <div class="field">
+              <BaseInput
+                  v-model="freeTime.description"
+                  label="Description"
+                  type="text"
+              />
+            </div>
+
+            <div class="field">
               <VueDatePicker v-model="freeTime.date_regarding" :enable-time-picker="false"></VueDatePicker>
             </div>
 
@@ -23,14 +31,6 @@
                   v-model.number="freeTime.free_time_hours"
                   label="Time Requested"
                   type="number"
-              />
-            </div>
-
-            <div class="field">
-              <BaseInput
-                  v-model="freeTime.description"
-                  label="Description"
-                  type="text"
               />
             </div>
 

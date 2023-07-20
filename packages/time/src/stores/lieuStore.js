@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from "axios";
 import {useAuthStore} from "auth/src/stores/authStore";
+import {useTimeStore} from "./timeStore";
 
 export const useLieuStore = defineStore('lieu', {
     // arrow function recommended for full type inference
@@ -43,9 +44,11 @@ export const useLieuStore = defineStore('lieu', {
         },
 
         async submitLieu(lieu) {
+            const timeStore = useTimeStore();
             try {
                 const response = await axios.post('http://localhost:8060/api/time/lieu-hour-create', lieu)
                 this.submitStatus = true
+                timeStore.timeDetails.lieu_hours += lieu.lieu_hours
                 return console.log(response)
             } catch (error) {
                 console.error(error)

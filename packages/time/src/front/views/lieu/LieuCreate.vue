@@ -14,6 +14,13 @@
         </div>
         <form v-on:submit.prevent="submitForm">
           <div>
+            <div class="field">
+              <BaseInput
+                  v-model="lieu.description"
+                  label="Description"
+                  type="text"
+              />
+            </div>
             <p class="label">Date Regarding</p>
             <div class="field has-addons">
               <p class="control">
@@ -26,14 +33,6 @@
                   v-model.number="lieu.lieu_hours"
                   label="Lieu Hours"
                   type="number"
-              />
-            </div>
-
-            <div class="field">
-              <BaseInput
-                  v-model="lieu.description"
-                  label="Description"
-                  type="text"
               />
             </div>
             <br>

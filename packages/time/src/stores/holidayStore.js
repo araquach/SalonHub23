@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { useAuthStore } from "auth/src/stores/authStore"
 import axios from "axios";
+import {useTimeStore} from "./timeStore";
 
 //const initialValue = 0
 
@@ -60,9 +61,12 @@ export const useHolidayStore = defineStore('holiday', {
         },
 
         async submitHoliday(holiday) {
+            const timeStore = useTimeStore();
             try {
                 const response = await axios.post('http://localhost:8060/api/time/holiday-create', holiday)
                 this.submitStatus = true
+                timeStore.timeDetails.saturdays -= holiday.saturday;
+                timeStore.timeDetails.holidays += holiday.hours_requested
                 return console.log(response)
             } catch (error) {
                 console.error(error)

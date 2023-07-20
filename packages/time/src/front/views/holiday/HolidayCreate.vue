@@ -14,34 +14,6 @@
         </div>
         <form v-on:submit.prevent="submitForm">
           <div>
-            <p class="label">Date From</p>
-            <div class="field has-addons">
-              <p class="control">
-                <VueDatePicker v-model="holiday.request_date_from" :enable-time-picker="false"></VueDatePicker>
-              </p>
-            </div>
-            <p class="label">Date To</p>
-            <div class="field has-addons">
-              <p class="control">
-                <VueDatePicker v-model="holiday.request_date_to" :enable-time-picker="false"></VueDatePicker>
-              </p>
-            </div>
-            <div class="field">
-              <BaseInput
-                  v-model.number="holiday.hours_requested"
-                  label="Days Requested"
-                  type="number"
-              />
-            </div>
-
-            <div class="field">
-              <BaseInput
-                  v-model.number="holiday.saturday"
-                  label="Saturdays"
-                  type="number"
-              />
-            </div>
-
             <div class="field">
               <BaseInput
                   v-model="holiday.description"
@@ -49,8 +21,21 @@
                   type="text"
               />
             </div>
+            <p class="label">Date Range</p>
+            <div class="field has-addons">
+              <p class="control">
+                <VueDatePicker v-model="dateRange" range :enable-time-picker="false"></VueDatePicker>
+              </p>
+            </div>
+            <div v-if="holiday.hours_requested">
+              <div class="field">
+                <p class="is-size-4">Requested: {{ holiday.hours_requested }} days</p>
+              </div>
 
-            <p class="is-size-7">Saturdays in date range: 3</p>
+              <div class="field">
+                <p class="is-size-4">Saturdays: {{ holiday.saturday }}</p>
+              </div>
+            </div>
             <br>
             <div class="field">
               <div class="control">
@@ -72,22 +57,26 @@
 import VueDatePicker from "@vuepic/vue-datepicker";
 import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
 import {useHolidayStore} from "../../../stores/holidayStore";
+import {useTimeStore} from "../../../stores/timeStore";
 import {useAuthStore} from "auth/src/stores/authStore";
 
 export default {
   components: {VueDatePicker, BaseInput},
 
   setup() {
-    const holidayStore = useHolidayStore()
-    const authStore = useAuthStore()
+    const holidayStore = useHolidayStore();
+    const authStore = useAuthStore();
+    const timeStore = useTimeStore();
     return {
       holidayStore,
-      authStore
+      authStore,
+      timeStore
     }
   },
 
   data() {
     return {
+      dateRange: [],
       holiday: {
         staff_id: this.authStore.user.staff_id,
         hours_requested: 0,
@@ -106,6 +95,43 @@ export default {
   },
 
   methods: {
+    workingDays(startDate, endDate) {
+      let workingDaysCount = 0;
+      let schedule = this.timeStore.timeDetails.schedule
+      let currentDate = new Date(startDate);
+      const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+      while (currentDate <= endDate) {
+        let dayOfWeek = daysOfWeek[currentDate.getDay()];
+
+        if (schedule[dayOfWeek]['am']) {
+          workingDaysCount += 0.5;
+        }
+
+        if (schedule[dayOfWeek]['pm']) {
+          workingDaysCount += 0.5;
+        }
+
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      return workingDaysCount;
+    },
+
+    countSaturdays(startDate, endDate) {
+      let saturdaysCount = 0;
+      let currentDate = new Date(startDate);
+
+      while (currentDate <= endDate) {
+        if (currentDate.getDay() === 6) { // Check if it's Saturday
+          saturdaysCount += 1;
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      return saturdaysCount;
+    },
+
     async submitForm() {
       try {
         await this.holidayStore.submitHoliday(this.holiday).then(()=>{
@@ -114,6 +140,21 @@ export default {
       } catch (error) {
         // handle the error here
         console.error(error)
+      }
+    }
+  },
+
+  watch: {
+    dateRange: function(newVal) {
+      if (newVal.length === 2) {
+        this.holiday.request_date_from = newVal[0];
+        this.holiday.request_date_to = newVal[1];
+
+        const startDate = new Date(this.holiday.request_date_from);
+        const endDate = new Date(this.holiday.request_date_to);
+
+        this.holiday.hours_requested = this.workingDays(startDate, endDate, this.schedule);
+        this.holiday.saturday = this.countSaturdays(startDate, endDate);
       }
     }
   }

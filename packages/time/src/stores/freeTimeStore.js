@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from "axios";
 import {useAuthStore} from "auth/src/stores/authStore";
+import {useTimeStore} from "./timeStore";
 
 export const useFreeTimeStore = defineStore('freeTime', {
     // arrow function recommended for full type inference
@@ -44,9 +45,11 @@ export const useFreeTimeStore = defineStore('freeTime', {
         },
 
         async submitFreeTime(freeTime) {
+            const timeStore = useTimeStore();
             try {
                 const response = await axios.post('http://localhost:8060/api/time/free-time-create', freeTime)
                 this.submitStatus = true
+                timeStore.timeDetails.free_time += freeTime.free_time_hours
                 return console.log(response)
             } catch (error) {
                 console.error(error)

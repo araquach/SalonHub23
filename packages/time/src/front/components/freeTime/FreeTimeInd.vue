@@ -5,12 +5,14 @@
       <h2 class="title is-5">{{ freeTime.description }}</h2>
       <div class="columns">
         <div class="column">
-          <p>Date:</p>
+          <p>Requested:</p>
+          <p>Regarding:</p>
           <p>Hours:</p>
         </div>
         <div class="column">
+          <p>{{ formatDate(freeTime.created_at) }}</p>
           <p>{{ formatDate(freeTime.date_regarding) }}</p>
-          <p>{{ formatDate(freeTime.free_time_hours) }}</p>
+          <p>{{ freeTime.free_time_hours }}</p>
         </div>
       </div>
     </div>

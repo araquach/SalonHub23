@@ -9,7 +9,7 @@
           <p>To:</p>
         </div>
         <div class="column">
-          <p>{{ holiday.hours_requested / 8 }}</p>
+          <p>{{ holiday.hours_requested }}</p>
           <p>{{ formatDate(holiday.request_date_from) }}</p>
           <p>{{ formatDate(holiday.request_date_to) }}</p>
         </div>
