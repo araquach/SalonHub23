@@ -17,6 +17,32 @@ export default {
     return {
       timeStore
     };
-  }
+  },
+
+  // computed: {
+  //   ...mapGetters([
+  //     'isAdmin',
+  //     'sickTotal',
+  //     'entitlement',
+  //     'holidayTotal',
+  //     'lieuTotal',
+  //     'freeTimeEntitlement',
+  //     'usedFreeTime',
+  //     'sickTotal',
+  //   ]),
+  //
+  //   catStyle(key) {
+  //     const cat = this.categories.filter(c => c.id === key)
+  //     console.log(cat)
+  //   }
+  // },
+
+  // created() {
+  //   this.$store.dispatch('loadCategories')
+  //   this.$store.dispatch('loadHolidays')
+  //   this.$store.dispatch('loadLieuHours')
+  //   this.$store.dispatch('loadSickDays')
+  //   this.$store.dispatch('loadFreeTimes')
+  // },
 }
 </script>
