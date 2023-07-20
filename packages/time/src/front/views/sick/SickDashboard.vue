@@ -6,8 +6,11 @@
           <div class="column is-2">
             <img :src="'/dist/img/icons/sick.svg'" alt="Sick">
           </div>
-          <div class="column">
-            <p class="is-size-3">Total Sick: 3 days</p>
+          <div v-if="timeStore.timeDetailsLoading" class="column">
+            <p>Loading...</p>
+          </div>
+          <div v-else class="column">
+            <p class="is-size-3">Total Sick: {{ timeStore.timeDetails.sick_days }} days</p>
           </div>
         </div>
         <div class="buttons">
@@ -28,7 +31,7 @@
     </div>
   </div>
   <div class="section">
-    <div v-if="loading" class="columns section">
+    <div v-if="sickStore.sickDaysLoading" class="columns section">
       <p class="is-size-4">Loading sick days...</p>
     </div>
     <div v-else-if="sickStore.sickDays.length" class="columns is-mobile is-multiline">
@@ -44,24 +47,19 @@
 </template>
 <script>
 import SickInd from "../../../front/components/sick/SickInd.vue";
+import {useTimeStore} from "../../../stores/timeStore";
 import {useSickStore} from "../../../stores/sickStore";
-import {ref} from "vue";
 
 export default {
   components: {SickInd},
 
   setup() {
+    const timeStore = useTimeStore()
     const sickStore = useSickStore();
-    const loading = ref(true)
-    sickStore.loadSickDays().then(() => {
-      loading.value = false;
-    }).catch(error => {
-      console.error('Failed to load sick days: ', error);
-      // Here you can handle the error in some way, like showing a message to the user
-    });
+    sickStore.loadSickDays();
     return {
-      sickStore,
-      loading
+      timeStore,
+      sickStore
     }
   }
 }

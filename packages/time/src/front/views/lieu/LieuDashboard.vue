@@ -6,8 +6,11 @@
           <div class="column is-2">
             <img :src="'/dist/img/icons/lieu.svg'" alt="Lieu Hours">
           </div>
-          <div class="column">
-            <p class="is-size-3">Total Lieu: 10 hours</p>
+          <div v-if="timeStore.timeDetailsLoading" class="column">
+            Loading...
+          </div>
+          <div v-else class="column">
+            <p class="is-size-3">Total Lieu: {{  timeStore.timeDetails.lieu_hours  }} hours</p>
           </div>
         </div>
         <div class="buttons">
@@ -35,13 +38,13 @@
     </div>
   </div>
   <div class="section">
-    <div v-if="loading" class="columns section">
+    <div v-if="lieuStore.lieuHoursLoading" class="columns section">
       <p class="is-size-4">Loading lieu hours...</p>
     </div>
     <div v-else-if="lieuStore.lieuHours.length" class="columns is-mobile is-multiline">
       <lieuInd v-for="(lieu, index) in lieuStore.lieuHours"
-                  :key="index"
-                  :lieu="lieu"
+               :key="index"
+               :lieu="lieu"
       />
     </div>
     <div v-else>
@@ -51,24 +54,19 @@
 </template>
 <script>
 import LieuInd from "../../../front/components/lieu/LieuInd.vue";
+import {useTimeStore} from "../../../stores/timeStore";
 import {useLieuStore} from "../../../stores/lieuStore";
-import {ref} from "vue";
 
 export default {
   components: {LieuInd},
 
   setup() {
+    const timeStore= useTimeStore();
     const lieuStore = useLieuStore();
-   const  loading = ref(true)
-    lieuStore.loadLieuHours().then(() => {
-      loading.value = false;
-    }).catch(error => {
-      console.error('Failed to load holiday: ', error);
-      // Here you can handle the error in some way, like showing a message to the user
-    });
+    lieuStore.loadLieuHours()
     return {
-      lieuStore,
-      loading
+      timeStore,
+      lieuStore
     }
   }
 }

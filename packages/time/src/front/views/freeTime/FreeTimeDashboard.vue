@@ -6,10 +6,13 @@
           <div class="column is-2">
             <img :src="'/dist/img/icons/free-time.svg'" alt="Free Time">
           </div>
-          <div class="column">
-            <p class="is-size-4">Free Time: 30 hours</p>
-            <p class="is-size-4">Used Time: 20 hours</p>
-            <p class="is-size-3">Remaining: 10 hours</p>
+          <div v-if="timeStore.timeDetailsLoading" class="column">
+            <p>Loading...</p>
+          </div>
+          <div v-else class="column">
+            <p class="is-size-4">Free Time: {{ timeStore.timeDetails.free_time_ent }} hours</p>
+            <p class="is-size-4">Used Time: {{ timeStore.timeDetails.free_time }} hours</p>
+            <p class="is-size-3">Remaining: {{ timeStore.timeDetails.free_time_ent - timeStore.timeDetails.free_time }} hours</p>
           </div>
         </div>
         <div>
@@ -38,7 +41,7 @@
       </div>
     </div>
     <div class="section">
-      <div v-if="loading" class="columns section">
+      <div v-if="freeTimeStore.freeTimesLoading" class="columns section">
         <p class="is-size-4">Loading free time...</p>
       </div>
       <div v-else-if="freeTimeStore.freeTimes.length" class="columns is-mobile is-multiline">
@@ -55,24 +58,19 @@
 </template>
 <script>
 import FreeTimeInd from "../../../front/components/freeTime/FreeTimeInd.vue";
+import {useTimeStore} from "../../../stores/timeStore";
 import {useFreeTimeStore} from "../../../stores/freeTimeStore";
-import {ref} from "vue";
 
 export default {
   components: {FreeTimeInd},
 
   setup() {
+    const timeStore = useTimeStore()
     const freeTimeStore = useFreeTimeStore();
-    const loading = ref(true)
-    freeTimeStore.loadFreeTimes().then(() => {
-      loading.value = false;
-    }).catch(error => {
-      console.error('Failed to load holiday: ', error);
-      // Here you can handle the error in some way, like showing a message to the user
-    });
+    freeTimeStore.loadFreeTimes()
     return {
-      freeTimeStore,
-      loading
+      timeStore,
+      freeTimeStore
     }
   }
 }

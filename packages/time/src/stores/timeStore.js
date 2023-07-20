@@ -6,20 +6,24 @@ export const useTimeStore = defineStore('time', {
     // arrow function recommended for full type inference
     state: () => {
         return {
-            timeDetails: {}
+            timeDetails: {},
+            timeDetailsLoading: null
         }
     },
 
     actions: {
-        async loadTimeDetails(id) {
+        async loadTimeDetails(stylist_id) {
+            this.timeDetailsLoading = true;
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/time-details/${id}`);
-                this.timeDetails = data.data;
-                return this.timeDetails
+                const response = await axios.get(`http://localhost:8060/api/time/time-details/${stylist_id}`);
+                this.timeDetails = response.data;
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 throw error;
+            } finally {
+                this.timeDetailsLoading = false;
             }
+            return { timeDetails: this.timeDetails, timeDetailsLoading: this.timeDetailsLoading };
         }
     }
 })

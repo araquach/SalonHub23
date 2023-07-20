@@ -7,6 +7,7 @@ export const useSickStore = defineStore('sick', {
     state: () => {
         return {
             sickDays: [],
+            sickDaysLoading: null,
             sickDay: {}
         }
     },
@@ -15,14 +16,17 @@ export const useSickStore = defineStore('sick', {
         async loadSickDays() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
+            this.sickDaysLoading = true;
             try {
                 const data = await axios.get(`http://localhost:8060/api/time/sick-days/${id}`);
                 this.sickDays = data.data;
-                return this.sickDays
             } catch (error) {
                 console.log(error);
                 throw error
+            } finally {
+                this.sickDaysLoading = false
             }
+            return { sickDays: this.sickDays, sickDaysLoading: this.sickDaysLoading }
         },
 
         async loadSickDay(id) {

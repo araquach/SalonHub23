@@ -6,11 +6,14 @@
           <div class="column is-2">
             <img :src="'/dist/img/icons/holiday.svg'" alt="Holidays">
           </div>
-          <div class="column">
-            <p class="is-size-4">Holiday Entitlement: {{ timeDetails.holiday_ent }} days</p>
-            <p class="is-size-4">Total Booked: {{ timeDetails.holidays }} days</p>
-            <p class="is-size-3">Days remaining: {{ timeDetails.holiday_ent - timeDetails.holidays }}</p>
-            <p class="is-size-3">Remaining Saturdays: 3?</p>
+          <div v-if="timeStore.timeDetailsLoading" class="column">
+            <p>Loading...</p>
+          </div>
+          <div v-else class="column">
+            <p class="is-size-4">Holiday Entitlement: {{ timeStore.timeDetails.holiday_ent }} days</p>
+            <p class="is-size-4">Total Booked: {{ timeStore.timeDetails.holidays }} days</p>
+            <p class="is-size-3">Days remaining: {{ timeStore.timeDetails.holiday_ent - timeStore.timeDetails.holidays }}</p>
+            <p class="is-size-3">Remaining Saturdays: {{ timeStore.timeDetails.saturdays }}</p>
           </div>
         </div>
         <div class="navbar is-transparent">
@@ -41,7 +44,7 @@
       </div>
     </div>
     <div class="section">
-      <div v-if="loading" class="columns section">
+      <div v-if="holidayStore.holidaysLoading" class="columns section">
         <p class="is-size-4">Loading holidays...</p>
       </div>
       <div v-else-if="holidayStore.holidays.length" class="columns is-mobile is-multiline">
@@ -61,7 +64,6 @@ import {useHolidayStore} from "../../../stores/holidayStore";
 import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "../../../stores/timeStore";
 import HolidayInd from "../../../front/components/holiday/HolidayInd.vue";
-import {ref} from "vue";
 
 export default {
   components: {HolidayInd},
@@ -70,20 +72,11 @@ export default {
     const holidayStore = useHolidayStore();
     const authStore = useAuthStore();
     const timeStore = useTimeStore();
-    const timeDetails = timeStore.timeDetails
-    const loading = ref(true)
-    holidayStore.loadHolidays().then(() => {
-      loading.value = false;
-    }).catch(error => {
-      console.error('Failed to load holiday: ', error);
-      // Here you can handle the error in some way, like showing a message to the user
-    });
+    holidayStore.loadHolidays()
     return {
+      timeStore,
       holidayStore,
-      authStore,
-      timeDetails,
-      holidays: holidayStore.holidays,
-      loading
+      authStore
     }
   }
 }

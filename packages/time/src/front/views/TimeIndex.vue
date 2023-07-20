@@ -5,22 +5,17 @@
 
 <script>
 import HeaderTime from "../../front/components/HeaderTime.vue";
-import {useHolidayStore} from "../../stores/holidayStore";
 import {useAuthStore} from "auth/src/stores/authStore";
-import {useDashboardStore} from "main/src/stores/dashboardStore";
+import {useTimeStore} from "../../stores/timeStore";
 
 export default {
   components: {HeaderTime},
   setup() {
-    const dashboardStore = useDashboardStore()
-    const holidayStore = useHolidayStore();
     const authStore = useAuthStore();
+    const timeStore = useTimeStore();
+    timeStore.loadTimeDetails(authStore.user.staff_id)
     return {
-      authStore: authStore,
-      holidayStore: holidayStore,
-      user: authStore.user,
-      isAdmin: authStore.isAdmin,
-      categories: dashboardStore.categories
+      timeStore
     };
   }
 }

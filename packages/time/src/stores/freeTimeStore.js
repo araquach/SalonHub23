@@ -7,6 +7,7 @@ export const useFreeTimeStore = defineStore('freeTime', {
     state: () => {
         return {
             freeTimes: [],
+            freeTimesLoading: null,
             freeTime: {},
             submitStatus: null,
             freeTimeEntitlement: 12
@@ -17,14 +18,17 @@ export const useFreeTimeStore = defineStore('freeTime', {
         async loadFreeTimes() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
+            this.freeTimesLoading = true;
             try {
                 const data = await axios.get(`http://localhost:8060/api/time/free-times/${id}`);
                 this.freeTimes = data.data;
-                return this.freeTimes
             } catch (error) {
                 console.log(error);
                 throw error
+            } finally {
+                this.freeTimesLoading = false;
             }
+            return { freeTime: this.freeTimes, freeTimesLoading: this.freeTimesLoading }
         },
 
         async loadFreeTime(id) {

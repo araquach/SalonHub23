@@ -7,6 +7,7 @@ export const useLieuStore = defineStore('lieu', {
     state: () => {
         return {
             lieuHours: [],
+            lieuHoursLoading: null,
             lieuHour: {},
             submitStatus: null
         }
@@ -16,14 +17,17 @@ export const useLieuStore = defineStore('lieu', {
         async loadLieuHours() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
+            this.lieuHoursLoading = true;
             try {
                 const data = await axios.get(`http://localhost:8060/api/time/lieu-hours/${id}`);
                 this.lieuHours = data.data;
-                return this.lieuHours
             } catch (error) {
                 console.log(error);
                 throw error
+            } finally {
+                this.lieuHoursLoading = false;
             }
+            return { lieuHours: this.lieuHours, lieuHoursLoading: this.lieuHoursLoading }
         },
 
         async loadLieuHour(id) {
