@@ -10,11 +10,45 @@ export const useLieuStore = defineStore('lieu', {
             lieuHours: [],
             lieuHoursLoading: null,
             lieuHour: {},
-            submitStatus: null
+            submitStatus: null,
+            activeFilter: 3
+        }
+    },
+
+    getters: {
+        filteredLieuHours() {
+            let filtered
+
+            switch (this.activeFilter) {
+                case 0: // Approved
+                    filtered = this.lieuHours.filter(lieuHours => lieuHours.approved === 0);
+                    break;
+                case 1: // Awaiting
+                    filtered = this.lieuHours.filter(lieuHours => lieuHours.approved === 1);
+                    break;
+                case 2: // Denied
+                    filtered = this.lieuHours.filter(lieuHours => lieuHours.approved === 2);
+                    break;
+                case 3: // All
+                    filtered = this.lieuHours;
+                    break;
+                default: // All
+                    filtered = [];
+                    break;
+            }
+            return filtered.sort((a, b) => b.id - a.id);
         }
     },
 
     actions: {
+        setActiveFilter(filter) {
+            if(filter === 'all') {
+                this.activeFilter = 3;
+            } else {
+                this.activeFilter = parseInt(filter, 10) || 0;
+            }
+        },
+
         async loadLieuHours() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id

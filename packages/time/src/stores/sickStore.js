@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import axios from "axios";
 import {useAuthStore} from "auth/src/stores/authStore";
 
@@ -8,11 +8,42 @@ export const useSickStore = defineStore('sick', {
         return {
             sickDays: [],
             sickDaysLoading: null,
-            sickDay: {}
+            sickDay: {},
+            activeFilter: 2
         }
     },
 
+    getters: {
+        filteredSickDays() {
+            let filtered;
+
+            switch (this.activeFilter) {
+                case 0: // Awaiting
+                    filtered = this.sickDays.filter(sickDays => sickDays.deducted === 0);
+                    break;
+                case 1: // Deducted
+                    filtered = this.sickDays.filter(sickDays => sickDays.deducted === 1);
+                    break;
+                case 2: // All
+                    filtered = this.sickDays;
+                    break;
+                default: // All
+                    filtered = [];
+                    break;
+            }
+            return filtered.sort((a, b) => b.id - a.id);
+        },
+    },
+
     actions: {
+        setActiveFilter(filter) {
+            if (filter === 'all') {
+                this.activeFilter = 2;
+            } else {
+                this.activeFilter = parseInt(filter, 10) || 0;
+            }
+        },
+
         async loadSickDays() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
@@ -26,7 +57,7 @@ export const useSickStore = defineStore('sick', {
             } finally {
                 this.sickDaysLoading = false
             }
-            return { sickDays: this.sickDays, sickDaysLoading: this.sickDaysLoading }
+            return {sickDays: this.sickDays, sickDaysLoading: this.sickDaysLoading}
         },
 
         async loadSickDay(id) {

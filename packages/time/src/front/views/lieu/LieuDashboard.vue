@@ -42,7 +42,7 @@
       <p class="is-size-4">Loading lieu hours...</p>
     </div>
     <div v-else-if="lieuStore.lieuHours.length" class="columns is-mobile is-multiline">
-      <lieuInd v-for="(lieu, index) in lieuStore.lieuHours"
+      <lieuInd v-for="(lieu, index) in lieuStore.filteredLieuHours"
                :key="index"
                :lieu="lieu"
       />
@@ -56,14 +56,33 @@
 import LieuInd from "../../../front/components/lieu/LieuInd.vue";
 import {useTimeStore} from "../../../stores/timeStore";
 import {useLieuStore} from "../../../stores/lieuStore";
+import {useRoute} from "vue-router";
+import {watch} from "vue";
 
 export default {
   components: {LieuInd},
 
   setup() {
+    const route = useRoute();
     const timeStore= useTimeStore();
     const lieuStore = useLieuStore();
+
+    const filterMapping = {
+      'awaiting': 0,
+      'approved': 1,
+      'denied': 2,
+      'all': 3,
+      // add any additional filters you need here
+    };
+
+    watch(() => route.params.filter, newFilter => {
+      if (newFilter in filterMapping) {
+        lieuStore.setActiveFilter(filterMapping[newFilter]);
+      }
+    }, { immediate: true });
+
     lieuStore.loadLieuHours()
+
     return {
       timeStore,
       lieuStore

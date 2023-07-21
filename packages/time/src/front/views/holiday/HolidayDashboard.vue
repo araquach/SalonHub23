@@ -47,8 +47,8 @@
       <div v-if="holidayStore.holidaysLoading" class="columns section">
         <p class="is-size-4">Loading holidays...</p>
       </div>
-      <div v-else-if="holidayStore.holidays.length" class="columns is-mobile is-multiline">
-        <holidayInd v-for="(holiday, index) in holidayStore.holidays"
+      <div v-else-if="holidayStore.filteredHolidays.length" class="columns is-mobile is-multiline">
+        <holidayInd v-for="(holiday, index) in holidayStore.filteredHolidays"
                     :key="index"
                     :holiday="holiday"
         />
@@ -60,8 +60,9 @@
   </div>
 </template>
 <script>
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
 import {useHolidayStore} from "../../../stores/holidayStore";
-import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "../../../stores/timeStore";
 import HolidayInd from "../../../front/components/holiday/HolidayInd.vue";
 
@@ -69,18 +70,33 @@ export default {
   components: {HolidayInd},
 
   setup() {
+    const route = useRoute();
     const holidayStore = useHolidayStore();
-    const authStore = useAuthStore();
     const timeStore = useTimeStore();
-    holidayStore.loadHolidays()
+
+    const filterMapping = {
+      'awaiting': 0,
+      'approved': 1,
+      'denied': 2,
+      'all': 3,
+    };
+
+    watch(() => route.params.filter, newFilter => {
+      if (newFilter in filterMapping) {
+        holidayStore.setActiveFilter(filterMapping[newFilter]);
+      }
+    }, { immediate: true });
+
+    holidayStore.loadHolidays();
+
     return {
       timeStore,
-      holidayStore,
-      authStore
+      holidayStore
     }
   }
 }
 </script>
+
 <style scoped>
 .section {
   padding: 1rem;

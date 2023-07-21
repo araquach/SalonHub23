@@ -13,25 +13,47 @@ export const useHolidayStore = defineStore('holiday', {
             holidaysLoading: null,
             holiday: {},
             entitlement: 28,
-            submitStatus: null
+            submitStatus: null,
+            activeFilter: 3
         }
     },
 
     getters: {
-        // holidayTotal: state => state.holidays.reduce(function (accumulator, currentValue) {
-        //     return accumulator + currentValue.hours_requested
-        // }, initialValue),
-        // remainingHolidays: (state, getters) => state.entitlement - (getters.holidayTotal / 8),
-        // totalSaturdays: state => state.holidays.reduce(function (accumulator, currentValue) {
-        //     return accumulator + currentValue.saturday
-        // }, initialValue),
-        // remainingSaturdays: (state, getters) => 5 - getters.totalSaturdays,
-        // awaitingHolidays: state => state.holidays.filter(f => f.approved === 0),
-        // approvedHolidays: state => state.holidays.filter(f => f.approved === 1),
-        // deniedHolidays: state => state.holidays.filter(f => f.approved === 2)
+        filteredHolidays() {
+            let filtered;
+
+            switch (this.activeFilter) {
+                case 0: // Approved
+                    filtered = this.holidays.filter(holidays => holidays.approved === 0);
+                    break;
+                case 1: // Awaiting
+                    filtered = this.holidays.filter(holidays => holidays.approved === 1);
+                    break;
+                case 2: // Denied
+                    filtered = this.holidays.filter(holidays => holidays.approved === 2);
+                    break;
+                case 3: // All
+                    filtered = this.holidays;
+                    break;
+                default: // All
+                    filtered = [];
+                    break;
+            }
+
+            return filtered.sort((a, b) => b.id - a.id); // This line will sort the filtered array by `id` in descending order.
+        },
     },
 
+
     actions: {
+        setActiveFilter(filter) {
+            if(filter === 'all') {
+                this.activeFilter = 3;
+            } else {
+                this.activeFilter = parseInt(filter, 10) || 0;
+            }
+        },
+
         async loadHolidays() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
