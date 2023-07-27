@@ -12,93 +12,15 @@
             </figure>
           </div>
         </div>
-        <form v-on:submit.prevent="submitForm">
-          <div>
-            <div class="field">
-              <BaseInput
-                  v-model="lieu.description"
-                  label="Description"
-                  type="text"
-              />
-            </div>
-            <p class="label">Date Regarding</p>
-            <div class="field has-addons">
-              <p class="control">
-                <VueDatePicker v-model="lieu.date_regarding" :enable-time-picker="false"></VueDatePicker>
-              </p>
-            </div>
-
-            <div class="field">
-              <BaseInput
-                  v-model.number="lieu.lieu_hours"
-                  label="Lieu Hours"
-                  type="number"
-              />
-            </div>
-            <br>
-            <div class="field">
-              <div class="control">
-                <button class="button is-outlined is-white" type="submit">
-                  Add/Redeem Lieu
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div v-if="submitStatus">
-            <p class="is-size-4 has-text-white">Lieu request submitted</p>
-          </div>
-        </form>
+        <LieuForm :formType="'create'"/>
       </div>
     </div>
   </div>
 </template>
 <script>
-import VueDatePicker from "@vuepic/vue-datepicker";
-import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
-import {useLieuStore} from "../../../stores/lieuStore";
-import {useAuthStore} from "auth/src/stores/authStore";
+import LieuForm from "../../components/lieu/LieuForm.vue";
 
 export default {
-  components: {BaseInput, VueDatePicker},
-
-  setup() {
-    const lieuStore = useLieuStore()
-    const authStore = useAuthStore()
-    return {
-      lieuStore,
-      authStore
-    }
-  },
-
-  data() {
-    return {
-      lieu: {
-        staff_id: this.authStore.user.staff_id,
-        lieu_hours: 0,
-        description: '',
-        date_regarding: null
-      }
-    }
-  },
-
-  computed: {
-    submitStatus() {
-      return useLieuStore().submitStatus
-    }
-  },
-
-  methods: {
-    async submitForm() {
-      try {
-        await this.lieuStore.submitLieu(this.lieu).then(()=>{
-          this.$router.push({name: 'lieu-dashboard', params: {filter: 'all'}})
-        })
-      } catch (error) {
-        // handle the error here
-        console.error(error)
-      }
-    }
-  }
+  components: {LieuForm}
 }
 </script>

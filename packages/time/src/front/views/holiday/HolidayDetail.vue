@@ -35,11 +35,16 @@
                 <td>{{ approvalStatus }}</td>
               </tr>
             </table>
-            <router-link :to="{ name: 'holiday-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
-              Back to
-              All Holidays
-            </router-link>
-          </div>
+            <div class="buttons">
+              <router-link v-if="holiday.approved === 0" :to="{name: 'holiday-update', params: {id: holiday.id}}" class="button is-white is-small">
+                Edit Holiday
+              </router-link>
+              <router-link :to="{ name: 'holiday-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
+                Back to
+                All Holidays
+              </router-link>
+            </div>
+            </div>
           <div class="column is-3">
             <figure class="image">
               <img :src="'/dist/img/icons/holiday.svg'" alt="Holiday">
@@ -50,59 +55,54 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import {useHolidayStore} from "../../../stores/holidayStore";
 import {useRoute} from "vue-router";
-import {computed, ref} from "vue";
+import {computed, ref, onMounted} from "vue";
 import {format} from "date-fns"
 
-export default {
-  setup() {
-    const route = useRoute()
-    const holidayStore = useHolidayStore();
-    const holiday = computed(() => holidayStore.holiday)
-    const id = route.params.id
-    const loading = ref(true)
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return format(date, 'do MMMM yyyy');
-    }
+const route = useRoute()
+const holidayStore = useHolidayStore();
+const holiday = computed(() => holidayStore.holiday)
+const id = route.params.id
+const loading = ref(true)
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'do MMMM yyyy');
+}
 
-    holidayStore.loadHoliday(id).then(() => {
-      loading.value = false;  // Once the data has loaded, we set loading to false
-    }).catch(error => {
-      console.error('Failed to load holiday: ', error);
-      // Here you can handle the error in some way, like showing a message to the user
-    });
+onMounted(async () => {
+  await holidayStore.loadHoliday(id)
+  loading.value = false
+})
 
-    return {
-      holidayStore,
-      holiday,
-      formatDate,
-      loading
-    }
-  },
-  computed: {
-    approvalStatus() {
-      if (this.holiday.approved === 2) {
-        return "Denied"
-      } else if (this.holiday.approved === 1) {
-        return "Approved"
-      } else {
-        return "Pending"
-      }
-    },
-
-    statusColour() {
-      if (this.holiday.approved === 1) {
-        return 'approved'
-      } else if (this.holiday.approved === 2) {
-        return 'denied'
-      } else return 'pending'
-    },
+const approvalStatus = computed(() => {
+  if (holiday.value?.approved === 2) {
+    return "Denied"
+  } else if (holiday.value?.approved === 1) {
+    return "Approved"
+  } else {
+    return "Pending"
   }
-};
+})
+
+const statusColour = computed(() => {
+  if (holiday.value?.approved === 1) {
+    return 'approved'
+  } else if (holiday.value?.approved === 2) {
+    return 'denied'
+  } else return 'pending'
+})
+
+defineExpose({
+  holiday,
+  formatDate,
+  loading,
+  approvalStatus,
+  statusColour
+});
 </script>
+
 <style scoped>
 .table td {
   border-bottom: 1px solid #fff;

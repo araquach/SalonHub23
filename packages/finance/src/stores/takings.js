@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { useMainStore } from "../stores/main";
 import { useIncomeStore } from "../stores/income";
-import axios from "axios";
+import takingsService from "../services/takingsService";
 
 export const useTakingsStore = defineStore("takingsStore", {
   state: () => {
@@ -307,7 +307,7 @@ export const useTakingsStore = defineStore("takingsStore", {
   actions: {
     async loadTakingsYearByYear() {
       try {
-        const data = await axios.get("http://localhost:8060/api/finance/takings-by-year");
+        const data = await takingsService.getTakingsYearByYear()
         this.takingsYearByYearLoaded = true;
         this.takingsYearByYear.jakata = data.data.jakata;
         this.takingsYearByYear.pk = data.data.pk;
@@ -321,8 +321,10 @@ export const useTakingsStore = defineStore("takingsStore", {
 
     async loadTakingsMonthByMonth() {
       const mainStore = useMainStore();
+      const sd = mainStore.startDate
+      const ed = mainStore.endDate
       try {
-        const data = await axios.get(`http://localhost:8060/api/finance/monthly-takings-by-date-range/${mainStore.startDate}/${mainStore.endDate}`);
+        const data = await takingsService.getTakingsMonthByMonth(sd, ed)
         this.takingsByMonth = data.data;
         this.takingsByMonthLoaded = true;
       } catch (error) {
@@ -333,8 +335,12 @@ export const useTakingsStore = defineStore("takingsStore", {
 
     async loadStylistTakingsMonthByMonth() {
       const mainStore = useMainStore();
+      const fn = mainStore.teamMember.first_name
+      const ln = mainStore.teamMember.last_name
+      const sd = mainStore.startDate
+      const ed = mainStore.endDate
       try {
-        const data = await axios.get(`http://localhost:8060/api/finance/stylist-takings-month-by-month/${mainStore.teamMember.first_name}/${mainStore.teamMember.last_name}/${mainStore.startDate}/${mainStore.endDate}`);
+        const data = await takingsService.getStylistTakingsMonthByMonth(fn, ln, sd, ed)
         this.stylistTakingsByMonth = data.data;
         this.stylistTakingsByMonthLoaded = true;
       } catch (error) {
@@ -345,8 +351,11 @@ export const useTakingsStore = defineStore("takingsStore", {
 
     async loadTakingsByStylistComparison() {
       const mainStore = useMainStore();
+      const s = mainStore.getSalonToLower()
+      const sd = mainStore.startDate
+      const ed = mainStore.endDate
       try {
-        const data = await axios.get(`http://localhost:8060/api/finance/takings-by-stylist-comparison/${mainStore.getSalonToLower}/${mainStore.startDate}/${mainStore.endDate}`);
+        const data = await takingsService.getStylistTakingsMonthByMonth(s, sd, ed)
         this.takingsByStylistComparison = data.data;
         this.takingsByStylistComparisonLoaded = true;
       } catch (error) {

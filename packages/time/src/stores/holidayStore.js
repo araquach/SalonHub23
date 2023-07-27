@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { useAuthStore } from "auth/src/stores/authStore"
-import axios from "axios";
 import {useTimeStore} from "./timeStore";
+import holidayService from "../services/holidayService";
 
 //const initialValue = 0
 
@@ -12,8 +12,6 @@ export const useHolidayStore = defineStore('holiday', {
             holidays: [],
             holidaysLoading: null,
             holiday: {},
-            entitlement: 28,
-            submitStatus: null,
             activeFilter: 3
         }
     },
@@ -42,6 +40,8 @@ export const useHolidayStore = defineStore('holiday', {
 
             return filtered.sort((a, b) => b.id - a.id); // This line will sort the filtered array by `id` in descending order.
         },
+
+
     },
 
 
@@ -59,8 +59,8 @@ export const useHolidayStore = defineStore('holiday', {
             const id = authStore.user.staff_id
             this.holidaysLoading = true;
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/holidays/${id}`);
-                this.holidays = data.data;
+                const response = await holidayService.getHolidays(id)
+                this.holidays = response.data;
             } catch (error) {
                 console.log(error);
                 throw error
@@ -73,8 +73,8 @@ export const useHolidayStore = defineStore('holiday', {
         async loadHoliday(id) {
             // const authStore = useAuthStore();
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/holiday/${id}`);
-                this.holiday = data.data;
+                const response = await holidayService.getHoliday(id)
+                this.holiday = response.data;
                 return this.holiday;
             } catch (error) {
                 console.log(error);
@@ -85,14 +85,28 @@ export const useHolidayStore = defineStore('holiday', {
         async submitHoliday(holiday) {
             const timeStore = useTimeStore();
             try {
-                const response = await axios.post('http://localhost:8060/api/time/holiday-create', holiday)
-                this.submitStatus = true
-                timeStore.timeDetails.saturdays -= holiday.saturday;
-                timeStore.timeDetails.holidays += holiday.hours_requested
-                return console.log(response)
+                await holidayService.postHoliday(holiday)
+                timeStore.timeDetails.holidays_pending += holiday.hours_requested
+                timeStore.timeDetails.saturdays_pending += holiday.saturday
             } catch (error) {
                 console.error(error)
-                this.submitStatus = false
+            }
+        },
+
+        async updateHoliday(holiday) {
+            try {
+                const updatedHoliday = await holidayService.updateHoliday(holiday);
+                this.holidays = this.holidays.map(h => h.id === holiday.id ? updatedHoliday : h);
+
+                // Fetch updated time data from the API.
+                const authStore = useAuthStore();
+                const stylistId = authStore.user.staff_id;
+                const timeStore = useTimeStore();
+                await timeStore.loadTimeDetails(stylistId);
+
+                return updatedHoliday;
+            } catch (error) {
+                console.error(error);
             }
         }
     }

@@ -2,6 +2,7 @@ import LieuIndex from "../front/views/lieu/LieuIndex.vue";
 import LieuDashboard from "../front/views/lieu/LieuDashboard.vue";
 import LieuDetail from "../front/views/lieu/LieuDetail.vue";
 import LieuCreate from "../front/views/lieu/LieuCreate.vue";
+import LieuUpdate from "../front/views/lieu/LieuUpdate.vue";
 
 export default [
     {
@@ -30,6 +31,14 @@ export default [
                 path: 'create',
                 name: 'lieu-create',
                 component: LieuCreate,
+                meta: {
+                    requiresAuth: true
+                }
+            },
+            {
+                path: 'update/:id',
+                name: 'lieu-update',
+                component: LieuUpdate,
                 meta: {
                     requiresAuth: true
                 }

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import axios from "axios";
 import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "./timeStore";
+import lieuService from "../services/lieuService";
 
 export const useLieuStore = defineStore('lieu', {
     // arrow function recommended for full type inference
@@ -54,8 +54,8 @@ export const useLieuStore = defineStore('lieu', {
             const id = authStore.user.staff_id
             this.lieuHoursLoading = true;
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/lieu-hours/${id}`);
-                this.lieuHours = data.data;
+                const response = await lieuService.getLieuHours(id)
+                this.lieuHours = response.data;
             } catch (error) {
                 console.log(error);
                 throw error
@@ -66,10 +66,9 @@ export const useLieuStore = defineStore('lieu', {
         },
 
         async loadLieuHour(id) {
-            // const authStore = useAuthStore();
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/lieu-hour/${id}`);
-                this.lieuHour = data.data;
+                const response = await lieuService.getLieuHour(id)
+                this.lieuHour = response.data;
                 return this.lieuHour
             } catch (error) {
                 console.log(error);
@@ -80,20 +79,13 @@ export const useLieuStore = defineStore('lieu', {
         async submitLieu(lieu) {
             const timeStore = useTimeStore();
             try {
-                const response = await axios.post('http://localhost:8060/api/time/lieu-hour-create', lieu)
+                await lieuService.postLieuHour(lieu)
                 this.submitStatus = true
                 timeStore.timeDetails.lieu_hours += lieu.lieu_hours
-                return console.log(response)
             } catch (error) {
                 console.error(error)
                 this.submitStatus = false
             }
         }
-
-        // async addLieuHours (payload) {
-        //     axios.post('/api/holiday', payload).then(_ => {
-        //         commit('ADD_HOLIDAY', payload)
-        //     })
-        // }
     }
 })

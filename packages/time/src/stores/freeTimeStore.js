@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import axios from "axios";
 import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "./timeStore";
+import freeTimeService from "../services/freeTimeService";
 
 export const useFreeTimeStore = defineStore('freeTime', {
     // arrow function recommended for full type inference
@@ -56,8 +56,8 @@ export const useFreeTimeStore = defineStore('freeTime', {
             const id = authStore.user.staff_id
             this.freeTimesLoading = true;
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/free-times/${id}`);
-                this.freeTimes = data.data;
+                const response = await freeTimeService.getFreeTimes(id)
+                this.freeTimes = response.data;
             } catch (error) {
                 console.log(error);
                 throw error
@@ -68,10 +68,9 @@ export const useFreeTimeStore = defineStore('freeTime', {
         },
 
         async loadFreeTime(id) {
-            // const authStore = useAuthStore();
             try {
-                const data = await axios.get(`http://localhost:8060/api/time/free-time/${id}`);
-                this.freeTime = data.data;
+                const response = await freeTimeService.getFreeTime(id)
+                this.freeTime = response.data;
                 return this.freeTime;
             } catch (error) {
                 console.log(error);
@@ -82,20 +81,13 @@ export const useFreeTimeStore = defineStore('freeTime', {
         async submitFreeTime(freeTime) {
             const timeStore = useTimeStore();
             try {
-                const response = await axios.post('http://localhost:8060/api/time/free-time-create', freeTime)
+                await freeTimeService.postFreeTime(freeTime)
                 this.submitStatus = true
                 timeStore.timeDetails.free_time += freeTime.free_time_hours
-                return console.log(response)
             } catch (error) {
                 console.error(error)
                 this.submitStatus = false
             }
         }
-
-        // async addHoliday (payload) {
-        //     axios.post('/api/holiday', payload).then(_ => {
-        //         commit('ADD_HOLIDAY', payload)
-        //     })
-        // }
     }
 })

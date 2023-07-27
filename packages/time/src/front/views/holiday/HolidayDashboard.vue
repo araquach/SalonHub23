@@ -10,10 +10,10 @@
             <p>Loading...</p>
           </div>
           <div v-else class="column">
-            <p class="is-size-4">Holiday Entitlement: {{ timeStore.timeDetails.holiday_ent }} days</p>
-            <p class="is-size-4">Total Booked: {{ timeStore.timeDetails.holidays }} days</p>
-            <p class="is-size-3">Days remaining: {{ timeStore.timeDetails.holiday_ent - timeStore.timeDetails.holidays }}</p>
-            <p class="is-size-3">Remaining Saturdays: {{ timeStore.timeDetails.saturdays }}</p>
+            <p class="is-size-4">Holiday Entitlement: {{ timeDetails.holiday_ent }} days</p>
+            <p class="is-size-4">Total Booked: {{ timeDetails.holidays }} days <span v-if="timeDetails.holidays_pending !== 0" class="is-size-6"> ({{ timeDetails.holidays_pending }} pending)</span></p>
+            <p class="is-size-3">Days remaining: {{ holidaysRemaining }} <span v-if="timeDetails.holidays_pending !== 0" class="is-size-6">({{holidaysRemaining - timeDetails.holidays_pending}})</span></p>
+            <p class="is-size-3">Remaining Saturdays: {{ timeDetails.saturdays }} <span v-if="timeDetails.saturdays_pending !== 0" class="is-size-6">({{ timeDetails.saturdays - timeDetails.saturdays_pending }})</span></p>
           </div>
         </div>
         <div class="navbar is-transparent">
@@ -34,7 +34,7 @@
                            class="button is-white is-outlined is-small">
                 Denied Holidays
               </router-link>
-              <router-link :to="{ name: 'holiday-dashboard', params: { filter: 'all' } }"
+              <router-link :to="{ name: 'holiday-dashboard', params: {filter: 'all', id: null} }"
                            class="button is-white is-outlined is-small">
                 All Holidays
               </router-link>
@@ -59,42 +59,40 @@
     </div>
   </div>
 </template>
-<script>
-import { watch } from 'vue';
+<script setup>
+import {computed, onMounted, watch} from 'vue';
 import { useRoute } from 'vue-router';
 import {useHolidayStore} from "../../../stores/holidayStore";
 import {useTimeStore} from "../../../stores/timeStore";
 import HolidayInd from "../../../front/components/holiday/HolidayInd.vue";
 
-export default {
-  components: {HolidayInd},
+const route = useRoute();
+const holidayStore = useHolidayStore();
+const timeStore = useTimeStore();
+const timeDetails = computed(() => timeStore.timeDetails);
+const holidaysRemaining = computed(() => timeStore.timeDetails.holiday_ent - timeStore.timeDetails.holidays)
 
-  setup() {
-    const route = useRoute();
-    const holidayStore = useHolidayStore();
-    const timeStore = useTimeStore();
+const filterMapping = {
+  'awaiting': 0,
+  'approved': 1,
+  'denied': 2,
+  'all': 3,
+};
 
-    const filterMapping = {
-      'awaiting': 0,
-      'approved': 1,
-      'denied': 2,
-      'all': 3,
-    };
+onMounted(() => {
+  holidayStore.loadHolidays();
+})
 
-    watch(() => route.params.filter, newFilter => {
-      if (newFilter in filterMapping) {
-        holidayStore.setActiveFilter(filterMapping[newFilter]);
-      }
-    }, { immediate: true });
-
-    holidayStore.loadHolidays();
-
-    return {
-      timeStore,
-      holidayStore
-    }
+watch(() => route.params.filter, newFilter => {
+  if (newFilter in filterMapping) {
+    holidayStore.setActiveFilter(filterMapping[newFilter]);
   }
-}
+}, { immediate: true });
+
+defineExpose({
+  timeStore,
+  holidayStore
+});
 </script>
 
 <style scoped>

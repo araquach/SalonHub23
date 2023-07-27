@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import axios from "axios";
-import {useAuthStore} from "auth/src/stores/authStore";
 
 export const useTimeStore = defineStore('time', {
     // arrow function recommended for full type inference
@@ -8,6 +7,13 @@ export const useTimeStore = defineStore('time', {
         return {
             timeDetails: {},
             timeDetailsLoading: null
+        }
+    },
+
+    getters: {
+        // Holiday Getters
+        holidayEntitlement() {
+
         }
     },
 

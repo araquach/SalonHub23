@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from "axios";
+import teamService from "../services/teamService";
 
 export const useMainStore = defineStore('main', {
     // arrow function recommended for full type inference
@@ -25,9 +25,7 @@ export const useMainStore = defineStore('main', {
     actions: {
         async loadTeamMembers() {
             try {
-                const data = await axios.get(
-                    "http://localhost:8060/api/team/team-members"
-                );
+                const data = await teamService.getTeamMembers()
                 this.teamMembers = data.data;
                 return this.teamMembers
             } catch (error) {

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useMainStore } from "../stores/main";
-import axios from "axios";
+import profitLossService from "../services/profitLossService";
 
 export const useProfitLossStore = defineStore("profitLossStore", {
   state: () => {
@@ -80,15 +80,13 @@ export const useProfitLossStore = defineStore("profitLossStore", {
     }
   },
 
-
-
   actions: {
     async loadCostsAndTakingsByDateRange() {
       const mainStore = useMainStore();
+      const sd = mainStore.startDate
+      const ed = mainStore.endDate
       try {
-        const data = await axios.get(
-          `http://localhost:8060/api/costs-and-takings/${mainStore.startDate}/${mainStore.endDate}`
-        );
+        const data = await profitLossService.getCostsAndTakingsByDateRange(sd, ed)
         this.costsAndTakings = data.data;
         this.costsAndTakingsLoaded = true
       } catch (error) {

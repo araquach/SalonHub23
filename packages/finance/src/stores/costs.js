@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useMainStore } from "../stores/main";
-import axios from "axios";
+import costsService from "../services/costsService";
 
 export const useCostsStore = defineStore("costsStore", {
   state: () => {
@@ -249,9 +249,7 @@ export const useCostsStore = defineStore("costsStore", {
   actions: {
     async loadCostsYearByYear() {
       try {
-        const data = await axios.get(
-          "http://localhost:8060/api/finance/costs-year-by-year"
-        );
+        const data = await costsService.getCostsYearByYear()
         this.costsByYear = data.data;
         this.costsByYearLoaded = true
       } catch (error) {
@@ -262,10 +260,10 @@ export const useCostsStore = defineStore("costsStore", {
 
     async loadCostsMonthByMonth() {
       const mainStore = useMainStore();
+      const sd = mainStore.startDate
+      const ed = mainStore.endDate
       try {
-        const data = await axios.get(
-          `http://localhost:8060/api/finance/costs-month-by-month/${mainStore.startDate}/${mainStore.endDate}`
-        );
+        const data = await costsService.getCostsMonthByMonth(sd, ed)
         this.costsByMonth = data.data;
         this.costsByMonthLoaded = true
       } catch (error) {
@@ -276,10 +274,11 @@ export const useCostsStore = defineStore("costsStore", {
 
     async loadCostsByCat() {
       const mainStore = useMainStore();
+      const s = mainStore.salon.name.toLowerCase()
+      const sd = mainStore.startDate
+      const ed = mainStore.endDate
       try {
-        const data = await axios.get(
-          `http://localhost:8060/api/finance/costs-by-cat/${mainStore.salon.name.toLowerCase()}/${mainStore.startDate}/${mainStore.endDate}`
-        );
+        const data = await costsService.getCostsByCat(s, sd, ed)
         this.costsByCat = data.data;
         this.costsByCatLoaded = true
       } catch (error) {
@@ -290,10 +289,11 @@ export const useCostsStore = defineStore("costsStore", {
 
     async loadIndCostsByMonth() {
       const mainStore = useMainStore();
+      const c = this.category
+      const sd = mainStore.startDate
+      const ed = mainStore.endDate
       try {
-        const data = await axios.get(
-          `http://localhost:8060/api/finance/ind-cost-month-by-month/${this.category}/${mainStore.startDate}/${mainStore.endDate}`
-        );
+        const data = await costsService.getIndCostsByMonth(c, sd, ed)
         this.indCostsByMonth = data.data;
         this.indCostsByMonthLoaded = true
       } catch (error) {

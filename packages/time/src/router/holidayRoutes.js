@@ -2,6 +2,7 @@ import HolidayIndex from "../front/views/holiday/HolidayIndex.vue";
 import HolidayDashboard from "../front/views/holiday/HolidayDashboard.vue";
 import HolidayCreate from "../front/views/holiday/HolidayCreate.vue";
 import HolidayDetail from "../front/views/holiday/HolidayDetail.vue";
+import HolidayUpdate from "../front/views/holiday/HolidayUpdate.vue";
 
 export default [
     {
@@ -29,6 +30,14 @@ export default [
                 path: 'create',
                 name: 'holiday-create',
                 component: HolidayCreate,
+                meta: {
+                    requiresAuth: true
+                }
+            },
+            {
+                path: 'update/:id',
+                name: 'holiday-update',
+                component: HolidayUpdate,
                 meta: {
                     requiresAuth: true
                 }

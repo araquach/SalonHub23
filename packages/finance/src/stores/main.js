@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { format, startOfYear, subYears, endOfMonth, subMonths } from "date-fns";
-import axios from "axios";
+import teamService from "main/src/services/teamService";
 
 export const useMainStore = defineStore("mainStore", {
   state: () => {
@@ -40,9 +40,7 @@ export const useMainStore = defineStore("mainStore", {
   actions: {
     async loadStylists() {
       try {
-        const data = await axios.get(
-          "http://localhost:8060/api/team/team-members"
-        );
+        const data = await teamService.getTeamMembers()
         this.teamMembers = data.data;
       } catch (error) {
         alert(error);
