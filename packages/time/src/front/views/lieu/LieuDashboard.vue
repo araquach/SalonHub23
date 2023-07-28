@@ -52,44 +52,35 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import LieuInd from "../../../front/components/lieu/LieuInd.vue";
 import {useTimeStore} from "../../../stores/timeStore";
 import {useLieuStore} from "../../../stores/lieuStore";
 import {useRoute} from "vue-router";
-import {watch} from "vue";
+import {watchEffect, onMounted} from "vue";
 
-export default {
-  components: {LieuInd},
+const route = useRoute();
+const timeStore = useTimeStore();
+const lieuStore = useLieuStore();
 
-  setup() {
-    const route = useRoute();
-    const timeStore= useTimeStore();
-    const lieuStore = useLieuStore();
+const filterMapping = {
+  'awaiting': 0,
+  'approved': 1,
+  'denied': 2,
+  'all': 3,
+  // add any additional filters you need here
+};
 
-    const filterMapping = {
-      'awaiting': 0,
-      'approved': 1,
-      'denied': 2,
-      'all': 3,
-      // add any additional filters you need here
-    };
-
-    watch(() => route.params.filter, newFilter => {
-      if (newFilter in filterMapping) {
-        lieuStore.setActiveFilter(filterMapping[newFilter]);
-      }
-    }, { immediate: true });
-
-    lieuStore.loadLieuHours()
-
-    return {
-      timeStore,
-      lieuStore
-    }
+watchEffect(() => {
+  const newFilter = route.params.filter;
+  if (newFilter in filterMapping) {
+    lieuStore.setActiveFilter(filterMapping[newFilter]);
   }
-}
+});
 
+onMounted(() => {
+  lieuStore.loadLieuHours();
+});
 </script>
 
 <style scoped>

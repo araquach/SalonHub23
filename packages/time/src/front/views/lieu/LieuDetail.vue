@@ -39,59 +39,45 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import {useLieuStore} from "../../../stores/lieuStore";
 import {useRoute} from "vue-router";
-import {computed, ref} from "vue";
-import { format } from "date-fns"
+import {computed, onMounted, ref} from "vue";
+import { format } from "date-fns";
 
-export default {
-  setup() {
-    const route = useRoute()
-    const lieuStore = useLieuStore();
-    const lieu = computed(() => lieuStore.lieuHour)
-    const id = route.params.id
-    const loading = ref(true)
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return format(date, 'do MMMM yyyy');
-    }
-
-    lieuStore.loadLieuHour(id).then(() => {
-      loading.value = false;  // Once the data has loaded, we set loading to false
-    }).catch(error => {
-      console.error('Failed to load holiday: ', error);
-      // Here you can handle the error in some way, like showing a message to the user
-    });
-
-    return {
-      lieuStore,
-      lieu,
-      formatDate,
-      loading
-    }
-  },
-
-  computed: {
-    approvalStatus() {
-      if (this.lieu.approved === 2) {
-        return "Denied"
-      } else if (this.lieu.approved === 1) {
-        return "Approved"
-      } else {
-        return "Pending"
-      }
-    },
-
-    statusColour() {
-      if (this.lieu.approved === 1) {
-        return 'approved'
-      } else if (this.lieu.approved === 2) {
-        return 'denied'
-      } else return 'pending'
-    },
-  }
+const route = useRoute();
+const lieuStore = useLieuStore();
+const lieu = computed(() => lieuStore.lieuHour);
+const id = route.params.id;
+const loading = ref(true);
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'do MMMM yyyy');
 };
+
+onMounted(async () => {
+  await lieuStore.loadLieuHour(id)
+  loading.value = false
+})
+
+// Computed properties
+const approvalStatus = computed(() => {
+  if (lieu.value?.approved === 2) {
+    return "Denied"
+  } else if (lieu.value?.approved === 1) {
+    return "Approved"
+  } else {
+    return "Pending"
+  }
+});
+
+const statusColour = computed(() => {
+  if (lieu.value?.approved === 1) {
+    return 'approved'
+  } else if (lieu.value?.approved === 2) {
+    return 'denied'
+  } else return 'pending'
+});
 </script>
 <style scoped>
 .table td {

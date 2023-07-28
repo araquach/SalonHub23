@@ -35,53 +35,33 @@
     </div>
   </form>
 </template>
-<script>
-import {defineComponent} from "vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
-import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
-import {useFreeTimeStore} from "../../../stores/freeTimeStore";
-import {useAuthStore} from "auth/src/stores/authStore";
+<script setup>
+import {computed, reactive} from 'vue';
+import { useFreeTimeStore } from '../../../stores/freeTimeStore';
+import { useAuthStore } from 'auth/src/stores/authStore';
+import BaseInput from 'main/src/front/components/formBase/BaseInput.vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import { useRouter } from 'vue-router';
 
-export default defineComponent({
-  components: {BaseInput, VueDatePicker},
+const freeTimeStore = useFreeTimeStore();
+const authStore = useAuthStore();
+const router = useRouter();
 
-  setup() {
-    const freeTimeStore = useFreeTimeStore();
-    const authStore = useAuthStore();
-    return {
-      freeTimeStore,
-      authStore
-    }
-  },
+let freeTime = reactive({
+  staff_id: authStore.user.staff_id,
+  free_time_hours: 0,
+  description: '',
+  date_regarding: null,
+});
 
-  data() {
-    return {
-      freeTime: {
-        staff_id: this.authStore.user.staff_id,
-        free_time_hours: 0,
-        description: '',
-        date_regarding: null
-      }
-    }
-  },
+const submitStatus = computed(() => freeTimeStore.submitStatus);
 
-  computed: {
-    submitStatus() {
-      return useFreeTimeStore().submitStatus
-    }
-  },
-
-  methods: {
-    async submitForm() {
-      try {
-        await this.freeTimeStore.submitFreeTime(this.freeTime).then(()=>{
-          this.$router.push({name: 'free-time-dashboard', params: {filter: 'all'}})
-        })
-      } catch (error) {
-        // handle the error here
-        console.error(error)
-      }
-    }
+async function submitForm() {
+  try {
+    await freeTimeStore.submitFreeTime(freeTime);
+    router.push({ name: 'free-time-dashboard', params: { filter: 'all' } });
+  } catch (error) {
+    console.error(error);
   }
-})
+}
 </script>

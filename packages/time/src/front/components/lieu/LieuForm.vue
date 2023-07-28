@@ -37,51 +37,43 @@
     </div>
   </form>
 </template>
-<script>
+<script setup>
+import {ref, computed, defineProps} from "vue";
 import {useLieuStore} from "../../../stores/lieuStore";
-import {ref} from "vue";
 import {useAuthStore} from "auth/src/stores/authStore";
 import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
+import {useRouter} from 'vue-router';
 
-export default {
-  components: {BaseInput, VueDatePicker},
+// Define the props
+const props = defineProps({
+  lieuProps: Object,
+  formType: String
+});
 
-  props: ['lieuProps', 'formType'],  // define the 'lieu' prop here
+const lieuStore = useLieuStore();
+const authStore = useAuthStore();
+const router = useRouter();
 
-  setup(props) {
-    const lieuStore = useLieuStore()
-    const authStore = useAuthStore()
-    const lieu = ref(props.lieuProps || {
-      staff_id: authStore.user.staff_id,
-      lieu_hours: 0,
-      description: '',
-      date_regarding: null
-    });  // initialize 'lieu' with 'lieuProp' if it's provided
-    return {
-      lieuStore,
-      authStore,
-      lieu
-    }
-  },
+// Initialize 'lieu' with 'lieuProp' if it's provided
+const lieu = ref(props.lieuProps || {
+  staff_id: authStore.user.staff_id,
+  lieu_hours: 0,
+  description: '',
+  date_regarding: null
+});
 
-  computed: {
-    submitStatus() {
-      return useLieuStore().submitStatus
-    }
-  },
+const submitStatus = computed(() => lieuStore.submitStatus);
 
-  methods: {
-    async submitForm() {
-      try {
-        await this.lieuStore.submitLieu(this.lieu).then(()=>{
-          this.$router.push({name: 'lieu-dashboard', params: {filter: 'all'}})
-        })
-      } catch (error) {
-        // handle the error here
-        console.error(error)
-      }
-    }
+// The method has been converted to a regular function
+const submitForm = async () => {
+  try {
+    await lieuStore.submitLieu(lieu.value).then(() => {
+      router.push({name: 'lieu-dashboard', params: {filter: 'all'}});
+    });
+  } catch (error) {
+    // handle the error here
+    console.error(error);
   }
-}
+};
 </script>

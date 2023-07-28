@@ -56,43 +56,37 @@
     </div>
   </div>
 </template>
-<script>
-import { watch } from 'vue';
+<script setup>
+import {onMounted, watchEffect} from 'vue';
 import { useRoute } from 'vue-router';
 import FreeTimeInd from "../../../front/components/freeTime/FreeTimeInd.vue";
-import {useTimeStore} from "../../../stores/timeStore";
-import {useFreeTimeStore} from "../../../stores/freeTimeStore";
+import { useTimeStore } from "../../../stores/timeStore";
+import { useFreeTimeStore } from "../../../stores/freeTimeStore";
 
-export default {
-  components: {FreeTimeInd},
+const route = useRoute();
+const timeStore = useTimeStore();
+const freeTimeStore = useFreeTimeStore();
 
-  setup() {
-    const route = useRoute();
-    const timeStore = useTimeStore()
-    const freeTimeStore = useFreeTimeStore();
+const filterMapping = {
+  'awaiting': 0,
+  'approved': 1,
+  'denied': 2,
+  'all': 3,
+};
 
-    const filterMapping = {
-      'awaiting': 0,
-      'approved': 1,
-      'denied': 2,
-      'all': 3,
-    };
-
-    watch(() => route.params.filter, newFilter => {
-      if (newFilter in filterMapping) {
-        freeTimeStore.setActiveFilter(filterMapping[newFilter]);
-      }
-    }, { immediate: true });
-
-    freeTimeStore.loadFreeTimes()
-
-    return {
-      timeStore,
-      freeTimeStore
-    }
+watchEffect(() => {
+  const newFilter = route.params.filter;
+  if (newFilter in filterMapping) {
+    freeTimeStore.setActiveFilter(filterMapping[newFilter]);
   }
-}
+});
+
+onMounted(() => {
+  freeTimeStore.loadFreeTimes();
+});
+
 </script>
+
 <style scoped>
 .section {
   padding: 1rem;

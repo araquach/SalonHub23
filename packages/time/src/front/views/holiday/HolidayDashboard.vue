@@ -60,7 +60,7 @@
   </div>
 </template>
 <script setup>
-import {computed, onMounted, watch} from 'vue';
+import {computed, onMounted, watchEffect} from 'vue';
 import { useRoute } from 'vue-router';
 import {useHolidayStore} from "../../../stores/holidayStore";
 import {useTimeStore} from "../../../stores/timeStore";
@@ -83,11 +83,12 @@ onMounted(() => {
   holidayStore.loadHolidays();
 })
 
-watch(() => route.params.filter, newFilter => {
+watchEffect(() => {
+  const newFilter = route.params.filter;
   if (newFilter in filterMapping) {
     holidayStore.setActiveFilter(filterMapping[newFilter]);
   }
-}, { immediate: true });
+});
 
 defineExpose({
   timeStore,

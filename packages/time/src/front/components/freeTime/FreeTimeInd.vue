@@ -19,31 +19,25 @@
   </router-link>
 </template>
 
-<script>
+<script setup>
+import { format } from 'date-fns';
+import { computed, defineProps } from 'vue';
 
-import {format} from "date-fns";
+const props = defineProps({
+  freeTime: Object
+});
 
-export default {
-  setup() {
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return format(date, 'dd/MM/yyyy');
-    }
-    return {
-      formatDate
-    }
-  },
-
-  props: ['freeTime'],
-
-  computed: {
-    statusColour() {
-      if (this.freeTime.approved === 1) {
-        return 'approved'
-      } else if (this.freeTime.approved === 2) {
-        return 'denied'
-      } else return 'pending'
-    }
-  }
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'dd/MM/yyyy');
 }
+
+const statusColour = computed(() => {
+  if (props.freeTime.approved === 1) {
+    return 'approved'
+  } else if (props.freeTime.approved === 2) {
+    return 'denied'
+  } else return 'pending'
+});
 </script>
+

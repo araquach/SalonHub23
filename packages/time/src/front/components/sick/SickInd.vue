@@ -18,39 +18,25 @@
   </router-link>
 </template>
 
-<script>
-import {format} from "date-fns";
+<script setup>
+import {computed, defineProps} from 'vue';
+import { format } from 'date-fns';
 
-export default {
-  setup() {
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return format(date, 'dd/MM/yyyy');
-    }
-    return {
-      formatDate
-    }
-  },
+const props = defineProps({
+  sick: Object,
+  filter: [String, Number]
+});
 
-  props: ['sick', 'filter'],
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'dd/MM/yyyy');
+};
 
-  computed: {
-    statusColour() {
-      if (this.sick.deducted) {
-        return 'approved'
-      }
-      else return 'pending'
-    },
-
-    // approvedStatus() {
-    //   if (this.filter === 'awaiting') {
-    //     return this.sick.deducted === false
-    //   } else if (this.filter === 'deducted') {
-    //     return this.sick.deducted === true
-    //   } else if (this.filter === 'all') {
-    //     return this.sick.deducted !== this.approvalFilter
-    //   }
-    // }
+const statusColour = computed(() => {
+  if (props.sick.deducted) {
+    return 'approved';
+  } else {
+    return 'pending';
   }
-}
+});
 </script>

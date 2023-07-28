@@ -43,57 +43,31 @@
     </div>
   </div>
 </template>
-<script>
-import {useSickStore} from "../../../stores/sickStore";
-import {useRoute} from "vue-router";
-import {computed, ref} from "vue";
-import { format } from "date-fns"
+<script setup>
+import {ref, computed, onMounted} from 'vue';
+import { useRoute } from 'vue-router';
+import { useSickStore } from '../../../stores/sickStore';
+import { format } from 'date-fns';
 
-export default {
-  setup() {
-    const route = useRoute()
-    const sickStore = useSickStore();
-    const sick = computed(() => sickStore.sickDay)
-    const id = route.params.id
-    const loading = ref(true)
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return format(date, 'do MMMM yyyy');
-    }
+const route = useRoute();
+const sickStore = useSickStore();
+const sick = computed(() => sickStore.sickDay);
+const id = route.params.id;
+const loading = ref(true);
 
-    sickStore.loadSickDay(id).then(() => {
-      loading.value = false;  // Once the data has loaded, we set loading to false
-    }).catch(error => {
-      console.error('Failed to load holiday: ', error);
-      // Here you can handle the error in some way, like showing a message to the user
-    });
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'do MMMM yyyy');
+}
 
-    return {
-      sickStore,
-      sick,
-      formatDate,
-      loading
-    }
-  },
+onMounted(async () => {
+  await sickStore.loadSickDay(id)
+  loading.value = false
+})
 
-  computed: {
-    deductionStatus() {
-      if (this.sick.deducted) {
-        return "Yes"
-      } else {
-        return "No"
-      }
-    },
+const deductionStatus = computed(() => sick.value?.deducted ? 'Yes' : 'No');
+const statusColour = computed(() => sick.value?.deducted ? 'approved' : 'pending');
 
-    statusColour() {
-      if (this.sick.deducted) {
-        return 'approved'
-      } else {
-        return 'pending'
-      }
-    },
-  }
-};
 </script>
 <style scoped>
 .table td {

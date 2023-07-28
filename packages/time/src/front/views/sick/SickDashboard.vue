@@ -45,40 +45,32 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import SickInd from "../../../front/components/sick/SickInd.vue";
 import {useTimeStore} from "../../../stores/timeStore";
 import {useSickStore} from "../../../stores/sickStore";
 import {useRoute} from "vue-router";
-import {watch} from "vue";
+import {onMounted, watch} from "vue";
 
-export default {
-  components: {SickInd},
+const route = useRoute();
+const timeStore = useTimeStore()
+const sickStore = useSickStore();
 
-  setup() {
-    const route = useRoute();
-    const timeStore = useTimeStore()
-    const sickStore = useSickStore();
+const filterMapping = {
+  'awaiting': 0,
+  'deducted': 1,
+  'all': 2,
+};
 
-    const filterMapping = {
-      'awaiting': 0,
-      'deducted': 1,
-      'all': 2,
-    };
+onMounted(() => {
+  sickStore.loadSickDays();
+})
 
-    watch(() => route.params.filter, newFilter => {
-      if (newFilter in filterMapping) {
-        sickStore.setActiveFilter(filterMapping[newFilter]);
-      }
-    }, { immediate: true });
-
-    sickStore.loadSickDays();
-    return {
-      timeStore,
-      sickStore
-    }
+watch(() => route.params.filter, newFilter => {
+  if (newFilter in filterMapping) {
+    sickStore.setActiveFilter(filterMapping[newFilter]);
   }
-}
+}, { immediate: true });
 </script>
 
 <style scoped>

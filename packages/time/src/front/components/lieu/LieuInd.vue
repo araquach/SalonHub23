@@ -16,29 +16,23 @@
   </router-link>
 </template>
 
-<script>
+<script setup>
 import {format} from "date-fns";
-export default {
-  setup() {
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return format(date, 'dd/MM/yyyy');
-    }
-    return {
-      formatDate
-    }
-  },
+import {computed, defineProps} from 'vue';
 
-  props: ['lieu'],
+// Use 'defineProps' to define props
+const props = defineProps(['lieu']);
 
-  computed: {
-    statusColour() {
-      if (this.lieu.approved === 1) {
-        return 'approved'
-      } else if (this.lieu.approved === 2) {
-        return 'denied'
-      } else return 'pending'
-    }
-  }
-}
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'dd/MM/yyyy');
+};
+
+const statusColour = computed(() => {
+  if (props.lieu.approved === 1) {
+    return 'approved'
+  } else if (props.lieu.approved === 2) {
+    return 'denied'
+  } else return 'pending'
+});
 </script>

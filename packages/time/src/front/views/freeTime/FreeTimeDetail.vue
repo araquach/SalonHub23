@@ -43,60 +43,48 @@
     </div>
   </div>
 </template>
-<script>
-import {useFreeTimeStore} from "../../../stores/freeTimeStore";
-import {useRoute} from "vue-router";
-import {computed, ref} from "vue"
-import {format} from "date-fns";
+<script setup>
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useFreeTimeStore } from '../../../stores/freeTimeStore';
+import { format } from 'date-fns';
 
-export default {
-  setup() {
-    const route = useRoute();
-    const freeTimeStore = useFreeTimeStore();
-    const freeTime = computed(() => freeTimeStore.freeTime);
-    const id = route.params.id;
-    const loading =ref(true);
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return format(date, 'do MMMM yyyy');
-    }
-
-    freeTimeStore.loadFreeTime(id).then(() => {
-      loading.value = false;  // Once the data has loaded, we set loading to false
-    }).catch(error => {
-      console.error('Failed to load free time: ', error);
-      // Here you can handle the error in some way, like showing a message to the user
-    });
-
-    return {
-      freeTimeStore,
-      freeTime,
-      formatDate,
-      loading
-    }
-  },
-
-  computed: {
-    approvalStatus() {
-      if (this.freeTime.approved === 2) {
-        return "Denied"
-      } else if (this.freeTime.approved === 1) {
-        return "Approved"
-      } else {
-        return "Pending"
-      }
-    },
-
-    statusColour() {
-      if (this.freeTime.approved === 1) {
-        return 'approved'
-      } else if (this.freeTime.approved === 2) {
-        return 'denied'
-      } else return 'pending'
-    },
-  }
+const route = useRoute();
+const freeTimeStore = useFreeTimeStore();
+const freeTime = computed(() => freeTimeStore.freeTime);
+const id = route.params.id;
+const loading = ref(true);
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'do MMMM yyyy');
 };
+
+freeTimeStore.loadFreeTime(id).then(() => {
+  loading.value = false; // Once the data has loaded, we set loading to false
+}).catch((error) => {
+  console.error('Failed to load free time: ', error);
+  // Here you can handle the error in some way, like showing a message to the user
+});
+
+const approvalStatus = computed(() => {
+  if (freeTime.value.approved === 2) {
+    return "Denied"
+  } else if (freeTime.value.approved === 1) {
+    return "Approved"
+  } else {
+    return "Pending"
+  }
+});
+
+const statusColour = computed(() => {
+  if (freeTime.value.approved === 1) {
+    return 'approved'
+  } else if (freeTime.value.approved === 2) {
+    return 'denied'
+  } else return 'pending'
+});
 </script>
+
 <style scoped>
 .table td {
   border-bottom: 1px solid #fff;

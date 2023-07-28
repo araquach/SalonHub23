@@ -17,10 +17,6 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import FreeTimeForm from "../../components/freeTime/FreeTimeForm.vue";
-
-export default {
-  components: {FreeTimeForm},
-}
 </script>

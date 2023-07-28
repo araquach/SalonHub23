@@ -17,10 +17,6 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import LieuForm from "../../components/lieu/LieuForm.vue";
-
-export default {
-  components: {LieuForm}
-}
 </script>

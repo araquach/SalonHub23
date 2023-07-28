@@ -17,34 +17,25 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import LieuForm from "../../components/lieu/LieuForm.vue";
 import {useLieuStore} from "../../../stores/lieuStore";
 import {useRoute} from "vue-router";
-import {computed, ref} from "vue";
+import {computed, ref, onMounted} from "vue";
 
-export default {
-  components: {LieuForm},
+const route = useRoute();
+const lieuStore = useLieuStore();
+const lieu = computed(() => lieuStore.lieuHour);
+const id = route.params.id;
+const loading = ref(true);
 
-  setup() {
-    const route = useRoute();
-    const lieuStore = useLieuStore();
-    const lieu = computed(() => lieuStore.lieuHour)
-    const id = route.params.id
-    const loading = ref(true)
-
-    lieuStore.loadLieuHour(id).then(() => {
-      loading.value = false;  // Once the data has loaded, we set loading to false
-    }).catch(error => {
-      console.error('Failed to load lieu hour: ', error);
-      // Here you can handle the error in some way, like showing a message to the user
-    });
-
-    return {
-      lieuStore,
-      lieu,
-      loading
-    }
+onMounted(async () => {
+  try {
+    await lieuStore.loadLieuHour(id);
+    loading.value = false;  // Once the data has loaded, we set loading to false
+  } catch (error) {
+    console.error('Failed to load lieu hour: ', error);
+    // Here you can handle the error in some way, like showing a message to the user
   }
-}
+});
 </script>
