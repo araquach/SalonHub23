@@ -17,27 +17,16 @@
     </div>
   </div>
 </template>
-<script>
-import { useMainStore } from "../../../stores/main";
+<script setup>
 import { useCostsStore } from "../../../stores/costs";
 
-export default {
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    return {
-      mainStore: mainStore,
-      costsStore: costsStore
-    };
-  },
+const costsStore = useCostsStore();
 
-  methods: {
-    formatCurrency(number, currency) {
-      return number.toLocaleString('en-GB', { style: 'currency', currency: currency });
-    },
-  }
+const formatCurrency = (number, currency) => {
+  return number.toLocaleString('en-GB', { style: 'currency', currency: currency });
 };
 </script>
+
 <style scoped>
 .red .red strong {
     color: darkred;

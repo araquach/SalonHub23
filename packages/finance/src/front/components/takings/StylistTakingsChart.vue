@@ -10,7 +10,8 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import {computed, ref} from 'vue';
 import { Line } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -24,51 +25,28 @@ import {
 } from "chart.js";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LineElement, CategoryScale, LinearScale);
-import { useMainStore } from "../../../stores/main";
 import { useTakingsStore } from "../../../stores/takings";
 
-export default {
-  // eslint-disable-next-line vue/no-reserved-component-names
-  components: { Line },
+const takingsStore = useTakingsStore();
 
-  setup() {
-    const mainStore = useMainStore();
-    const takingsStore = useTakingsStore();
-    return {
-      mainStore,
-      takingsStore
-    };
-  },
+let toggled = ref(false);
+let showLinear = ref(false);
 
-  data() {
-    return {
-      toggled: false,
-      showLinear: false,
-      startDate: this.mainStore.startDate,
-      endDate: this.mainStore.endDate
-    };
-  },
-
-  methods: {
-    toggleData() {
-      this.toggled = !this.toggled;
-    },
-
-    toggleLinear() {
-      this.showLinear = !this.showLinear;
-    }
-  },
-
-  computed: {
-    chartData() {
-      return {
-        labels: this.takingsStore.stylistTakingsByMonth.map(row => row.month),
-        datasets: this.takingsStore.getStylistTakingsByMonthChart(this.toggled, this.showLinear),
-        chartOptions: {
-          responsive: true
-        }
-      };
-    }
-  }
+const toggleData = () => {
+  toggled.value = !toggled.value;
 };
+
+const toggleLinear = () => {
+  showLinear.value = !showLinear.value;
+};
+
+const chartData = computed(() => {
+  return {
+    labels: takingsStore.stylistTakingsByMonth.map(row => row.month),
+    datasets: takingsStore.getStylistTakingsByMonthChart(toggled.value, showLinear.value),
+    chartOptions: {
+      responsive: true
+    }
+  };
+});
 </script>

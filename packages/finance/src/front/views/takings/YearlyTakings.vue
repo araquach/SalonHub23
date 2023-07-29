@@ -17,44 +17,24 @@
     <br>
     <div class="transition-container">
       <transition name="fade" mode="out-in">
-        <component :is="toggledView ? 'yearly-takings-chart' : 'yearly-takings-table'"></component>
+        <component :is="toggledView ? YearlyTakingsChart : YearlyTakingsTable"></component>
       </transition>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import YearlyTakingsChart from "../../components/takings/YearlyTakingsChart.vue";
 import YearlyTakingsTable from "../../components/takings/YearlyTakingsTable.vue";
-import { useMainStore } from "../../../stores/main";
 import { useTakingsStore } from "../../../stores/takings";
 
-export default {
-  components: {
-    'yearly-takings-chart': YearlyTakingsChart,
-    'yearly-takings-table': YearlyTakingsTable
-  },
+const takingsStore = useTakingsStore();
+takingsStore.loadTakingsYearByYear();
 
-  setup() {
-    const mainStore = useMainStore();
-    const takingsStore = useTakingsStore();
-    takingsStore.loadTakingsYearByYear();
-    return {
-      mainStore,
-      takingsStore
-    };
-  },
+let toggledView = ref(true);
 
-  data() {
-    return {
-      toggledView: true
-    };
-  },
-
-  methods: {
-    toggleView() {
-      this.toggledView = !this.toggledView;
-    }
-  }
+const toggleView = () => {
+  toggledView.value = !toggledView.value;
 };
 </script>

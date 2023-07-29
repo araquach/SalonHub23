@@ -23,58 +23,39 @@
     </div>
     <div class="transition-container">
       <transition name="fade" mode="out-in">
-        <component :is="toggledView ? 'costs-comparison-chart' : 'costs-comparison-table'"></component>
+        <component :is="toggledView ? CostsComparisonChart : CostsComparisonTable"></component>
       </transition>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import CostsComparisonChart from "../../components/costs/CostsComparisonChart.vue";
 import CostsComparisonTable from "../../components/costs/CostsComparisonTable.vue";
 import DatePickerComponent from "../../components/DatePickerComponent.vue";
 import { useCostsStore } from "../../../stores/costs";
 import { useMainStore } from "../../../stores/main";
 
-export default {
-  components: {
-    'costs-comparison-chart': CostsComparisonChart,
-    'costs-comparison-table': CostsComparisonTable,
-    DatePickerComponent
-  },
+const mainStore = useMainStore();
+const costsStore = useCostsStore();
+mainStore.salon = {id: 0, name: "All"}
+costsStore.loadCostsByCat();
 
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    mainStore.salon = {id: 0, name: "All"}
-    costsStore.loadCostsByCat();
-    return {
-      mainStore,
-      costsStore
-    };
-  },
+const toggledView = ref(true);
+const activeItem = ref("all");
 
-  data() {
-    return {
-      toggledView: true,
-      activeItem: "all"
-    };
-  },
+const toggleView = () => {
+  toggledView.value = !toggledView.value;
+};
 
-  methods: {
-    toggleView() {
-      this.toggledView = !this.toggledView;
-    },
+const updateData = (salon) => {
+  mainStore.salon = salon;
+  activeItem.value = salon;
+  costsStore.loadCostsByCat();
+};
 
-    updateData(salon) {
-      this.mainStore.salon = salon;
-      this.activeItem = salon;
-      this.costsStore.loadCostsByCat();
-    },
-
-    handleDateChange() {
-      this.costsStore.loadCostsByCat();
-    }
-  }
+const handleDateChange = () => {
+  costsStore.loadCostsByCat();
 };
 </script>

@@ -9,46 +9,28 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import {computed, ref} from 'vue';
 import { Line } from "vue-chartjs";
 import { Chart as ChartJS, Title, Tooltip, Legend, PointElement, LineElement, CategoryScale, LinearScale } from 'chart.js'
-import { useMainStore } from "../../../stores/main";
 import { useTakingsStore } from "../../../stores/takings";
+
 ChartJS.register(Title, Tooltip, Legend, PointElement, LineElement, CategoryScale, LinearScale)
 
-export default {
-  setup() {
-    const mainStore = useMainStore();
-    const takingsStore = useTakingsStore();
-    return {
-      mainStore,
-      takingsStore
-    };
-  },
+const takingsStore = useTakingsStore();
 
-  // eslint-disable-next-line vue/no-reserved-component-names
-  components: { Line },
-  data() {
-    return {
-      toggled: false,
-      showLinear: false
-    }
-  },
+let toggled = ref(false);
+let showLinear = ref(false);
 
-  methods: {
-    toggleData() {
-      this.toggled = !this.toggled
-    },
+const toggleData = () => {
+  toggled.value = !toggled.value;
+};
 
-    toggleLinear() {
-      this.showLinear = !this.showLinear
-    }
-  },
+const toggleLinear = () => {
+  showLinear.value = !showLinear.value;
+};
 
-  computed: {
-    chartData() {
-      return this.takingsStore.getTakingsByMonthChart(this.toggled, this.showLinear)
-    }
-  }
-}
+const chartData = computed(() => {
+  return takingsStore.getTakingsByMonthChart(toggled.value, showLinear.value);
+});
 </script>

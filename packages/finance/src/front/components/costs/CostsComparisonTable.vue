@@ -18,29 +18,18 @@
     </table>
   </div>
 </template>
-<script>
+<script setup>
 import { useCostsStore } from "../../../stores/costs";
-import { useMainStore } from "../../../stores/main";
 
-export default {
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    return {
-      mainStore,
-      costsStore
-    };
-  },
+const costsStore = useCostsStore();
 
-  methods: {
-    formatCurrency(number, currency) {
-      return number.toLocaleString('en-GB', { style: 'currency', currency: currency });
-    },
+const formatCurrency = (number, currency) => {
+  return number.toLocaleString('en-GB', { style: 'currency', currency: currency });
+};
 
-    capitalise(s) {
-      return s.charAt(0).toUpperCase() + s.slice(1);
-    },
-  }
+const capitalise = (s) => {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 };
 </script>
+
 

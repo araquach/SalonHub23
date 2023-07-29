@@ -39,26 +39,16 @@
     </table>
   </div>
 </template>
-<script>
-  import { useMainStore } from "../../../stores/main";
-  import { useTakingsStore } from "../../../stores/takings";
+<script setup>
+import { useMainStore } from "../../../stores/main";
+import { useTakingsStore } from "../../../stores/takings";
 
-  export default {
-    setup() {
-      const mainStore = useMainStore();
-      const takingsStore = useTakingsStore();
-      return {
-        mainStore,
-        takingsStore
-      };
-    },
+const mainStore = useMainStore();
+const takingsStore = useTakingsStore();
 
-    methods: {
-      formatCurrency(number, currency) {
-        return number.toLocaleString('en-GB', { style: 'currency', currency: currency });
-      },
-    }
-  }
+const formatCurrency = (number, currency) => {
+  return number.toLocaleString('en-GB', { style: 'currency', currency: currency });
+};
 </script>
 <style scoped>
 .green, .green strong {

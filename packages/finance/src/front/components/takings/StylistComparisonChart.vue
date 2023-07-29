@@ -9,44 +9,23 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import { ref, computed } from 'vue';
 import { Bar } from "vue-chartjs";
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-import { useMainStore } from "../../../stores/main";
 import { useTakingsStore } from "../../../stores/takings";
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-export default {
-  components: { Bar },
 
-  setup() {
-    const mainStore = useMainStore();
-    const takingsStore = useTakingsStore();
-    takingsStore.loadTakingsByStylistComparison();
-    return {
-      mainStore,
-      takingsStore
-    };
-  },
+const takingsStore = useTakingsStore();
 
-  data() {
-    return {
-      toggled: false,
-    }
-  },
+takingsStore.loadTakingsByStylistComparison();
 
-  methods: {
-    toggleData() {
-      this.toggled = !this.toggled
-    },
-  },
+let toggled = ref(false);
 
-  computed: {
-    // eslint-disable-next-line vue/return-in-computed-property
-    chartData() {
-      return this.takingsStore.getStylistComparisonChart(this.toggled)
-    }
-  }
-}
+const toggleData = () => {
+  toggled.value = !toggled.value;
+};
 
+const chartData = computed(() => takingsStore.getStylistComparisonChart(toggled.value));
 </script>

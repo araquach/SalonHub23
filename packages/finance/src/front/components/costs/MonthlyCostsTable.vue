@@ -21,27 +21,16 @@
     </table>
   </div>
 </template>
-<script>
-import { useMainStore } from "../../../stores/main";
+<script setup>
 import { useCostsStore } from "../../../stores/costs";
 
-export default {
-  // eslint-disable-next-line vue/no-reserved-component-names
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    return {
-      mainStore: mainStore,
-      costsStore: costsStore
-    };
-  },
-  methods: {
-    formatCurrency(number, currency) {
-      return number.toLocaleString('en-GB', { style: 'currency', currency: currency });
-    },
-  }
+const costsStore = useCostsStore();
+
+const formatCurrency = (number, currency) => {
+  return number.toLocaleString('en-GB', { style: 'currency', currency: currency });
 };
 </script>
+
 <style scoped>
   .red .red strong{
       color: darkred;

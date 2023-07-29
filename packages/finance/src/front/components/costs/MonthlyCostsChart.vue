@@ -10,7 +10,7 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { Line } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -22,45 +22,25 @@ import {
   CategoryScale,
   LinearScale
 } from "chart.js";
-import { useMainStore } from "../../../stores/main";
+import { ref, computed } from 'vue';
 import { useCostsStore } from "../../../stores/costs";
 
 ChartJS.register(Title, Tooltip, Legend, PointElement, LineElement, CategoryScale, LinearScale);
 
-export default {
-  // eslint-disable-next-line vue/no-reserved-component-names
-  components: { Line },
+const costsStore = useCostsStore();
 
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    return {
-      mainStore: mainStore,
-      costsStore: costsStore
-    };
-  },
+const toggled = ref(false);
+const showLinear = ref(false);
 
-  data() {
-    return {
-      toggled: false,
-      showLinear: false
-    };
-  },
-
-  methods: {
-    toggleData() {
-      this.toggled = !this.toggled;
-    },
-
-    toggleLinear() {
-      this.showLinear = !this.showLinear;
-    }
-  },
-
-  computed: {
-    chartData() {
-      return this.costsStore.getCostsByMonthChart(this.toggled, this.showLinear)
-    }
-  }
+const toggleData = () => {
+  toggled.value = !toggled.value;
 };
+
+const toggleLinear = () => {
+  showLinear.value = !showLinear.value;
+};
+
+const chartData = computed(() => {
+  return costsStore.getCostsByMonthChart(toggled.value, showLinear.value);
+});
 </script>

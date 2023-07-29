@@ -9,39 +9,20 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { Bar } from "vue-chartjs";
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from "chart.js";
-import { useMainStore } from "../../../stores/main";
+import { ref, computed } from 'vue';
 import { useCostsStore } from "../../../stores/costs";
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
-export default {
-  components: { Bar },
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    return {
-      mainStore,
-      costsStore
-    };
-  },
 
-  data() {
-    return {
-      toggled: false
-    }
-  },
+const costsStore = useCostsStore();
 
-  methods: {
-    toggleData() {
-      this.toggled = !this.toggled
-    }
-  },
+const toggled = ref(false);
 
-  computed: {
-    chartData() {
-        return this.costsStore.getCostsByYearChart(this.toggled)
-    }
-  }
-}
+const toggleData = () => {
+  toggled.value = !toggled.value;
+};
+
+const chartData = computed(() => costsStore.getCostsByYearChart(toggled.value));
 </script>

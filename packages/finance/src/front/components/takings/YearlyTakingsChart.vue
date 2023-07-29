@@ -8,42 +8,23 @@
     </div>
   </div>
 </template>
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import {computed, ref} from 'vue';
 import { Bar } from "vue-chartjs";
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from "chart.js";
-import { useMainStore } from "../../../stores/main";
 import { useTakingsStore } from "../../../stores/takings";
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-export default defineComponent({
-  components: { Bar },
+const takingsStore = useTakingsStore();
 
-  setup() {
-    const mainStore = useMainStore();
-    const takingsStore = useTakingsStore();
-    return {
-      mainStore,
-      takingsStore
-    };
-  },
+let toggled = ref(false);
 
-  data() {
-    return {
-      toggled: false
-    }
-  },
+const toggleData = () => {
+  toggled.value = !toggled.value;
+};
 
-  methods: {
-    toggleData() {
-      this.toggled = !this.toggled
-    }
-  },
-
-  computed: {
-    chartData() {
-      return this.takingsStore.getTakingsByYearChart(this.toggled)
-    }
-  }
+const chartData = computed(() => {
+  return takingsStore.getTakingsByYearChart(toggled.value);
 });
 </script>
+

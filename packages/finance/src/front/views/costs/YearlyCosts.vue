@@ -14,44 +14,24 @@
     </div>
     <div class="transition-container">
       <transition name="fade" mode="out-in">
-        <component :is="toggledView ? 'yearly-costs-chart' : 'yearly-costs-table'"></component>
+        <component :is="toggledView ? YearlyCostsChart : YearlyCostsTable"></component>
       </transition>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import YearlyCostsChart from "../../components/costs/YearlyCostsChart.vue";
 import YearlyCostsTable from "../../components/costs/YearlyCostsTable.vue";
-import { useMainStore } from "../../../stores/main";
 import { useCostsStore } from "../../../stores/costs";
 
-export default {
-  components: {
-    'yearly-costs-chart': YearlyCostsChart,
-    'yearly-costs-table': YearlyCostsTable
-  },
+const costsStore = useCostsStore();
+costsStore.loadCostsYearByYear();
 
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    costsStore.loadCostsYearByYear();
-    return {
-      mainStore: mainStore,
-      costsStore: costsStore
-    };
-  },
+const toggledView = ref(true);
 
-  data() {
-    return {
-      toggledView: true
-    };
-  },
-
-  methods: {
-    toggleView() {
-      this.toggledView = !this.toggledView;
-    }
-  }
+const toggleView = () => {
+  toggledView.value = !toggledView.value;
 };
 </script>

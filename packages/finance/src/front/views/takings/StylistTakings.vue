@@ -36,80 +36,41 @@
     </div>
     <div class="transition-container">
       <transition name="fade" mode="out-in">
-        <component :is="toggledView ? 'stylist-takings-chart' : 'stylist-takings-table'"></component>
+        <component :is="toggledView ? StylistTakingsChart : StylistTakingsTable"></component>
       </transition>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import StylistTakingsChart from "../../components/takings/StylistTakingsChart.vue";
 import StylistTakingsTable from "../../components/takings/StylistTakingsTable.vue";
 import DatePickerComponent from "../../components/DatePickerComponent.vue";
 import { useMainStore } from "../../../stores/main";
 import { useTakingsStore } from "../../../stores/takings";
-import { format } from "date-fns";
 
-export default {
-  // eslint-disable-next-line vue/no-reserved-component-names
-  components: {
-    'stylist-takings-chart': StylistTakingsChart,
-    'stylist-takings-table': StylistTakingsTable,
-    DatePickerComponent
-  },
+const mainStore = useMainStore();
+const takingsStore = useTakingsStore();
+mainStore.loadStylists();
+takingsStore.loadStylistTakingsMonthByMonth();
 
-  setup() {
-    const mainStore = useMainStore();
-    const takingsStore = useTakingsStore();
-    mainStore.loadStylists();
-    takingsStore.loadStylistTakingsMonthByMonth();
-    return {
-      mainStore,
-      takingsStore
-    };
-  },
+let toggledView = ref(true);
 
-  data() {
-    return {
-      toggledView: true,
-      startDate: this.mainStore.startDate,
-      endDate: this.mainStore.endDate
-    };
-  },
+const toggleView = () => {
+  toggledView.value = !toggledView.value;
+};
 
-  methods: {
-    toggleView() {
-      this.toggledView = !this.toggledView;
-    },
+const selectSalon = (salon) => {
+  mainStore.salon = salon;
+};
 
-    formattedStartDate() {
-      return format(new Date(this.startDate), "dd/MM/yyyy");
-    },
+const selectStylist = (id, fn, ln) => {
+  mainStore.teamMember = { id: id, first_name: fn, last_name: ln };
+  takingsStore.loadStylistTakingsMonthByMonth();
+};
 
-    formattedEndDate() {
-      return format(new Date(this.endDate), "dd/MM/yyyy");
-    },
-
-    selectSalon(salon) {
-      this.mainStore.salon = salon;
-    },
-
-    selectStylist(id, fn, ln) {
-      this.mainStore.teamMember = { id: id, first_name: fn, last_name: ln };
-      this.takingsStore.loadStylistTakingsMonthByMonth();
-    },
-
-    handleDateChange() {
-      this.takingsStore.loadStylistTakingsMonthByMonth();
-    },
-
-    toggleData() {
-      this.toggled = !this.toggled;
-    },
-
-    toggleLinear() {
-      this.showLinear = !this.showLinear;
-    }
-  }
+const handleDateChange = () => {
+  takingsStore.loadStylistTakingsMonthByMonth();
 };
 </script>

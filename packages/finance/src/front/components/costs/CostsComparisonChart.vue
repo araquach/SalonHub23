@@ -10,35 +10,20 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
+import {computed} from 'vue';
 import { Pie } from "vue-chartjs";
 import CostsComparisonOverview from "./CostsComparisonOverview.vue"
 import { useCostsStore } from "../../../stores/costs";
-import { useMainStore } from "../../../stores/main";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default {
-  components: { Pie, CostsComparisonOverview },
+const costsStore = useCostsStore();
 
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    return {
-      mainStore,
-      costsStore
-    };
-  },
+const chartData = computed(() => costsStore.getCostsByCatChart);
 
-  data() {
-    return {};
-  },
-
-  computed: {
-    chartData() {
-      return this.costsStore.getCostsByCatChart
-    }
-  }
-};
+defineExpose({
+  chartData
+});
 </script>

@@ -10,7 +10,7 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <div class="navbar-item has-dropdown" v-on-click-outside="outsideClickHandler">
+        <div class="navbar-item has-dropdown">
           <a class="navbar-link" @click="toggleDropdown">
             Takings
           </a>
@@ -63,50 +63,43 @@
     </div>
   </nav>
 </template>
-<script>
-import { directive as onClickOutside } from 'vue3-click-away';
+<script setup>
+import { ref } from 'vue';
 
-export default {
-  directives: {
-    onClickOutside
-  },
-  data() {
-    return {
-      activeDropdown: null,
-    };
-  },
-  methods: {
-    toggleDropdown(event) {
-      const dropdownParent = event.currentTarget.parentNode;
-      const allDropdowns = document.querySelectorAll('.navbar-item.has-dropdown');
+let activeDropdown = ref(null);
 
-      allDropdowns.forEach((dropdown) => {
-        if (dropdown !== dropdownParent) {
-          dropdown.classList.remove('is-active');
-        }
-      });
+const toggleDropdown = (event) => {
+  const dropdownParent = event.currentTarget.parentNode;
+  const allDropdowns = document.querySelectorAll('.navbar-item.has-dropdown');
 
-      if (dropdownParent) {
-        dropdownParent.classList.toggle('is-active');
-        this.activeDropdown = dropdownParent;
-      }
-    },
-    closeDropdown(navigate, event) {
-      const dropdownParent = event.target.closest('.navbar-item.has-dropdown');
-      if (dropdownParent) {
-        dropdownParent.classList.remove('is-active');
-        Promise.resolve().then(() => {
-          navigate();
-        });
-        this.activeDropdown = null;
-      }
-    },
-    outsideClickHandler(event) {
-      if (this.activeDropdown && !this.activeDropdown.contains(event.target)) {
-        this.activeDropdown.classList.remove('is-active');
-        this.activeDropdown = null;
-      }
+  allDropdowns.forEach((dropdown) => {
+    if (dropdown !== dropdownParent) {
+      dropdown.classList.remove('is-active');
     }
-  },
+  });
+
+  if (dropdownParent) {
+    dropdownParent.classList.toggle('is-active');
+    activeDropdown.value = dropdownParent;
+    document.addEventListener('click', outsideClickHandler);
+  }
+};
+
+const closeDropdown = async (navigate, event) => {
+  const dropdownParent = event.target.closest('.navbar-item.has-dropdown');
+  if (dropdownParent) {
+    dropdownParent.classList.remove('is-active');
+    navigate();
+    activeDropdown.value = null;
+    document.removeEventListener('click', outsideClickHandler);
+  }
+};
+
+const outsideClickHandler = (event) => {
+  if (activeDropdown && !activeDropdown.value.contains(event.target)) {
+    activeDropdown.value.classList.remove('is-active');
+    activeDropdown.value = null;
+    document.removeEventListener('click', outsideClickHandler);
+  }
 };
 </script>

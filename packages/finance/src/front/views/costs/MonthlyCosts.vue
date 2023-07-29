@@ -17,51 +17,29 @@
     </div>
     <div class="transition-container">
       <transition name="fade" mode="out-in">
-        <component :is="toggledView ? 'monthly-costs-chart' : 'monthly-costs-table'"></component>
+        <component :is="toggledView ? MonthlyCostsChart : MonthlyCostsTable"></component>
       </transition>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import MonthlyCostsChart from "../../components/costs/MonthlyCostsChart.vue";
 import MonthlyCostsTable from "../../components/costs/MonthlyCostsTable.vue";
 import DatePickerComponent from "../../components/DatePickerComponent.vue";
-import { useMainStore } from "../../../stores/main";
 import { useCostsStore } from "../../../stores/costs";
 
-export default {
-  // eslint-disable-next-line vue/no-reserved-component-names
-  components: {
-    'monthly-costs-chart': MonthlyCostsChart,
-    'monthly-costs-table': MonthlyCostsTable,
-    DatePickerComponent
-  },
+const costsStore = useCostsStore();
+costsStore.loadCostsMonthByMonth();
 
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    costsStore.loadCostsMonthByMonth();
-    return {
-      mainStore: mainStore,
-      costsStore: costsStore
-    };
-  },
+const toggledView = ref(true);
 
-  data() {
-    return {
-      toggledView: true
-    };
-  },
+const toggleView = () => {
+  toggledView.value = !toggledView.value;
+};
 
-  methods: {
-    toggleView() {
-      this.toggledView = !this.toggledView;
-    },
-
-    handleDateChange() {
-      this.costsStore.loadCostsMonthByMonth();
-    }
-  }
+const handleDateChange = () => {
+  costsStore.loadCostsMonthByMonth();
 };
 </script>

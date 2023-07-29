@@ -271,7 +271,6 @@ export const useTakingsStore = defineStore("takingsStore", {
     },
 
     getStylistComparisonChart: (state) => (toggled) => {
-      //const mainStore = useMainStore();
       let salonDataSets = [];
       let data = state.takingsByStylistComparison;
 
@@ -351,11 +350,11 @@ export const useTakingsStore = defineStore("takingsStore", {
 
     async loadTakingsByStylistComparison() {
       const mainStore = useMainStore();
-      const s = mainStore.getSalonToLower()
+      const s = mainStore.getSalonToLower
       const sd = mainStore.startDate
       const ed = mainStore.endDate
       try {
-        const data = await takingsService.getStylistTakingsMonthByMonth(s, sd, ed)
+        const data = await takingsService.getTakingsByStylistComparison(s, sd, ed)
         this.takingsByStylistComparison = data.data;
         this.takingsByStylistComparisonLoaded = true;
       } catch (error) {

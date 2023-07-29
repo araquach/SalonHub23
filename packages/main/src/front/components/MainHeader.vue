@@ -64,21 +64,12 @@
   </div>
 </template>
 
-<script>
-import {useAuthStore} from "auth/src/stores/authStore";
+<script setup>
+import { useAuthStore } from "auth/src/stores/authStore";
 
-export default {
-  setup() {
-    const authStore = useAuthStore()
-    return {
-      authStore
-    }
-  },
+const authStore = useAuthStore();
 
-  methods: {
-    logout() {
-      this.authStore.logout()
-    }
-  },
-}
+const logout = () => {
+  authStore.logout();
+};
 </script>

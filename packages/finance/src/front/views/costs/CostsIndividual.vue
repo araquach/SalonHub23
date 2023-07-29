@@ -22,67 +22,43 @@
     </div>
     <div class="transition-container">
       <transition name="fade" mode="out-in">
-        <component :is="toggledView ? 'costs-individual-chart' : 'costs-individual-table'"></component>
+        <component :is="toggledView ? CostsIndividualChart : CostsIndividualTable"></component>
       </transition>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import CostsIndividualChart from "../../components/costs/CostsIndividualChart.vue";
 import CostsIndividualTable from "../../components/costs/CostsIndividualTable.vue";
 import DatePickerComponent from "../../components/DatePickerComponent.vue";
-import { useMainStore } from "../../../stores/main";
 import { useCostsStore } from "../../../stores/costs";
 
-export default {
-  // eslint-disable-next-line vue/no-reserved-component-names
-  components: {
-    'costs-individual-chart': CostsIndividualChart,
-    'costs-individual-table': CostsIndividualTable,
-    DatePickerComponent
-  },
+const costsStore = useCostsStore();
+costsStore.loadIndCostsByMonth();
 
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    costsStore.loadIndCostsByMonth();
-    return {
-      mainStore: mainStore,
-      costsStore: costsStore
-    };
-  },
+const toggledView = ref(true);
 
-  data() {
-    return {
-      toggledView: true,
-      startDate: this.mainStore.startDate,
-      endDate: this.mainStore.endDate,
-    };
-  },
+const toggleView = () => {
+  toggledView.value = !toggledView.value;
+};
 
-  methods: {
-    toggleView() {
-      this.toggledView = !this.toggledView
-    },
+const handleDateChange = () => {
+  costsStore.loadIndCostsByMonth();
+};
 
-    handleDateChange() {
-        this.costsStore.loadIndCostsByMonth();
-    },
+const capitalise = (s) => {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 
-    capitalise(s) {
-      return s.charAt(0).toUpperCase() + s.slice(1);
-    },
-
-    async selectCategory(cat) {
-      this.costsStore.category = cat
-      try {
-        await this.costsStore.loadIndCostsByMonth();
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
-    }
+const selectCategory = async (cat) => {
+  costsStore.category = cat;
+  try {
+    await costsStore.loadIndCostsByMonth();
+  } catch (error) {
+    alert(error);
+    console.log(error);
   }
 };
 </script>

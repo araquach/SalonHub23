@@ -18,57 +18,33 @@
     <br>
     <div class="transition-container">
       <transition name="fade" mode="out-in">
-        <component :is="toggledView ? 'monthly-takings-chart' : 'monthly-takings-table'"></component>
+        <component :is="toggledView ? MonthlyTakingsChart : MonthlyTakingsTable"></component>
       </transition>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import MonthlyTakingsChart from "../../components/takings/MonthlyTakingsChart.vue";
 import MonthlyTakingsTable from "../../components/takings/MonthlyTakingsTable.vue";
 import DatePickerComponent from "../../components/DatePickerComponent.vue";
-import { useMainStore } from "../../../stores/main";
 import { useTakingsStore } from "../../../stores/takings";
 import { useIncomeStore } from "../../../stores/income";
 
-export default {
-  setup() {
-    const mainStore = useMainStore();
-    const takingsStore = useTakingsStore();
-    const incomeStore = useIncomeStore()
-    takingsStore.loadTakingsMonthByMonth();
-    incomeStore.loadIncomeByMonth()
-    return {
-      mainStore,
-      takingsStore,
-      incomeStore
-    };
-  },
+const takingsStore = useTakingsStore();
+const incomeStore = useIncomeStore();
+takingsStore.loadTakingsMonthByMonth();
+incomeStore.loadIncomeByMonth();
 
-  // eslint-disable-next-line vue/no-reserved-component-names
-  components: {
-    'monthly-takings-chart': MonthlyTakingsChart,
-    'monthly-takings-table': MonthlyTakingsTable,
-    DatePickerComponent
-  },
-  data() {
-    return {
-      toggledView: true,
-      startDate: this.mainStore.startDate,
-      endDate: this.mainStore.endDate
-    };
-  },
+let toggledView = ref(true);
 
-  methods: {
-    toggleView() {
-      this.toggledView = !this.toggledView;
-    },
+const toggleView = () => {
+  toggledView.value = !toggledView.value;
+};
 
-    handleDateChange() {
-      this.takingsStore.loadTakingsMonthByMonth();
-      this.incomeStore.loadIncomeByMonth()
-    }
-  }
+const handleDateChange = () => {
+  takingsStore.loadTakingsMonthByMonth();
+  incomeStore.loadIncomeByMonth();
 };
 </script>

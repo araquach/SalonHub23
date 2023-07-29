@@ -96,6 +96,7 @@ export const useHolidayStore = defineStore('holiday', {
         async updateHoliday(holiday) {
             try {
                 const updatedHoliday = await holidayService.updateHoliday(holiday);
+                console.log(updatedHoliday)
                 this.holidays = this.holidays.map(h => h.id === holiday.id ? updatedHoliday : h);
 
                 // Fetch updated time data from the API.

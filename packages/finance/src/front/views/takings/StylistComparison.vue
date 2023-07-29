@@ -26,77 +26,59 @@
     </div>
     <div class="transition-container">
       <transition name="fade" mode="out-in">
-        <component :is="toggledView ? 'stylist-comparison-chart' : 'stylist-comparison-table'"></component>
+        <component :is="toggledView ? StylistComparisonChart : StylistComparisonTable"></component>
       </transition>
     </div>
   </div>
 </template>
 
-<script>
-
+<script setup>
 import StylistComparisonChart from "../../components/takings/StylistComparisonChart.vue";
 import StylistComparisonTable from "../../components/takings/StylistComparisonTable.vue";
 import DatePickerComponent from "../../components/DatePickerComponent.vue";
 import { useMainStore } from "../../../stores/main";
 import { useTakingsStore } from "../../../stores/takings";
+import {ref, defineExpose, computed} from "vue";
 
-export default {
-  components: {
-    "stylist-comparison-table": StylistComparisonTable,
-    "stylist-comparison-chart": StylistComparisonChart,
-    DatePickerComponent
-  },
+const mainStore = useMainStore();
+const takingsStore = useTakingsStore();
+mainStore.loadStylists();
+takingsStore.loadTakingsByStylistComparison();
 
-  setup() {
-    const mainStore = useMainStore();
-    const takingsStore = useTakingsStore();
-    mainStore.loadStylists();
-    takingsStore.loadTakingsByStylistComparison();
-    return {
-      mainStore,
-      takingsStore
-    };
-  },
+let toggledView = ref(true);
+let buttonLabels = ref({ true: "Hide Old", false: "Show Old" });
 
-  data() {
-    return {
-      toggledView: true,
-      buttonLabels: {
-        true: "Hide Old",
-        false: "Show Old"
-      },
-      startDate: this.mainStore.startDate,
-      endDate: this.mainStore.endDate
-    };
-  },
-
-  methods: {
-    toggleView() {
-      this.toggledView = !this.toggledView;
-    },
-
-    toggleFilter() {
-      this.takingsStore.stylistFiltered = !this.takingsStore.stylistFiltered;
-    },
-
-    selectSalon(salon) {
-      this.mainStore.salon = salon;
-      this.updateData();
-    },
-
-    updateData() {
-      this.takingsStore.loadTakingsByStylistComparison();
-    },
-
-    handleDateChange() {
-      this.takingsStore.loadTakingsByStylistComparison();
-    }
-  },
-
-  computed: {
-    buttonText() {
-      return this.takingsStore.stylistFiltered ? this.buttonLabels.true : this.buttonLabels.false;
-    }
-  }
+const toggleView = () => {
+  toggledView.value = !toggledView.value;
 };
+
+const toggleFilter = () => {
+  takingsStore.stylistFiltered = !takingsStore.stylistFiltered;
+};
+
+const selectSalon = (salon) => {
+  mainStore.salon = salon;
+  updateData();
+};
+
+const updateData = () => {
+  takingsStore.loadTakingsByStylistComparison();
+};
+
+const handleDateChange = () => {
+  takingsStore.loadTakingsByStylistComparison();
+};
+
+const buttonText = computed(() => {
+  return takingsStore.stylistFiltered ? buttonLabels.value.true : buttonLabels.value.false;
+});
+
+defineExpose({
+  toggleView,
+  toggleFilter,
+  selectSalon,
+  toggledView,
+  mainStore,
+  buttonText
+});
 </script>

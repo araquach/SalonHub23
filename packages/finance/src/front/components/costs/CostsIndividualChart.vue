@@ -11,42 +11,18 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { Line } from "vue-chartjs";
-import { useMainStore } from "../../../stores/main";
 import { useCostsStore } from "../../../stores/costs";
+import { ref, computed } from "vue";
 
-export default {
-  // eslint-disable-next-line vue/no-reserved-component-names
-  components: { Line },
+const costsStore = useCostsStore();
 
-  setup() {
-    const mainStore = useMainStore();
-    const costsStore = useCostsStore();
-    return {
-      mainStore: mainStore,
-      costsStore: costsStore
-    };
-  },
+let showLinear = ref(false);
 
-  data() {
-    return {
-      showLinear: false
-    };
-  },
+const toggleLinear = () => {
+  showLinear.value = !showLinear.value;
+}
 
-  methods: {
-    toggleLinear() {
-      this.showLinear = !this.showLinear;
-    }
-  },
-
-  computed: {
-    // eslint-disable-next-line vue/return-in-computed-property
-    chartData() {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      return this.costsStore.getIndCostsByMonthChart(this.showLinear)
-    }
-  }
-};
+const chartData = computed(() => costsStore.getIndCostsByMonthChart(showLinear.value));
 </script>
