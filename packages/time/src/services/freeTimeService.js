@@ -11,8 +11,8 @@ export default {
         const response = await mainService.post(`/time/free-time-create`, freeTime)
         return response.data
     },
-    async updateFreeTime(freeTime) {
-        const response = await mainService.put(`/time/free-time-update`, freeTime)
+    async updateFreeTime(id, freeTime) {
+        const response = await mainService.put(`/time/free-time-update/${id}`, freeTime)
         return response.data
     }
 }

@@ -35,7 +35,7 @@
   </form>
 </template>
 <script setup>
-import {defineProps, ref, watch, computed} from 'vue';
+import {defineProps, ref, watch} from 'vue';
 import VueDatePicker from "@vuepic/vue-datepicker";
 import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
 import {useHolidayStore} from "../../../stores/holidayStore";
@@ -43,21 +43,16 @@ import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "../../../stores/timeStore";
 import {useRouter} from "vue-router";
 
-const props = defineProps([
-      {
-        id: {
-          required: true
-        }
-      },
-      'holidayProps', 'formType',
-    ]
-);
+const props = defineProps({
+  id: String,
+  holidayProps: Object,
+  formType: String
+});
 
 const router = useRouter();
 const holidayStore = useHolidayStore();
 const authStore = useAuthStore();
 const timeStore = useTimeStore();
-const submitStatus = computed(() => holidayStore.submitStatus);
 
 let holiday = ref(props.holidayProps || {
   id: null,
@@ -139,7 +134,7 @@ const countSaturdays = (startDate, endDate) => {
 
 const submitForm = () => {
   if (props.formType === 'update') {
-    holidayStore.updateHoliday(this.props.id, holiday.value).then(() => {
+    holidayStore.updateHoliday(props.id, holiday.value).then(() => {
       router.push({name: 'holiday-detail', params: {id: holiday.value.id}});
     }).catch((error) => {
       console.error(error)

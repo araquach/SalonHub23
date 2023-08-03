@@ -12,7 +12,7 @@
             </figure>
           </div>
         </div>
-        <HolidayForm v-if="!loading" :holidayProps="holiday" :formType="'update'" />
+        <HolidayForm v-if="!loading" :holidayProps="holiday" :formType="'update'" :id="id"/>
       </div>
     </div>
   </div>
