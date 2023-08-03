@@ -19,28 +19,25 @@
 </template>
 <script setup>
 import HolidayForm from "../../components/holiday/HolidayForm.vue";
-import {useRoute} from "vue-router";
 import {useHolidayStore} from "../../../stores/holidayStore";
 import {computed, ref, onMounted} from "vue";
 
-const route = useRoute();
+const props = defineProps({
+  id: {
+    required: true
+  }
+})
+
 const holidayStore = useHolidayStore();
 const holiday = computed(() => holidayStore.holiday);
-const id = route.params.id
 const loading = ref(true)
 
 onMounted(async () => {
   try {
-    await holidayStore.loadHoliday(id);
+    await holidayStore.loadHoliday(props.id);
     loading.value = false;
   } catch (error) {
     console.error('Failed to load holiday: ', error);
   }
 })
-
-defineExpose({
-  holidayStore,
-  holiday,
-  loading
-});
 </script>

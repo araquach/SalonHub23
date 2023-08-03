@@ -57,14 +57,17 @@
 </template>
 <script setup>
 import {useHolidayStore} from "../../../stores/holidayStore";
-import {useRoute} from "vue-router";
 import {computed, ref, onMounted} from "vue";
 import {format} from "date-fns"
 
-const route = useRoute()
+const props = defineProps({
+  id: {
+    required: true
+  }
+})
+
 const holidayStore = useHolidayStore();
 const holiday = computed(() => holidayStore.holiday)
-const id = route.params.id
 const loading = ref(true)
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -72,7 +75,7 @@ const formatDate = (dateString) => {
 }
 
 onMounted(async () => {
-  await holidayStore.loadHoliday(id)
+  await holidayStore.loadHoliday(props.id)
   loading.value = false
 })
 
@@ -93,14 +96,6 @@ const statusColour = computed(() => {
     return 'denied'
   } else return 'pending'
 })
-
-defineExpose({
-  holiday,
-  formatDate,
-  loading,
-  approvalStatus,
-  statusColour
-});
 </script>
 
 <style scoped>

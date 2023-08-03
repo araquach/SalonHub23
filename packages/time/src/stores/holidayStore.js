@@ -93,9 +93,9 @@ export const useHolidayStore = defineStore('holiday', {
             }
         },
 
-        async updateHoliday(holiday) {
+        async updateHoliday(id, holiday) {
             try {
-                const updatedHoliday = await holidayService.updateHoliday(holiday);
+                const updatedHoliday = await holidayService.updateHoliday(id, holiday);
                 console.log(updatedHoliday)
                 this.holidays = this.holidays.map(h => h.id === holiday.id ? updatedHoliday : h);
 

@@ -14,8 +14,4 @@ const timeStore = useTimeStore();
 onMounted(() => {
   timeStore.loadTimeDetails(authStore.user.staff_id)
 })
-
-defineExpose({
-  timeStore
-});
 </script>

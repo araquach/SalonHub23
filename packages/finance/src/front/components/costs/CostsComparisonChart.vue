@@ -22,8 +22,4 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const costsStore = useCostsStore();
 
 const chartData = computed(() => costsStore.getCostsByCatChart);
-
-defineExpose({
-  chartData
-});
 </script>

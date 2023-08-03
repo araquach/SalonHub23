@@ -13,6 +13,7 @@ export default [
             {
                 path: ':filter',
                 name: 'holiday-dashboard',
+                props: true,
                 component: HolidayDashboard,meta: {
                     requiresAuth: true
                 }
@@ -21,7 +22,7 @@ export default [
                 path: 'detail/:id',
                 name: 'holiday-detail',
                 component: HolidayDetail,
-                params: true,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }
@@ -30,6 +31,7 @@ export default [
                 path: 'create',
                 name: 'holiday-create',
                 component: HolidayCreate,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }
@@ -38,6 +40,7 @@ export default [
                 path: 'update/:id',
                 name: 'holiday-update',
                 component: HolidayUpdate,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }

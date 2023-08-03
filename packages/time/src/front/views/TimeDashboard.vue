@@ -92,8 +92,4 @@
 import {useTimeStore} from "../../stores/timeStore";
 
 const timeStore = useTimeStore();
-
-defineExpose({
-  timeStore
-});
 </script>

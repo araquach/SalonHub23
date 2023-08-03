@@ -11,8 +11,8 @@ export default {
         const response = await mainService.post(`/time/holiday-create`, holiday)
         return response.data
     },
-    async updateHoliday(holiday) {
-        const response = await mainService.put(`/time/holiday-update`, holiday)
+    async updateHoliday(id, holiday) {
+        const response = await mainService.put(`/time/holiday-update/${id}`, holiday)
         return response.data
     }
 }

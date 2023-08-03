@@ -38,7 +38,7 @@ import StylistComparisonTable from "../../components/takings/StylistComparisonTa
 import DatePickerComponent from "../../components/DatePickerComponent.vue";
 import { useMainStore } from "../../../stores/main";
 import { useTakingsStore } from "../../../stores/takings";
-import {ref, defineExpose, computed} from "vue";
+import {ref, computed} from "vue";
 
 const mainStore = useMainStore();
 const takingsStore = useTakingsStore();
@@ -71,14 +71,5 @@ const handleDateChange = () => {
 
 const buttonText = computed(() => {
   return takingsStore.stylistFiltered ? buttonLabels.value.true : buttonLabels.value.false;
-});
-
-defineExpose({
-  toggleView,
-  toggleFilter,
-  selectSalon,
-  toggledView,
-  mainStore,
-  buttonText
 });
 </script>

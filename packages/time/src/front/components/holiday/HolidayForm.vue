@@ -43,7 +43,15 @@ import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "../../../stores/timeStore";
 import {useRouter} from "vue-router";
 
-const props = defineProps(['holidayProps', 'formType']);
+const props = defineProps([
+      {
+        id: {
+          required: true
+        }
+      },
+      'holidayProps', 'formType',
+    ]
+);
 
 const router = useRouter();
 const holidayStore = useHolidayStore();
@@ -52,6 +60,7 @@ const timeStore = useTimeStore();
 const submitStatus = computed(() => holidayStore.submitStatus);
 
 let holiday = ref(props.holidayProps || {
+  id: null,
   staff_id: authStore.user.staff_id,
   hours_requested: 0,
   request_date_from: null,
@@ -130,8 +139,8 @@ const countSaturdays = (startDate, endDate) => {
 
 const submitForm = () => {
   if (props.formType === 'update') {
-    holidayStore.updateHoliday(holiday.value).then(() => {
-      router.push({name: 'holiday-dashboard',  params: {filter: 'all'}});
+    holidayStore.updateHoliday(this.props.id, holiday.value).then(() => {
+      router.push({name: 'holiday-detail', params: {id: holiday.value.id}});
     }).catch((error) => {
       console.error(error)
     });
@@ -143,11 +152,4 @@ const submitForm = () => {
     });
   }
 }
-
-defineExpose({
-  holiday,
-  dateRange,
-  submitForm,
-  submitStatus
-});
 </script>
