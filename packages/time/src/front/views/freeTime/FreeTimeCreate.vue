@@ -12,7 +12,7 @@
             </figure>
           </div>
         </div>
-        <FreeTimeForm/>
+        <FreeTimeForm :formType="'create'"/>
       </div>
     </div>
   </div>

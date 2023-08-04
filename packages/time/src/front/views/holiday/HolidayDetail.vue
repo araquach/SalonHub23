@@ -36,7 +36,7 @@
               </tr>
             </table>
             <div class="buttons">
-              <router-link v-if="holiday.approved === 0" :to="{name: 'holiday-update', params: {id: holiday.id}}" class="button is-white is-small">
+              <router-link v-if="holiday.approved === 0" :to="{name: 'holiday-update', params: {id: props.id}}" class="button is-white is-small">
                 Edit Holiday
               </router-link>
               <router-link :to="{ name: 'holiday-dashboard', params: {filter: 'all'} }" class="button is-small is-white">

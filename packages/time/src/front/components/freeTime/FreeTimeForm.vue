@@ -8,11 +8,9 @@
             type="text"
         />
       </div>
-
       <div class="field">
         <VueDatePicker v-model="freeTime.date_regarding" :enable-time-picker="false"></VueDatePicker>
       </div>
-
       <div class="field">
         <BaseInput
             v-model.number="freeTime.free_time_hours"
@@ -20,7 +18,6 @@
             type="number"
         />
       </div>
-
       <br>
       <div class="field">
         <div class="control">
@@ -33,7 +30,7 @@
   </form>
 </template>
 <script setup>
-import {reactive} from 'vue';
+import {ref} from 'vue';
 import { useFreeTimeStore } from '../../../stores/freeTimeStore';
 import { useAuthStore } from 'auth/src/stores/authStore';
 import BaseInput from 'main/src/front/components/formBase/BaseInput.vue';
@@ -50,7 +47,7 @@ const router = useRouter();
 const freeTimeStore = useFreeTimeStore();
 const authStore = useAuthStore();
 
-let freeTime = reactive({
+let freeTime = ref(props.freeTimeProps || {
   id: null,
   staff_id: authStore.user.staff_id,
   free_time_hours: 0,

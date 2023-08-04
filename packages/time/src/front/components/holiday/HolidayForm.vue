@@ -135,7 +135,7 @@ const countSaturdays = (startDate, endDate) => {
 const submitForm = () => {
   if (props.formType === 'update') {
     holidayStore.updateHoliday(props.id, holiday.value).then(() => {
-      router.push({name: 'holiday-detail', params: {id: holiday.value.id}});
+      router.push({name: 'holiday-detail', params: {id: props.id}});
     }).catch((error) => {
       console.error(error)
     });

@@ -2,6 +2,7 @@ import FreeTimeIndex from "../front/views/freeTime/FreeTimeIndex.vue";
 import FreeTimeDashboard from "../front/views/freeTime/FreeTimeDashboard.vue";
 import FreeTimeDetail from "../front/views/freeTime/FreeTimeDetail.vue";
 import FreeTimeCreate from "../front/views/freeTime/FreeTimeCreate.vue";
+import FreeTimeUpdate from "../front/views/freeTime/FreeTimeUpdate.vue";
 
 export default [
     {
@@ -13,6 +14,7 @@ export default [
                 path: ':filter',
                 name: 'free-time-dashboard',
                 component: FreeTimeDashboard,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }
@@ -21,7 +23,7 @@ export default [
                 path: 'detail/:id',
                 name: 'free-time-detail',
                 component: FreeTimeDetail,
-                params: true,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }
@@ -30,6 +32,16 @@ export default [
                 path: 'create',
                 name: 'free-time-create',
                 component: FreeTimeCreate,
+                props: true,
+                meta: {
+                    requiresAuth: true
+                }
+            },
+            {
+                path: 'update/::id',
+                name: 'free-time-update',
+                component: FreeTimeUpdate,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }

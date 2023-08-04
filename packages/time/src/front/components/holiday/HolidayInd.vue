@@ -24,29 +24,22 @@
   </router-link>
 </template>
 
-<script>
-import {format} from "date-fns";
-export default {
-  setup() {
-    const formatDate = (dateString) => {
-      const date = new Date(dateString);
-      return format(date, 'dd/MM/yyyy');
-    }
-    return {
-      formatDate
-    }
-  },
+<script setup>
+import { computed } from 'vue';
+import { format } from "date-fns";
 
-  props: ['holiday'],
+const props = defineProps(['holiday']);
 
-  computed: {
-    statusColour() {
-      if (this.holiday.approved === 1) {
-        return 'approved'
-      } else if (this.holiday.approved === 2) {
-        return 'denied'
-      } else return 'pending'
-    }
-  }
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return format(date, 'dd/MM/yyyy');
 }
+
+const statusColour = computed(() => {
+  if (props.holiday.approved === 1) {
+    return 'approved'
+  } else if (props.holiday.approved === 2) {
+    return 'denied'
+  } else return 'pending'
+});
 </script>

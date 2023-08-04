@@ -23,15 +23,18 @@
                 <td>{{ freeTime.free_time_hours }}</td>
               </tr>
               <tr>
-                <td>Description:</td>
-                <td>{{ freeTime.description }}</td>
-              </tr>
-              <tr>
                 <td>Approval Status:</td>
                 <td>{{ approvalStatus }}</td>
               </tr>
             </table>
-            <router-link :to="{ name: 'free-time-dashboard', params: {filter: 'all'} }" class="button is-small is-white">Back to All Free Time</router-link>
+            <div class="buttons">
+              <router-link v-if="freeTime.approved === 0" :to="{name: 'free-time-update', params: { id: props.id }}" class="button is-white is-small">
+                Edit Free Time
+              </router-link>
+              <router-link :to="{ name: 'free-time-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
+                Back to All Free Time
+              </router-link>
+            </div>
           </div>
           <div class="column is-3">
             <figure class="image">
@@ -44,27 +47,28 @@
   </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import {ref, computed, onMounted} from 'vue';
 import { useFreeTimeStore } from '../../../stores/freeTimeStore';
 import { format } from 'date-fns';
 
-const route = useRoute();
+const props = defineProps({
+  id: {
+    required: true
+  }
+})
+
 const freeTimeStore = useFreeTimeStore();
 const freeTime = computed(() => freeTimeStore.freeTime);
-const id = route.params.id;
 const loading = ref(true);
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return format(date, 'do MMMM yyyy');
 };
 
-freeTimeStore.loadFreeTime(id).then(() => {
-  loading.value = false; // Once the data has loaded, we set loading to false
-}).catch((error) => {
-  console.error('Failed to load free time: ', error);
-  // Here you can handle the error in some way, like showing a message to the user
-});
+onMounted(async () => {
+  await freeTimeStore.loadFreeTime(props.id)
+  loading.value = false
+})
 
 const approvalStatus = computed(() => {
   if (freeTime.value.approved === 2) {

@@ -22,7 +22,7 @@ export default [
                 path: 'detail/:id',
                 name: 'lieu-detail',
                 component: LieuDetail,
-                params: true,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }
@@ -31,6 +31,7 @@ export default [
                 path: 'create',
                 name: 'lieu-create',
                 component: LieuCreate,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }
@@ -39,6 +40,7 @@ export default [
                 path: 'update/:id',
                 name: 'lieu-update',
                 component: LieuUpdate,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }

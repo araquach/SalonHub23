@@ -21,11 +21,9 @@
 
 <script setup>
 import { format } from 'date-fns';
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-  freeTime: Object
-});
+const props = defineProps(['freeTime']);
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
