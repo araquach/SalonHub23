@@ -18,7 +18,7 @@
 
 <script setup>
 import {format} from "date-fns";
-import {computed, defineProps} from 'vue';
+import {computed} from 'vue';
 
 // Use 'defineProps' to define props
 const props = defineProps(['lieu']);

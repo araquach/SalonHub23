@@ -10,7 +10,10 @@
             Loading...
           </div>
           <div v-else class="column">
-            <p class="is-size-3">Total Lieu: {{  timeStore.timeDetails.lieu_hours  }} hours</p>
+            <p class="is-size-3">
+              Total Lieu: {{  timeStore.timeDetails.lieu_hours  }} hours
+              <span v-if="timeStore.timeDetails.lieu_pending !== 0" class="is-size-6">({{ timeStore.timeDetails.lieu_pending }} pending)</span>
+            </p>
           </div>
         </div>
         <div class="buttons">

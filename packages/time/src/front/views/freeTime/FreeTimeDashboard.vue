@@ -11,8 +11,16 @@
           </div>
           <div v-else class="column">
             <p class="is-size-4">Free Time: {{ timeStore.timeDetails.free_time_ent }} hours</p>
-            <p class="is-size-4">Used Time: {{ timeStore.timeDetails.free_time }} hours</p>
-            <p class="is-size-3">Remaining: {{ timeStore.timeDetails.free_time_ent - timeStore.timeDetails.free_time }} hours</p>
+            <p class="is-size-4">
+              Used Time: {{ timeStore.timeDetails.free_time }} hours
+              <span v-if="timeStore.timeDetails.free_time_pending !== 0" class="is-size-6">({{ timeStore.timeDetails.free_time_pending }} pending)</span>
+            </p>
+            <p class="is-size-3">
+              Remaining: {{ timeStore.timeDetails.free_time_ent - timeStore.timeDetails.free_time }} hours
+              <span v-if="timeStore.timeDetails.free_time_pending !== 0" class="is-size-6">
+                ({{ timeStore.timeDetails.free_time_ent - timeStore.timeDetails.free_time_pending + timeStore.timeDetails.free_time }})
+              </span>
+            </p>
           </div>
         </div>
         <div>

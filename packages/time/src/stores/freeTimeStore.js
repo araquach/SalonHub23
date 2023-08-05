@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "./timeStore";
 import freeTimeService from "../services/freeTimeService";
-import holidayService from "../services/holidayService";
 
 export const useFreeTimeStore = defineStore('freeTime', {
     // arrow function recommended for full type inference
@@ -83,9 +82,11 @@ export const useFreeTimeStore = defineStore('freeTime', {
             const timeStore = useTimeStore();
             try {
                 await freeTimeService.postFreeTime(freeTime)
+                this.submitStatus = true
                 timeStore.timeDetails.free_time_pending += freeTime.free_time_hours
             } catch (error) {
                 console.error(error)
+                this.submitStatus = false
             }
         },
 

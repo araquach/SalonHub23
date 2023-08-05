@@ -12,7 +12,7 @@
             </figure>
           </div>
         </div>
-        <LieuForm v-if="!loading" :lieuProps="lieu" :formType="'update'"/>
+        <LieuForm v-if="!loading" :lieuProps="lieu" :formType="'update'" :id="id"/>
       </div>
     </div>
   </div>
@@ -20,22 +20,24 @@
 <script setup>
 import LieuForm from "../../components/lieu/LieuForm.vue";
 import {useLieuStore} from "../../../stores/lieuStore";
-import {useRoute} from "vue-router";
 import {computed, ref, onMounted} from "vue";
 
-const route = useRoute();
+const props = defineProps({
+  id: {
+    required: true
+  }
+})
+
 const lieuStore = useLieuStore();
 const lieu = computed(() => lieuStore.lieuHour);
-const id = route.params.id;
 const loading = ref(true);
 
 onMounted(async () => {
   try {
-    await lieuStore.loadLieuHour(id);
-    loading.value = false;  // Once the data has loaded, we set loading to false
+    await lieuStore.loadLieuHour(props.id);
+    loading.value = false;
   } catch (error) {
     console.error('Failed to load lieu hour: ', error);
-    // Here you can handle the error in some way, like showing a message to the user
   }
 });
 </script>

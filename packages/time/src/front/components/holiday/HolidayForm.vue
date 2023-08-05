@@ -35,7 +35,7 @@
   </form>
 </template>
 <script setup>
-import {defineProps, ref, watch} from 'vue';
+import {ref, watch} from 'vue';
 import VueDatePicker from "@vuepic/vue-datepicker";
 import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
 import {useHolidayStore} from "../../../stores/holidayStore";

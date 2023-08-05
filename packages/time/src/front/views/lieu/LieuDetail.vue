@@ -27,7 +27,14 @@
                 <td>{{ approvalStatus }}</td>
               </tr>
             </table>
-            <router-link :to="{ name: 'lieu-dashboard', params: {filter: 'all'} }" class="button is-small is-white">Back to All Lieu Requests</router-link>
+            <div class="buttons">
+              <router-link v-if="lieu.approved === 0" :to="{name: 'lieu-update', params: {id: props.id}}" class="button is-white is-small">
+                Edit Lieu
+              </router-link>
+              <router-link :to="{ name: 'lieu-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
+                Back to all Lieu Requests
+              </router-link>
+            </div>
           </div>
           <div class="column is-3">
             <figure class="image">
@@ -41,14 +48,17 @@
 </template>
 <script setup>
 import {useLieuStore} from "../../../stores/lieuStore";
-import {useRoute} from "vue-router";
 import {computed, onMounted, ref} from "vue";
 import { format } from "date-fns";
 
-const route = useRoute();
+const props = defineProps({
+  id: {
+    required: true
+  }
+})
+
 const lieuStore = useLieuStore();
 const lieu = computed(() => lieuStore.lieuHour);
-const id = route.params.id;
 const loading = ref(true);
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -56,7 +66,7 @@ const formatDate = (dateString) => {
 };
 
 onMounted(async () => {
-  await lieuStore.loadLieuHour(id)
+  await lieuStore.loadLieuHour(props.id)
   loading.value = false
 })
 

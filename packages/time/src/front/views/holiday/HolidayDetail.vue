@@ -40,8 +40,7 @@
                 Edit Holiday
               </router-link>
               <router-link :to="{ name: 'holiday-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
-                Back to
-                All Holidays
+                Back to all Holidays
               </router-link>
             </div>
             </div>

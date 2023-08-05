@@ -11,9 +11,18 @@
           </div>
           <div v-else class="column">
             <p class="is-size-4">Holiday Entitlement: {{ timeDetails.holiday_ent }} days</p>
-            <p class="is-size-4">Total Booked: {{ timeDetails.holidays }} days <span v-if="timeDetails.holidays_pending !== 0" class="is-size-6"> ({{ timeDetails.holidays_pending }} pending)</span></p>
-            <p class="is-size-3">Days remaining: {{ holidaysRemaining }} <span v-if="timeDetails.holidays_pending !== 0" class="is-size-6">({{holidaysRemaining - timeDetails.holidays_pending}})</span></p>
-            <p class="is-size-3">Remaining Saturdays: {{ timeDetails.saturdays }} <span v-if="timeDetails.saturdays_pending !== 0" class="is-size-6">({{ timeDetails.saturdays - timeDetails.saturdays_pending }})</span></p>
+            <p class="is-size-4">
+              Total Booked: {{ timeDetails.holidays }} days
+              <span v-if="timeDetails.holidays_pending !== 0" class="is-size-6"> ({{ timeDetails.holidays_pending }} pending)</span>
+            </p>
+            <p class="is-size-3">
+              Days remaining: {{ holidaysRemaining }}
+              <span v-if="timeDetails.holidays_pending !== 0" class="is-size-6">({{holidaysRemaining - timeDetails.holidays_pending}})</span>
+            </p>
+            <p class="is-size-3">
+              Remaining Saturdays: {{ timeDetails.saturdays }}
+              <span v-if="timeDetails.saturdays_pending !== 0" class="is-size-6">({{ timeDetails.saturdays - timeDetails.saturdays_pending }})</span>
+            </p>
           </div>
         </div>
         <div class="navbar is-transparent">

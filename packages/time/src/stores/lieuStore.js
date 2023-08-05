@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "./timeStore";
 import lieuService from "../services/lieuService";
+import holidayService from "../services/holidayService";
 
 export const useLieuStore = defineStore('lieu', {
     // arrow function recommended for full type inference
@@ -81,10 +82,27 @@ export const useLieuStore = defineStore('lieu', {
             try {
                 await lieuService.postLieuHour(lieu)
                 this.submitStatus = true
-                timeStore.timeDetails.lieu_hours += lieu.lieu_hours
+                timeStore.timeDetails.lieu_pending += lieu.lieu_hours
             } catch (error) {
                 console.error(error)
                 this.submitStatus = false
+            }
+        },
+
+        async updateLieu(id, lieu) {
+            try {
+                const updatedLieu = await lieuService.updateLieuHour(id, lieu);
+                this.lieuHours = this.lieuHours.map(l => l.id === lieu.id ? updatedLieu : l);
+
+                // Fetch updated time data from the API.
+                const authStore = useAuthStore();
+                const stylistId = authStore.user.staff_id;
+                const timeStore = useTimeStore();
+                await timeStore.loadTimeDetails(stylistId);
+
+                return updatedLieu;
+            } catch (error) {
+                console.error(error);
             }
         }
     }

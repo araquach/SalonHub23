@@ -11,8 +11,8 @@ export default {
         const response = await mainService.post(`/time/lieu-hour-create`, lieu)
         return response.data
     },
-    async updateLieuHour(lieu) {
-        const response = await mainService.put(`/time/lieu-hour-update`, lieu)
+    async updateLieuHour(id, lieu) {
+        const response = await mainService.put(`/time/lieu-hour-update/${id}`, lieu)
         return response.data
     }
 }
