@@ -2,7 +2,7 @@
   <form v-on:submit.prevent="submitForm">
     <div>
       <div class="field">
-        <BaseInputValidate
+        <BaseInput
             v-model="holiday.description"
             label="Description"
             type="text"
@@ -11,7 +11,7 @@
       <p class="label">Date Range</p>
       <div class="field has-addons">
         <p class="control">
-          <BaseDatePickerValidate v-model="dateRange" range :enable-time-picker="false"></BaseDatePickerValidate>
+          <VueDatePicker v-model="dateRange" range :enable-time-picker="false"></VueDatePicker>
         </p>
       </div>
       <div v-if="holiday.hours_requested">
@@ -35,9 +35,9 @@
   </form>
 </template>
 <script setup>
-import {computed, ref, watch} from 'vue';
-import BaseDatePickerValidate from "main/src/front/components/baseFormValidate/BaseDatePickerValidate.vue"
-import BaseInputValidate from "main/src/front/components/baseFormValidate/BaseInputValidate.vue";
+import {ref, watch} from 'vue';
+import VueDatePicker from "@vuepic/vue-datepicker";
+import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
 import {useHolidayStore} from "../../../stores/holidayStore";
 import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "../../../stores/timeStore";
@@ -67,9 +67,6 @@ let holiday = ref(props.holidayProps || {
 let dateRange = ref(holiday.value.request_date_from && holiday.value.request_date_to ?
     [new Date(holiday.value.request_date_from), new Date(holiday.value.request_date_to)] : []
 );
-
-const hours_requested = computed(() => countWorkingDays(dateRange.value));
-const saturday = computed(() => countSaturdays(dateRange.value));
 
 watch(dateRange, (newVal) => {
   if (newVal && newVal.length === 2) {
@@ -135,42 +132,19 @@ const countSaturdays = (startDate, endDate) => {
   return saturdaysCount;
 }
 
-yup.addMethod(yup.array, 'maxWorkingDays', function (max, message) {
-  return this.test('max-working-days', message, function (dates) {
-    const { path, createError } = this;
-    const count = countWorkingDays(dates);
-    if (count > max) {
-      return createError({ path, message });
-    }
-    return true;
-  });
-});
-
-const submitForm = async () => {
-  try {
-    await handleSubmit((originalValues) => {
-      const [request_date_from, request_date_to] = originalValues.dateRange || [];
-      const mergedValues = {
-        ...originalValues,
-        id: holiday.value.id,
-        staff_id: holiday.value.staff_id,
-        request_date_from,
-        request_date_to,
-        hours_requested: hours_requested.value,
-        saturdaysCount: saturday.value
-      };
-      delete mergedValues.dateRange;
-
-      if (props.formType === 'update') {
-        holidayStore.updateHoliday(props.id, mergedValues);
-        router.push({name: 'holiday-detail', params: {id: props.id}});
-      } else {
-        holidayStore.submitHoliday(mergedValues);
-        router.push({name: 'holiday-dashboard', params: {filter: 'all'}});
-      }
-    })();
-  } catch (error) {
-    console.error(error);
+const submitForm = () => {
+  if (props.formType === 'update') {
+    holidayStore.updateHoliday(props.id, holiday.value).then(() => {
+      router.push({name: 'holiday-detail', params: {id: props.id}});
+    }).catch((error) => {
+      console.error(error)
+    });
+  } else {
+    holidayStore.submitHoliday(holiday.value).then(() => {
+      router.push({name: 'holiday-dashboard', params: {filter: 'all'}});
+    }).catch((error) => {
+      console.error(error)
+    });
   }
 }
 </script>
