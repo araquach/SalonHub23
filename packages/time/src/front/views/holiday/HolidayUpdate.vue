@@ -4,7 +4,7 @@
       <div class="box has-background-holiday">
         <div class="columns">
           <div class="column">
-            <h3 class="title is-4 has-text-white">Book a Holiday</h3>
+            <h3 class="title is-4 has-text-white">Edit Holiday</h3>
           </div>
           <div class="column is-3">
             <figure class="image">

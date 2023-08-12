@@ -51,7 +51,6 @@ import {useTimeStore} from "../../../stores/timeStore";
 
 const props = defineProps({
   id: String,
-  holidayProps: Object,
   formType: String
 });
 
@@ -60,11 +59,8 @@ const holidayStore = useHolidayStore();
 const timeStore = useTimeStore();
 const authStore = useAuthStore();
 
-const description = ref(props.holidayProps ? props.holidayProps.description : '');
-const dateRange = ref(props.holidayProps && props.holidayProps.request_date_from && props.holidayProps.request_date_to ?
-    [new Date(props.holidayProps.request_date_from), new Date(props.holidayProps.request_date_to)] : []
-);
-
+const description = ref('');
+const dateRange = ref( []);
 const hours_requested = computed(() => countWorkingDays(dateRange.value));
 const saturday = computed(() => countSaturdays(dateRange.value));
 
