@@ -18,7 +18,7 @@
   </div>
 </template>
 <script setup>
-import HolidayForm from "../../components/holiday/HolidayForm_backup.vue";
+import HolidayForm from "../../components/holiday/HolidayForm.vue";
 import {useHolidayStore} from "../../../stores/holidayStore";
 import {computed, ref, onMounted} from "vue";
 
