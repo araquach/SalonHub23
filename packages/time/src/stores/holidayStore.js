@@ -12,6 +12,7 @@ export const useHolidayStore = defineStore('holiday', {
             holidays: [],
             holidaysLoading: null,
             holiday: {},
+            holidayLoading: null,
             activeFilter: 3
         }
     },
@@ -71,15 +72,17 @@ export const useHolidayStore = defineStore('holiday', {
         },
 
         async loadHoliday(id) {
-            // const authStore = useAuthStore();
+            this.holidayLoading = true
             try {
                 const response = await holidayService.getHoliday(id)
                 this.holiday = response.data;
-                return this.holiday;
             } catch (error) {
                 console.log(error);
                 throw error;
+            }finally {
+                this.holidayLoading = false;
             }
+            return { holiday: this.holiday, holidayLoading: this.holidayLoading }
         },
 
         async submitHoliday(holiday) {

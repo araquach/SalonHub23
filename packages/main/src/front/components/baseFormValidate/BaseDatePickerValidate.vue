@@ -26,6 +26,7 @@ const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
   name: String,
+  modelValue: Array,
   label: {
     type: String,
     default: ''
@@ -42,8 +43,17 @@ const props = defineProps({
 
 const { value, errorMessage, meta } = useField(() => props.name);
 
+watch(value, (newValue) => { if (newValue !== props.modelValue) { emit('update:modelValue', newValue); } }); watch(() => props.modelValue, (newVal) => { if (newVal && newVal !== value.value) { value.value = newVal; } }, { immediate: true });
+
 watch(value, (newValue) => {
   emit('update:modelValue', newValue);
 });
+
+watch(() => props.modelValue, (newVal) => {
+  console.log('BaseDatePickerValidate prop modelValue change:', newVal);
+  if (newVal) {
+    value.value = newVal;
+  }
+}, { immediate: true });
 
 </script>

@@ -39,7 +39,7 @@
   </form>
 </template>
 <script setup>
-import {ref, computed} from 'vue';
+import {ref, computed, watch, reactive} from 'vue';
 import * as yup from 'yup';
 import {useForm} from "vee-validate";
 import BaseInputValidate from "main/src/front/components/baseFormValidate/BaseInputValidate.vue";
@@ -50,19 +50,30 @@ import {useRouter} from "vue-router";
 import {useTimeStore} from "../../../stores/timeStore";
 
 const props = defineProps({
-  id: String,
-  formType: String
+  id: {
+    type: String,
+  },
+  holidayProps: {
+    type: Object,
+    required: false
+  },
+  formType: {
+    type: String,
+    required: true
+  }
 });
 
+const form = reactive(useForm());
 const router = useRouter();
 const holidayStore = useHolidayStore();
 const timeStore = useTimeStore();
 const authStore = useAuthStore();
-
-const description = ref('');
-const dateRange = ref( []);
+const description = ref(props.holidayProps?.description || '');
+const dateRange = ref(props.holidayProps ? [props.holidayProps.request_date_from, props.holidayProps.request_date_to] : []);
 const hours_requested = computed(() => countWorkingDays(dateRange.value));
 const saturday = computed(() => countSaturdays(dateRange.value));
+
+watch(() => props.holidayProps, (newVal) => { if (newVal) { if (newVal.description !== description.value) { description.value = newVal.description; } if (newVal.dateRange !== dateRange.value) { dateRange.value = [newVal.request_date_from, newVal.request_date_to]; } } }, { deep: true, immediate: true });
 
 function getDayKey(date) {
   const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
@@ -153,7 +164,6 @@ const onSubmit = handleSubmit((originalValues) => {
     });
   } else {
     holidayStore.submitHoliday(mergedValues).then(() => {
-      console.log(mergedValues)
       router.push({ name: 'holiday-dashboard', params: { filter: 'all' } });
     }).catch((error) => {
       console.error(error);

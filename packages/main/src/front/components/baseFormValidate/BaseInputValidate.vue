@@ -17,9 +17,11 @@
 </template>
 <script setup>
 import { useField } from "vee-validate"
+import {watch} from "vue";
 
 const props = defineProps({
   name: String,
+  modelValue: String,
   type: String,
   label: {
     type: String,
@@ -28,4 +30,10 @@ const props = defineProps({
 })
 
 const { value, errorMessage, meta } = useField(() => props.name);
+
+watch(() => props.modelValue, (newVal) => {
+  if (newVal) {
+    value.value = newVal;
+  }
+}, { immediate: true });
 </script>

@@ -12,7 +12,12 @@
             </figure>
           </div>
         </div>
-        <HolidayForm v-if="!loading" :holidayProps="holiday" :formType="'update'" :id="id"/>
+        <div v-if="holidayStore.holidayLoading">
+          Loading...
+        </div>
+        <div v-else-if="!holidayStore.holidayLoading && holiday">
+          <HolidayForm  :holidayProps="holiday" :formType="'update'" :id="id"/>
+        </div>
       </div>
     </div>
   </div>
@@ -20,7 +25,7 @@
 <script setup>
 import HolidayForm from "../../components/holiday/HolidayForm.vue";
 import {useHolidayStore} from "../../../stores/holidayStore";
-import {computed, ref, onMounted} from "vue";
+import {computed, onMounted} from "vue";
 
 const props = defineProps({
   id: {
@@ -30,14 +35,12 @@ const props = defineProps({
 
 const holidayStore = useHolidayStore();
 const holiday = computed(() => holidayStore.holiday);
-const loading = ref(true)
 
 onMounted(async () => {
   try {
     await holidayStore.loadHoliday(props.id);
-    loading.value = false;
   } catch (error) {
     console.error('Failed to load holiday: ', error);
   }
-})
+});
 </script>
