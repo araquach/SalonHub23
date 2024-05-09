@@ -11,8 +11,8 @@
         </div>
         <div class="column">
           <p>{{ formatDate(freeTime.created_at) }}</p>
-          <p>{{ formatDate(freeTime.date_regarding) }}</p>
-          <p>{{ freeTime.free_time_hours }}</p>
+          <p>{{ formatDate(freeTime.request_date) }}</p>
+          <p>{{ freeTime.hours }}</p>
         </div>
       </div>
     </div>

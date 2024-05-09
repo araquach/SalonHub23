@@ -11,10 +11,7 @@ export const useTimeStore = defineStore('time', {
     },
 
     getters: {
-        // Holiday Getters
-        holidayEntitlement() {
 
-        }
     },
 
     actions: {

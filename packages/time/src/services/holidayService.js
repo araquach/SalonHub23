@@ -1,6 +1,9 @@
 import mainService from "main/src/services/mainService";
 
 export default {
+    getHolidayDash(id) {
+        return mainService.get(`/time/holidays/dash/${id}`)
+    },
     getHolidays(id) {
         return mainService.get(`/time/holidays/${id}`)
     },

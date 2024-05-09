@@ -36,6 +36,7 @@ const props = defineProps({
 const holidayStore = useHolidayStore();
 const holiday = computed(() => holidayStore.holiday);
 
+
 onMounted(async () => {
   try {
     await holidayStore.loadHoliday(props.id);

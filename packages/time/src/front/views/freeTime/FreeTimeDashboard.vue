@@ -6,19 +6,19 @@
           <div class="column is-2">
             <img :src="'/dist/img/icons/free-time.svg'" alt="Free Time">
           </div>
-          <div v-if="timeStore.timeDetailsLoading" class="column">
+          <div v-if="freeTimeStore.freeTimeDashLoading" class="column">
             <p>Loading...</p>
           </div>
           <div v-else class="column">
-            <p class="is-size-4">Free Time: {{ timeStore.timeDetails.free_time_ent }} hours</p>
+            <p class="is-size-4">Free Time: {{ timeDetails.entitlement }} hours</p>
             <p class="is-size-4">
-              Used Time: {{ timeStore.timeDetails.free_time }} hours
-              <span v-if="timeStore.timeDetails.free_time_pending !== 0" class="is-size-6">({{ timeStore.timeDetails.free_time_pending }} pending)</span>
+              Used Time: {{ timeDetails.used }} hours
+              <span v-if="timeDetails.pending" class="is-size-6">({{ timeDetails.total_pending }} pending)</span>
             </p>
             <p class="is-size-3">
-              Remaining: {{ timeStore.timeDetails.free_time_ent - timeStore.timeDetails.free_time }} hours
-              <span v-if="timeStore.timeDetails.free_time_pending !== 0" class="is-size-6">
-                ({{ timeStore.timeDetails.free_time_ent - timeStore.timeDetails.free_time_pending + timeStore.timeDetails.free_time }})
+              Remaining: {{ timeDetails.remaining }} hours
+              <span v-if="timeDetails.remaining_pending" class="is-size-6">
+                ({{ timeDetails.remaining_pending }})
               </span>
             </p>
           </div>
@@ -65,15 +65,18 @@
   </div>
 </template>
 <script setup>
-import {onMounted, watchEffect} from 'vue';
-import { useRoute } from 'vue-router';
+import {computed, onMounted, watchEffect} from 'vue';
 import FreeTimeInd from "../../../front/components/freeTime/FreeTimeInd.vue";
-import { useTimeStore } from "../../../stores/timeStore";
 import { useFreeTimeStore } from "../../../stores/freeTimeStore";
 
-const route = useRoute();
-const timeStore = useTimeStore();
+const props = defineProps({
+  filter: {
+    required: true
+  }
+})
+
 const freeTimeStore = useFreeTimeStore();
+const timeDetails = computed(() => freeTimeStore.freeTimeDash);
 
 const filterMapping = {
   'awaiting': 0,
@@ -82,15 +85,16 @@ const filterMapping = {
   'all': 3,
 };
 
+onMounted(() => {
+  freeTimeStore.loadFreeTimeDash();
+  freeTimeStore.loadFreeTimes();
+});
+
 watchEffect(() => {
-  const newFilter = route.params.filter;
+  const newFilter = props.filter;
   if (newFilter in filterMapping) {
     freeTimeStore.setActiveFilter(filterMapping[newFilter]);
   }
-});
-
-onMounted(() => {
-  freeTimeStore.loadFreeTimes();
 });
 
 </script>

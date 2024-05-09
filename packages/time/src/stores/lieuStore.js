@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia'
 import {useAuthStore} from "auth/src/stores/authStore";
-import {useTimeStore} from "./timeStore";
 import lieuService from "../services/lieuService";
-import holidayService from "../services/holidayService";
 
 export const useLieuStore = defineStore('lieu', {
     // arrow function recommended for full type inference
     state: () => {
         return {
+            lieuDash: {},
+            lieuDashLoading: null,
             lieuHours: [],
             lieuHoursLoading: null,
             lieuHour: {},
+            lieuHourLoading: null,
             submitStatus: null,
             activeFilter: 3
         }
@@ -42,6 +43,22 @@ export const useLieuStore = defineStore('lieu', {
     },
 
     actions: {
+        async loadLieuDash() {
+            const authStore = useAuthStore()
+            const id = authStore.user.staff_id
+            this.lieuDashLoading === true
+            try {
+                const response = await lieuService.getLieuDash(id)
+                this.lieuDash = response.data;
+            } catch (error) {
+                console.log(error);
+                throw error
+            } finally {
+                this.lieuDashLoading = false;
+            }
+            return { lieuDash: this.lieuDash, lieuDashLoading: this.lieuDashLoading }
+        },
+
         setActiveFilter(filter) {
             if(filter === 'all') {
                 this.activeFilter = 3;
@@ -67,39 +84,31 @@ export const useLieuStore = defineStore('lieu', {
         },
 
         async loadLieuHour(id) {
+            this.lieuHourLoading = false
             try {
                 const response = await lieuService.getLieuHour(id)
                 this.lieuHour = response.data;
-                return this.lieuHour
             } catch (error) {
                 console.log(error);
                 throw error;
+            } finally {
+                this.lieuHourLoading = false;
             }
+            return { lieuHour: this.lieuHour, lieHourLoading: this.lieuHourLoading }
         },
 
-        async submitLieu(lieu) {
-            const timeStore = useTimeStore();
+        async submitLieu(lieuHour) {
             try {
-                await lieuService.postLieuHour(lieu)
-                this.submitStatus = true
-                timeStore.timeDetails.lieu_pending += lieu.lieu_hours
+                await lieuService.postLieuHour(lieuHour)
             } catch (error) {
                 console.error(error)
-                this.submitStatus = false
             }
         },
 
-        async updateLieu(id, lieu) {
+        async updateLieu(id, lieuHour) {
             try {
-                const updatedLieu = await lieuService.updateLieuHour(id, lieu);
-                this.lieuHours = this.lieuHours.map(l => l.id === lieu.id ? updatedLieu : l);
-
-                // Fetch updated time data from the API.
-                const authStore = useAuthStore();
-                const stylistId = authStore.user.staff_id;
-                const timeStore = useTimeStore();
-                await timeStore.loadTimeDetails(stylistId);
-
+                const updatedLieu = await lieuService.updateLieuHour(id, lieuHour);
+                this.lieuHours = this.lieuHours.map(l => l.id === lieuHour.id ? updatedLieu : l)
                 return updatedLieu;
             } catch (error) {
                 console.error(error);

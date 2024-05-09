@@ -38,7 +38,7 @@ export default [
                 }
             },
             {
-                path: 'update/::id',
+                path: 'update/:id',
                 name: 'free-time-update',
                 component: FreeTimeUpdate,
                 props: true,

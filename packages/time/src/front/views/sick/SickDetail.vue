@@ -16,15 +16,15 @@
               </tr>
               <tr>
                 <td>Sick From:</td>
-                <td>{{ formatDate(sick.sick_from) }}</td>
+                <td>{{ formatDate(sick.date_from) }}</td>
               </tr>
               <tr>
                 <td>Sick To:</td>
-                <td>{{ formatDate(sick.sick_to) }}</td>
+                <td>{{ formatDate(sick.date_to) }}</td>
               </tr>
               <tr>
                 <td>Sick Days:</td>
-                <td>{{ sick.sick_hours }}</td>
+                <td>{{ sick.hours }}</td>
               </tr>
               <tr>
                 <td>Deducted:</td>
@@ -45,23 +45,25 @@
 </template>
 <script setup>
 import {ref, computed, onMounted} from 'vue';
-import { useRoute } from 'vue-router';
 import { useSickStore } from '../../../stores/sickStore';
 import { format } from 'date-fns';
 
-const route = useRoute();
+const props = defineProps({
+  id: {
+    required: true
+  }
+})
+
 const sickStore = useSickStore();
 const sick = computed(() => sickStore.sickDay);
-const id = route.params.id;
 const loading = ref(true);
-
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return format(date, 'do MMMM yyyy');
 }
 
 onMounted(async () => {
-  await sickStore.loadSickDay(id)
+  await sickStore.loadSickDay(props.id)
   loading.value = false
 })
 

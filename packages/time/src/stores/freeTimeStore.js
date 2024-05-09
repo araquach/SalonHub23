@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
 import {useAuthStore} from "auth/src/stores/authStore";
-import {useTimeStore} from "./timeStore";
 import freeTimeService from "../services/freeTimeService";
 
 export const useFreeTimeStore = defineStore('freeTime', {
-    // arrow function recommended for full type inference
     state: () => {
         return {
+            freeTimeDash: {},
+            freeTimeDashLoading: null,
             freeTimes: [],
             freeTimesLoading: null,
             freeTime: {},
-            submitStatus: null,
+            freeTimeLoading: null,
             freeTimeEntitlement: 12,
             activeFilter: 3
         }
@@ -43,6 +43,22 @@ export const useFreeTimeStore = defineStore('freeTime', {
     },
 
     actions: {
+        async loadFreeTimeDash() {
+            const authStore = useAuthStore()
+            const id = authStore.user.staff_id
+            this.freeTimeDashLoading === true
+            try {
+                const response = await freeTimeService.getFreeTimeDash(id)
+                this.freeTimeDash = response.data;
+            } catch (error) {
+                console.log(error);
+                throw error
+            } finally {
+                this.freeTimeDashLoading = false;
+            }
+            return { freeTimeDash: this.freeTimeDash, freeTimeDashLoading: this.freeTimeDashLoading }
+        },
+
         setActiveFilter(filter) {
             if(filter === 'all') {
                 this.activeFilter = 3;
@@ -64,29 +80,28 @@ export const useFreeTimeStore = defineStore('freeTime', {
             } finally {
                 this.freeTimesLoading = false;
             }
-            return { freeTime: this.freeTimes, freeTimesLoading: this.freeTimesLoading }
+            return { freeTimes: this.freeTimes, freeTimesLoading: this.freeTimesLoading }
         },
 
         async loadFreeTime(id) {
+            this.freeTimeLoading = true
             try {
                 const response = await freeTimeService.getFreeTime(id)
                 this.freeTime = response.data;
-                return this.freeTime;
             } catch (error) {
                 console.log(error);
                 throw error;
+            } finally {
+                this.freeTimeLoading = false;
             }
+            return { freeTime: this.freeTime, freeTimeLoading: this.freeTimeLoading }
         },
 
         async submitFreeTime(freeTime) {
-            const timeStore = useTimeStore();
             try {
                 await freeTimeService.postFreeTime(freeTime)
-                this.submitStatus = true
-                timeStore.timeDetails.free_time_pending += freeTime.free_time_hours
             } catch (error) {
                 console.error(error)
-                this.submitStatus = false
             }
         },
 
@@ -94,14 +109,7 @@ export const useFreeTimeStore = defineStore('freeTime', {
             try {
                 const updatedFreeTime = await freeTimeService.updateFreeTime(id, freeTime);
                 this.freeTime = this.freeTimes.map(ft => ft.id === freeTime.id ? updatedFreeTime : ft);
-
-                // Fetch updated time data from the API.
-                const authStore = useAuthStore();
-                const stylistId = authStore.user.staff_id;
-                const timeStore = useTimeStore();
-                await timeStore.loadTimeDetails(stylistId);
-
-                return updatedFreeTime;
+                return updatedFreeTime
             } catch (error) {
                 console.error(error);
             }

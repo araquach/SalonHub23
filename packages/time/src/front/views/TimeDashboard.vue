@@ -12,7 +12,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p class="is-size-6">{{ timeStore.timeDetails.holiday_ent - timeStore.timeDetails.holidays }} remaining</p>
+                  <p class="is-size-6">30 remaining</p>
                 </div>
               </div>
             </div>
@@ -33,7 +33,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p class="is-size-6">{{ timeStore.timeDetails.lieu_hours }} hours</p>
+                  <p class="is-size-6">30 hours</p>
                 </div>
               </div>
             </div>
@@ -54,7 +54,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p class="is-size-6">{{ timeStore.timeDetails.free_time_ent - timeStore.timeDetails.free_time }} hours</p>
+                  <p class="is-size-6">30 hours</p>
                 </div>
               </div>
             </div>
@@ -75,7 +75,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p class="is-size-6">{{ timeStore.timeDetails.sick_days }} days</p>
+                  <p class="is-size-6">30 days</p>
                 </div>
               </div>
             </div>
@@ -89,7 +89,7 @@
   </div>
 </template>
 <script setup>
-import {useTimeStore} from "../../stores/timeStore";
+//import {useTimeStore} from "../../stores/timeStore";
 
-const timeStore = useTimeStore();
+// const timeStore = useTimeStore();
 </script>

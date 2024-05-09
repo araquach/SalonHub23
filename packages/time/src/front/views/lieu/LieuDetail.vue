@@ -16,11 +16,11 @@
               </tr>
               <tr>
                 <td>Date Regarding:</td>
-                <td>{{ formatDate(lieu.date_regarding) }}</td>
+                <td>{{ formatDate(lieu.request_date) }}</td>
               </tr>
               <tr>
                 <td>Number of hours:</td>
-                <td>{{ lieu.lieu_hours }}</td>
+                <td>{{ lieu.hours }}</td>
               </tr>
               <tr>
                 <td>Approved:</td>
@@ -89,6 +89,7 @@ const statusColour = computed(() => {
   } else return 'pending'
 });
 </script>
+
 <style scoped>
 .table td {
   border-bottom: 1px solid #fff;

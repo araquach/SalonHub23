@@ -6,11 +6,12 @@
           <div class="column is-2">
             <img :src="'/dist/img/icons/sick.svg'" alt="Sick">
           </div>
-          <div v-if="timeStore.timeDetailsLoading" class="column">
+          <div v-if="sickStore.sickDashLoading" class="column">
             <p>Loading...</p>
           </div>
           <div v-else class="column">
-            <p class="is-size-3">Total Sick: {{ timeStore.timeDetails.sick_days }} days</p>
+            <p class="is-size-3">Total Sick: {{ timeDetails.sick_days }} days</p>
+            <span v-if="timeDetails.pending" class="is-size-6">({{ timeDetails.pending }} pending)</span>
           </div>
         </div>
         <div class="buttons">
@@ -46,15 +47,18 @@
   </div>
 </template>
 <script setup>
+import {computed, onMounted, watchEffect} from "vue";
 import SickInd from "../../../front/components/sick/SickInd.vue";
-import {useTimeStore} from "../../../stores/timeStore";
 import {useSickStore} from "../../../stores/sickStore";
-import {useRoute} from "vue-router";
-import {onMounted, watch} from "vue";
 
-const route = useRoute();
-const timeStore = useTimeStore()
+const props = defineProps({
+  filter: {
+    required: true
+  }
+})
+
 const sickStore = useSickStore();
+const timeDetails = computed(() => sickStore.sickDash);
 
 const filterMapping = {
   'awaiting': 0,
@@ -63,14 +67,16 @@ const filterMapping = {
 };
 
 onMounted(() => {
+  sickStore.loadSickDash();
   sickStore.loadSickDays();
 })
 
-watch(() => route.params.filter, newFilter => {
+watchEffect(() => {
+  const newFilter = props.filter;
   if (newFilter in filterMapping) {
     sickStore.setActiveFilter(filterMapping[newFilter]);
   }
-}, { immediate: true });
+});
 </script>
 
 <style scoped>

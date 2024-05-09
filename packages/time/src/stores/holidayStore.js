@@ -1,14 +1,12 @@
 import { defineStore } from 'pinia';
 import { useAuthStore } from "auth/src/stores/authStore"
-import {useTimeStore} from "./timeStore";
 import holidayService from "../services/holidayService";
 
-//const initialValue = 0
-
 export const useHolidayStore = defineStore('holiday', {
-    // arrow function recommended for full type inference
     state: () => {
         return {
+            holidayDash: {},
+            holidayDashLoading: null,
             holidays: [],
             holidaysLoading: null,
             holiday: {},
@@ -40,13 +38,27 @@ export const useHolidayStore = defineStore('holiday', {
             }
 
             return filtered.sort((a, b) => b.id - a.id); // This line will sort the filtered array by `id` in descending order.
-        },
-
-
+        }
     },
 
 
     actions: {
+        async loadHolidayDash() {
+            const authStore = useAuthStore()
+            const id = authStore.user.staff_id
+            this.holidayDashLoading === true
+            try {
+                const response = await holidayService.getHolidayDash(id)
+                this.holidayDash = response.data;
+            } catch (error) {
+                console.log(error);
+                throw error
+            } finally {
+                this.holidayDashLoading = false;
+            }
+            return { holidayDash: this.holidayDash, holidaysDashLoading: this.holidayDashLoading }
+        },
+
         setActiveFilter(filter) {
             if(filter === 'all') {
                 this.activeFilter = 3;
@@ -79,18 +91,15 @@ export const useHolidayStore = defineStore('holiday', {
             } catch (error) {
                 console.log(error);
                 throw error;
-            }finally {
+            } finally {
                 this.holidayLoading = false;
             }
             return { holiday: this.holiday, holidayLoading: this.holidayLoading }
         },
 
         async submitHoliday(holiday) {
-            const timeStore = useTimeStore();
             try {
                 await holidayService.postHoliday(holiday)
-                timeStore.timeDetails.holidays_pending += holiday.hours_requested
-                timeStore.timeDetails.saturdays_pending += holiday.saturday
             } catch (error) {
                 console.error(error)
             }
@@ -100,13 +109,6 @@ export const useHolidayStore = defineStore('holiday', {
             try {
                 const updatedHoliday = await holidayService.updateHoliday(id, holiday);
                 this.holidays = this.holidays.map(h => h.id === holiday.id ? updatedHoliday : h);
-
-                // Fetch updated time data from the API.
-                const authStore = useAuthStore();
-                const stylistId = authStore.user.staff_id;
-                const timeStore = useTimeStore();
-                await timeStore.loadTimeDetails(stylistId);
-
                 return updatedHoliday;
             } catch (error) {
                 console.error(error);

@@ -42,7 +42,7 @@ $addColors: (
 $colors: map-merge($colors, $addColors);
 
 @import "bulma/bulma";
-@import '@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss';
+@import '@vuepic/vue-datepicker/dist/main.css';
 
 html {
   background-color: $dark;

@@ -16,11 +16,11 @@
               </tr>
               <tr>
                 <td>Date Requested:</td>
-                <td>{{ formatDate(freeTime.date_regarding) }}</td>
+                <td>{{ formatDate(freeTime.request_date) }}</td>
               </tr>
               <tr>
                 <td>Number of hours:</td>
-                <td>{{ freeTime.free_time_hours }}</td>
+                <td>{{ freeTime.hours }}</td>
               </tr>
               <tr>
                 <td>Approval Status:</td>

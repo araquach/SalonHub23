@@ -1,15 +1,17 @@
 import {defineStore} from 'pinia'
-import axios from "axios";
 import {useAuthStore} from "auth/src/stores/authStore";
 import sickService from "../services/sickService";
 
 export const useSickStore = defineStore('sick', {
-    // arrow function recommended for full type inference
     state: () => {
         return {
+            sickDash: {},
+            sickDashLoading: null,
             sickDays: [],
             sickDaysLoading: null,
             sickDay: {},
+            sickDayLoading: null,
+            submitStatus: null,
             activeFilter: 2
         }
     },
@@ -37,6 +39,22 @@ export const useSickStore = defineStore('sick', {
     },
 
     actions: {
+        async loadSickDash() {
+            const authStore = useAuthStore()
+            const id = authStore.user.staff_id
+            this.sickDashLoading === true
+            try {
+                const response = await sickService.getSickDash(id)
+                this.sickDash = response.data;
+            } catch (error) {
+                console.log(error)
+                throw error
+            } finally {
+                this.sickDashLoading === false;
+            }
+            return { sickDash: this.sickDash, sickDashLoading: this.sickDashLoading }
+        },
+
         setActiveFilter(filter) {
             if (filter === 'all') {
                 this.activeFilter = 2;
@@ -62,15 +80,17 @@ export const useSickStore = defineStore('sick', {
         },
 
         async loadSickDay(id) {
-            // const authStore = useAuthStore();
+            this.sickDayLoading === false
             try {
                 const response = await sickService.getSickDay(id)
                 this.sickDay = response.data;
-                return this.sickDay
             } catch (error) {
-                console.log(error);
+                console.log(error)
                 throw error
+            } finally {
+                this.sickDayLoading === false;
             }
+            return { sickDay: this.sickDay, sickDayLoading: this.sickDayLoading }
         }
     }
 })

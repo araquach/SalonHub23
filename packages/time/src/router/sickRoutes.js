@@ -13,6 +13,7 @@ export default [
                 path: ':filter',
                 name: 'sick-dashboard',
                 component: SickDashboard,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }
@@ -21,7 +22,7 @@ export default [
                 path: 'detail/:id',
                 name: 'sick-detail',
                 component: SickDetail,
-                params: true,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }

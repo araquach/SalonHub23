@@ -1,6 +1,9 @@
 import mainService from "main/src/services/mainService";
 
 export default {
+    getFreeTimeDash(id) {
+        return mainService.get(`/time/free-time/dash/${id}`)
+    },
     getFreeTimes(id) {
         return mainService.get(`/time/free-times/${id}`)
     },

@@ -6,22 +6,22 @@
           <div class="column is-2">
             <img :src="'/dist/img/icons/holiday.svg'" alt="Holidays">
           </div>
-          <div v-if="timeStore.timeDetailsLoading" class="column">
+          <div v-if="holidayStore.holidayDashLoading" class="column">
             <p>Loading...</p>
           </div>
           <div v-else class="column">
-            <p class="is-size-4">Holiday Entitlement: {{ timeDetails.holiday_ent }} days</p>
+            <p class="is-size-4"><strong>Holiday Entitlement: {{ timeDetails.entitlement }} days</strong></p>
             <p class="is-size-4">
-              Total Booked: {{ timeDetails.holidays }} days
-              <span v-if="timeDetails.holidays_pending !== 0" class="is-size-6"> ({{ timeDetails.holidays_pending }} pending)</span>
+              Total Booked: {{ timeDetails.total_booked }} days
+              <span v-if="timeDetails.total_pending" class="is-size-6"> ({{ timeDetails.total_pending }} pending)</span>
             </p>
-            <p class="is-size-3">
-              Days remaining: {{ holidaysRemaining }}
-              <span v-if="timeDetails.holidays_pending !== 0" class="is-size-6">({{holidaysRemaining - timeDetails.holidays_pending}})</span>
+            <p class="is-size-4">
+              Days remaining: {{ timeDetails.remaining }}
+              <span v-if="timeDetails.total_pending" class="is-size-6">({{ timeDetails.remaining_pending }})</span>
             </p>
-            <p class="is-size-3">
-              Remaining Saturdays: {{ timeDetails.saturdays }}
-              <span v-if="timeDetails.saturdays_pending !== 0" class="is-size-6">({{ timeDetails.saturdays - timeDetails.saturdays_pending }})</span>
+            <p class="is-size-4">
+              Remaining Saturdays: {{ timeDetails.sat_remaining }}
+              <span v-if="timeDetails.total_pending" class="is-size-6">({{ timeDetails.sat_pending }})</span>
             </p>
           </div>
         </div>
@@ -71,7 +71,6 @@
 <script setup>
 import {computed, onMounted, watchEffect} from 'vue';
 import {useHolidayStore} from "../../../stores/holidayStore";
-import {useTimeStore} from "../../../stores/timeStore";
 import HolidayInd from "../../../front/components/holiday/HolidayInd.vue";
 
 const props = defineProps({
@@ -81,9 +80,7 @@ const props = defineProps({
 })
 
 const holidayStore = useHolidayStore();
-const timeStore = useTimeStore();
-const timeDetails = computed(() => timeStore.timeDetails);
-const holidaysRemaining = computed(() => timeStore.timeDetails.holiday_ent - timeStore.timeDetails.holidays)
+const timeDetails = computed(() => holidayStore.holidayDash);
 
 const filterMapping = {
   'awaiting': 0,
@@ -92,16 +89,18 @@ const filterMapping = {
   'all': 3,
 };
 
-onMounted(() => {
-  holidayStore.loadHolidays();
-})
-
 watchEffect(() => {
   const newFilter = props.filter;
   if (newFilter in filterMapping) {
     holidayStore.setActiveFilter(filterMapping[newFilter]);
   }
 });
+
+onMounted(() => {
+  holidayStore.loadHolidayDash();
+  holidayStore.loadHolidays();
+})
+
 </script>
 
 <style scoped>

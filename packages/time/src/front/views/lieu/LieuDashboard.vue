@@ -6,13 +6,13 @@
           <div class="column is-2">
             <img :src="'/dist/img/icons/lieu.svg'" alt="Lieu Hours">
           </div>
-          <div v-if="timeStore.timeDetailsLoading" class="column">
+          <div v-if="lieuStore.lieuDashLoading" class="column">
             Loading...
           </div>
           <div v-else class="column">
             <p class="is-size-3">
-              Total Lieu: {{  timeStore.timeDetails.lieu_hours  }} hours
-              <span v-if="timeStore.timeDetails.lieu_pending !== 0" class="is-size-6">({{ timeStore.timeDetails.lieu_pending }} pending)</span>
+              Total Lieu: {{  timeDetails.used  }} hours
+              <span v-if="timeDetails.pending" class="is-size-6">({{ timeDetails.pending }} pending)</span>
             </p>
           </div>
         </div>
@@ -56,15 +56,18 @@
   </div>
 </template>
 <script setup>
-import LieuInd from "../../../front/components/lieu/LieuInd.vue";
-import {useTimeStore} from "../../../stores/timeStore";
+import {watchEffect, onMounted, computed} from "vue";
 import {useLieuStore} from "../../../stores/lieuStore";
-import {useRoute} from "vue-router";
-import {watchEffect, onMounted} from "vue";
+import LieuInd from "../../../front/components/lieu/LieuInd.vue";
 
-const route = useRoute();
-const timeStore = useTimeStore();
+const props = defineProps({
+  filter: {
+    required: true
+  }
+})
+
 const lieuStore = useLieuStore();
+const timeDetails = computed(() => lieuStore.lieuDash);
 
 const filterMapping = {
   'awaiting': 0,
@@ -75,13 +78,14 @@ const filterMapping = {
 };
 
 watchEffect(() => {
-  const newFilter = route.params.filter;
+  const newFilter = props.filter;
   if (newFilter in filterMapping) {
     lieuStore.setActiveFilter(filterMapping[newFilter]);
   }
 });
 
 onMounted(() => {
+  lieuStore.loadLieuDash();
   lieuStore.loadLieuHours();
 });
 </script>

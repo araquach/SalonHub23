@@ -14,6 +14,7 @@ export default [
                 path: ':filter',
                 name: 'lieu-dashboard',
                 component: LieuDashboard,
+                props: true,
                 meta: {
                     requiresAuth: true
                 }

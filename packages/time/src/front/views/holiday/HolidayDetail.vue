@@ -16,15 +16,15 @@
               </tr>
               <tr>
                 <td>Date From:</td>
-                <td>{{ formatDate(holiday.request_date_from) }}</td>
+                <td>{{ formatDate(holiday.date_from) }}</td>
               </tr>
               <tr>
                 <td>Date To:</td>
-                <td>{{ formatDate(holiday.request_date_to) }}</td>
+                <td>{{ formatDate(holiday.date_to) }}</td>
               </tr>
               <tr>
                 <td>Number of days:</td>
-                <td>{{ holiday.hours_requested }}</td>
+                <td>{{ holiday.requested }}</td>
               </tr>
               <tr>
                 <td>Number of Saturdays:</td>

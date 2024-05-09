@@ -1,61 +1,65 @@
 <template>
-  <form @submit="onSubmit">
+  <form v-if="!holidayStore.holidayLoading" @submit="onSubmit">
     <div>
       <div class="field">
-        <BaseInputValidate
-            v-model="description"
-            name="description"
-            label="Description"
-            type="text"
-        />
+        <label class="label">Description</label>
+        <div class="control">
+          <input class="input" :class="{'is-danger': errors.description }" v-model="description"
+                 v-bind="descriptionAttrs" type="text">
+        </div>
+        <span class="help is-danger">{{ errors.description }}</span>
       </div>
       <div class="field">
-        <BaseDatePickerValidate
-            v-model="dateRange"
-            name="dateRange"
-            label="Date Range"
-            :range="true"
-            :enable-time-picker="false"
-        />
+        <div class="label">Date Range</div>
+        <div class="control">
+          <VueDatePicker
+              v-model="dateRange"
+              v-bind="dateRangeAttrs"
+              :enable-time-picker="false"
+              :class="{'is-danger': errors.dateRange}"
+              range
+          ></VueDatePicker>
+        </div>
+        <span class="help is-danger">{{ errors.dateRange }}</span>
       </div>
-      <div v-if="hours_requested">
+      <div v-if="requested">
         <div class="field">
-          <p class="is-size-4">Requested: {{ hours_requested }} days</p>
+          <p class="is-size-4">Requested: {{ requested }} days</p>
         </div>
 
         <div class="field">
-          <p class="is-size-4">Saturdays: {{ saturday }}</p>
+          <p class="is-size-4">Saturday: {{ saturday }}</p>
+          <span class="help is-danger">{{ errors.saturday }}</span>
         </div>
       </div>
       <br>
       <div class="field">
         <div class="control">
-          <button class="button is-outlined is-white" type="submit">
-            {{ formType === 'update' ? 'Update Holiday' : 'Book Holiday' }}
-          </button>
+          <button class="button is-outlined is-white">Submit</button>
         </div>
       </div>
     </div>
   </form>
 </template>
+
 <script setup>
-import {ref, computed, watch, reactive} from 'vue';
-import * as yup from 'yup';
-import {useForm} from "vee-validate";
-import BaseInputValidate from "main/src/front/components/baseFormValidate/BaseInputValidate.vue";
-import BaseDatePickerValidate from "main/src/front/components/baseFormValidate/BaseDatePickerValidate.vue"
+import {useForm} from 'vee-validate';
+import VueDatePicker from "@vuepic/vue-datepicker";
+import {object, string, array, number, date, addMethod} from "yup";
+import {toTypedSchema} from '@vee-validate/yup';
+import {onMounted, watch, watchEffect} from "vue";
 import {useHolidayStore} from "../../../stores/holidayStore";
 import {useAuthStore} from "auth/src/stores/authStore";
-import {useRouter} from "vue-router";
 import {useTimeStore} from "../../../stores/timeStore";
+import {useRouter} from "vue-router";
 
 const props = defineProps({
   id: {
     type: String,
   },
-  holidayProps: {
+  initialValues: {
     type: Object,
-    required: false
+    default: null,
   },
   formType: {
     type: String,
@@ -63,26 +67,14 @@ const props = defineProps({
   }
 });
 
-const form = reactive(useForm());
 const router = useRouter();
 const holidayStore = useHolidayStore();
 const timeStore = useTimeStore();
 const authStore = useAuthStore();
-const description = ref(props.holidayProps?.description || '');
-const dateRange = ref(props.holidayProps ? [props.holidayProps.request_date_from, props.holidayProps.request_date_to] : []);
-const hours_requested = computed(() => countWorkingDays(dateRange.value));
-const saturday = computed(() => countSaturdays(dateRange.value));
-
-watch(() => props.holidayProps, (newVal) => { if (newVal) { if (newVal.description !== description.value) { description.value = newVal.description; } if (newVal.dateRange !== dateRange.value) { dateRange.value = [newVal.request_date_from, newVal.request_date_to]; } } }, { deep: true, immediate: true });
-
-function getDayKey(date) {
-  const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-  return days[date.getDay()];
-}
 
 function countWorkingDays(dates) {
   let schedule = timeStore.timeDetails.schedule
-  if (!dates || dates.length < 2) return 0;
+  if (!schedule || !dates || dates.length < 2) return 0;
 
   let count = 0;
   let currentDate = new Date(dates[0]);
@@ -96,6 +88,54 @@ function countWorkingDays(dates) {
   }
 
   return count;
+}
+
+addMethod(array, 'maxWorkingDays', function (max, message) {
+  return this.test('max-working-days', message, function (dates) {
+    const {path, createError} = this;
+    const count = countWorkingDays(dates);
+    if (count > max) {
+      return createError({path, message});
+    }
+    return true;
+  });
+});
+
+const {handleSubmit, defineField, errors, setValues, resetForm} = useForm({
+  validationSchema: toTypedSchema(
+      object({
+        description: string().required().default(''),
+        dateRange: array().of(date().required()).min(2).max(2).required().default([]).test('is-valid-daterange', 'Start date must be before end date', (dates) => dates && dates[0] <= dates[1])
+            .test('max-saturdays', 'The range cannot contain more than 3 Saturdays', (dates) => countSaturdays(dates) <= 3)
+            .test('is-future-date', 'The date range should not be in the past', (dates) => {
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+              return dates && dates[0] >= today;
+            })
+            .maxWorkingDays(14, 'The range cannot have more than 14 working days'),
+        requested: number().default(0)
+            .test('remaining', 'You don\'t have enough days', (dates) => countWorkingDays(dates) <= 3),
+        saturday: number().default(0)
+            .test('saturday-count', 'You donn\'t have enough Saturdays', (dates) => countSaturdays(dates) <= 5)
+      }),
+  ),
+  initialValues: props.initialValues ?? {
+    description: '',
+    dateRange: [],
+    requested: 0,
+    saturday: 0
+  },
+});
+
+watchEffect(() => {
+  if (props.initialValues) {
+    resetForm({values: props.initialValues});
+  }
+});
+
+function getDayKey(date) {
+  const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  return days[date.getDay()];
 }
 
 function countSaturdays(dates) {
@@ -115,59 +155,55 @@ function countSaturdays(dates) {
   return count;
 }
 
-yup.addMethod(yup.array, 'maxWorkingDays', function (max, message) {
-  return this.test('max-working-days', message, function (dates) {
-    const { path, createError } = this;
-    const count = countWorkingDays(dates);
-    if (count > max) {
-      return createError({ path, message });
-    }
-    return true;
-  });
+const [description, descriptionAttrs] = defineField('description')
+const [dateRange, dateRangeAttrs] = defineField('dateRange')
+const [requested] = defineField('requested')
+const [saturday] = defineField('saturday')
+
+watch(dateRange, (newDateRange) => {
+  // Compute the new day count
+  const newDayCount = countWorkingDays(newDateRange);
+  const saturdayCount = countSaturdays(newDateRange)
+  // Set the new day count which will update the form state
+  setValues({requested: newDayCount});
+  setValues({saturday: saturdayCount})
 });
 
-const { handleSubmit } = useForm({
-  validationSchema: yup.object({
-    description: yup.string().required().label('Description'),
-    dateRange: yup.array().of(yup.date())
-        .min(2)
-        .test('is-valid-daterange', 'Start date must be before end date', (dates) => dates && dates[0] < dates[1])
-        .test('max-saturdays', 'The range cannot contain more than 3 Saturdays', (dates) => countSaturdays(dates) <= 3)
-        .test('is-future-date', 'The date range should not be in the past', (dates) => {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          return dates && dates[0] >= today;
-        })
-        .maxWorkingDays(14, 'The range cannot have more than 14 working days')
-        .required().label('Date Range')
-  })
-});
-
-const onSubmit = handleSubmit((originalValues) => {
-  const [request_date_from, request_date_to] = originalValues.dateRange || [];
-  const mergedValues = {
-    ...originalValues,
-    request_date_from,
-    request_date_to,
+const onSubmit = handleSubmit(values => {
+  const [date_from, date_to] = values.dateRange || [];
+  const formattedValues = {
+    ...values,
+    date_from,
+    date_to,
     staff_id: authStore.user.staff_id,
-    hours_requested: hours_requested.value,
-    saturday: saturday.value
-  };
-
-  delete mergedValues.dateRange;
-
-  if (props.formType === 'update') {
-    holidayStore.updateHoliday(props.id, mergedValues).then(() => {
-      router.push({ name: 'holiday-detail', params: { id: props.id } });
+  }
+  delete formattedValues.dateRange;
+  if (props.formType === 'create') {
+    holidayStore.submitHoliday(formattedValues).then(() => {
+      router.push({name: 'holiday-dashboard', params: {filter: 'all'}});
     }).catch((error) => {
       console.error(error);
     });
   } else {
-    holidayStore.submitHoliday(mergedValues).then(() => {
-      router.push({ name: 'holiday-dashboard', params: { filter: 'all' } });
+    holidayStore.updateHoliday(props.id, formattedValues).then(() => {
+      router.push({name: 'holiday-detail', params: {id: props.id}});
     }).catch((error) => {
       console.error(error);
     });
   }
 });
+
+onMounted(async () => {
+  if (props.formType === 'update') {
+    const initialValues = {
+      description: holidayStore.holiday.description,
+      dateRange: [
+        new Date(holidayStore.holiday.date_from),
+        new Date(holidayStore.holiday.date_to)
+      ]
+    };
+    resetForm({values: initialValues});
+  }
+});
+
 </script>

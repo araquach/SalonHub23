@@ -8,8 +8,8 @@
           <p>Hours:</p>
         </div>
         <div class="column">
-          <p>{{ formatDate(lieu.date_regarding) }}</p>
-          <p>{{ lieu.lieu_hours }}</p>
+          <p>{{ formatDate(lieu.request_date) }}</p>
+          <p>{{ lieu.hours }}</p>
         </div>
       </div>
     </div>

@@ -1,22 +1,33 @@
 <template>
-  <form v-on:submit.prevent="submitForm">
+  <form v-if="!freeTimeStore.freeTimeLoading" @submit="onSubmit">
     <div>
       <div class="field">
-        <BaseInput
-            v-model="freeTime.description"
-            label="Description"
-            type="text"
-        />
+        <label class="label">Description</label>
+        <div class="control">
+          <input class="input" :class="{'is-danger': errors.description }" v-model="description"
+                 v-bind="descriptionAttrs" type="text">
+        </div>
+        <span class="help is-danger">{{ errors.description }}</span>
       </div>
       <div class="field">
-        <VueDatePicker v-model="freeTime.date_regarding" :enable-time-picker="false"></VueDatePicker>
+        <div class="label">Request Date</div>
+        <div class="control">
+          <VueDatePicker
+              v-model="request_date"
+              v-bind="request_dateAttrs"
+              :enable-time-picker="false"
+              :class="{'is-danger': errors.request_date}"
+          ></VueDatePicker>
+        </div>
+        <span class="help is-danger">{{ errors.request_date }}</span>
       </div>
       <div class="field">
-        <BaseInput
-            v-model.number="freeTime.free_time_hours"
-            label="Time Requested"
-            type="number"
-        />
+        <label class="label">Time Requested</label>
+        <div class="control">
+          <input class="input" :class="{'is-danger': errors.hours }" v-model="hours"
+                 v-bind="hoursAttrs" type="number">
+        </div>
+        <span class="help is-danger">{{ errors.hours }}</span>
       </div>
       <br>
       <div class="field">
@@ -30,44 +41,86 @@
   </form>
 </template>
 <script setup>
-import {ref} from 'vue';
+import {useForm} from 'vee-validate';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import {object, string, number, date} from "yup";
+import {toTypedSchema} from '@vee-validate/yup';
+import {onMounted, watchEffect} from "vue";
 import { useFreeTimeStore } from '../../../stores/freeTimeStore';
 import { useAuthStore } from 'auth/src/stores/authStore';
-import BaseInput from 'main/src/front/components/formBase/BaseInput.vue';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import { useRouter } from 'vue-router';
+import {useRouter} from "vue-router";
 
 const props = defineProps({
-  id: String,
-  freeTimeProps: Object,
-  formType: String
+  id: {
+    type: String
+  },
+  initialValues: {
+    type: Object,
+    default: null
+  },
+  formType: {
+    type: String,
+    required: true
+  }
 })
 
 const router = useRouter();
 const freeTimeStore = useFreeTimeStore();
 const authStore = useAuthStore();
 
-let freeTime = ref(props.freeTimeProps || {
-  id: null,
-  staff_id: authStore.user.staff_id,
-  free_time_hours: 0,
-  description: '',
-  date_regarding: null,
+const {handleSubmit, defineField, errors, resetForm} = useForm({
+  validationSchema: toTypedSchema(
+      object({
+        description: string().required().default(''),
+        request_date: date().required().default({}),
+        hours: number().required().default(0)
+      })
+  ),
+  initialValues: props.initialValues ?? {
+    description: '',
+    request_date: {},
+    hours: 0
+  }
+})
+
+watchEffect(() => {
+  if (props.initialValues) {
+    resetForm({values: props.initialValues});
+  }
 });
 
-const submitForm = () => {
-  if (props.formType === 'update') {
-    freeTimeStore.updateFreeTime(props.id, freeTime.value).then(() => {
-      router.push({name: 'free-time-detail', params: {id: props.id}});
+const [description, descriptionAttrs] = defineField('description')
+const [request_date, request_dateAttrs] = defineField('request_date')
+const [hours, hoursAttrs] = defineField('hours')
+
+const onSubmit = handleSubmit(values => {
+  const formattedValues = {
+    ...values,
+    staff_id: authStore.user.staff_id,
+  }
+  if (props.formType === 'create') {
+    freeTimeStore.submitFreeTime(formattedValues).then(() => {
+      router.push({name: 'free-time-dashboard', params: {filter: 'all'}});
     }).catch((error) => {
-      console.log(error)
+      console.error(error);
     });
   } else {
-    freeTimeStore.submitFreeTime(freeTime.value).then(() => {
-      router.push({name: 'free-time-dashboard', params: {filter: 'all'}})
+    freeTimeStore.updateFreeTime(props.id, formattedValues).then(() => {
+      router.push({name: 'free-time-detail', params: {id: props.id}});
     }).catch((error) => {
-      console.log(error)
-    })
+      console.error(error);
+    });
   }
-}
+});
+
+onMounted(async () => {
+  if (props.formType === 'update') {
+    const initialValues = {
+      description: freeTimeStore.freeTime.description,
+      request_date: freeTimeStore.freeTime.request_date,
+      hours: freeTimeStore.freeTime.hours
+    };
+    resetForm({values: initialValues});
+  }
+});
 </script>
