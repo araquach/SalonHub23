@@ -12,7 +12,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p class="is-size-6">30 remaining</p>
+                  <p class="is-size-6">{{ timeDetails.holidays }} booked</p>
                 </div>
               </div>
             </div>
@@ -33,7 +33,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p class="is-size-6">30 hours</p>
+                  <p class="is-size-6">{{ timeDetails.lieu }} hours</p>
                 </div>
               </div>
             </div>
@@ -54,7 +54,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p class="is-size-6">30 hours</p>
+                  <p class="is-size-6">{{ timeDetails.free_time }} hours</p>
                 </div>
               </div>
             </div>
@@ -75,7 +75,7 @@
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p class="is-size-6">30 days</p>
+                  <p class="is-size-6">{{ timeDetails.sick }} days</p>
                 </div>
               </div>
             </div>
@@ -89,7 +89,13 @@
   </div>
 </template>
 <script setup>
-//import {useTimeStore} from "../../stores/timeStore";
+import {useTimeStore} from "../../stores/timeStore";
+import {computed, onMounted} from "vue";
 
-// const timeStore = useTimeStore();
+const timeStore = useTimeStore();
+const timeDetails = computed(() => timeStore.timeDash);
+
+onMounted(() => {
+  timeStore.loadTimeDash();
+});
 </script>

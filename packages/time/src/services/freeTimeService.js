@@ -5,17 +5,17 @@ export default {
         return mainService.get(`/time/free-time/dash/${id}`)
     },
     getFreeTimes(id) {
-        return mainService.get(`/time/free-times/${id}`)
+        return mainService.get(`/time/free-time/all/${id}`)
     },
     getFreeTime(id) {
         return mainService.get(`time/free-time/${id}`)
     },
     async postFreeTime(freeTime) {
-        const response = await mainService.post(`/time/free-time-create`, freeTime)
+        const response = await mainService.post(`/time/free-time/create`, freeTime)
         return response.data
     },
     async updateFreeTime(id, freeTime) {
-        const response = await mainService.put(`/time/free-time-update/${id}`, freeTime)
+        const response = await mainService.put(`/time/free-time/update/${id}`, freeTime)
         return response.data
     }
 }

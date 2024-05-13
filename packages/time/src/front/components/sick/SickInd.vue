@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'sick-detail', params: { id: sick.id } } " class="column is-6-mobile is-4-tablet is-3-desktop">
+  <router-link :to="{ name: 'sick-detail', params: { id: sick.id } }" class="column is-6-mobile is-4-tablet is-3-desktop">
     <div :class="statusColour" class="box has-background-sick">
       <h2 class="title is-5">{{sick.description}}</h2>
       <div class="columns">
@@ -9,9 +9,9 @@
           <p>Days:</p>
         </div>
         <div class="column">
-          <p>{{formatDate(sick.sick_from) }}</p>
-          <p>{{ formatDate(sick.sick_to) }}</p>
-          <p>{{sick.sick_hours / 8}}</p>
+          <p>{{formatDate(sick.date_from) }}</p>
+          <p>{{ formatDate(sick.date_to) }}</p>
+          <p>{{sick.hours}}</p>
         </div>
       </div>
     </div>
@@ -19,13 +19,10 @@
 </template>
 
 <script setup>
-import {computed, defineProps} from 'vue';
+import {computed } from 'vue';
 import { format } from 'date-fns';
 
-const props = defineProps({
-  sick: Object,
-  filter: [String, Number]
-});
+const props = defineProps(['sick']);
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);

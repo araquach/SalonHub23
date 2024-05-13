@@ -35,6 +35,14 @@
                 <td>{{ approvalStatus }}</td>
               </tr>
             </table>
+            <form @submit="onSubmit">
+              <label class="label">Approve</label>
+              <div class="buttons has-addons">
+                <button class="button is-small is-approved" @click="approved = 1">Approve</button>
+                <button class="button is-small is-denied" @click="approved = 2">Deny</button>
+              </div>
+            </form>
+            <br>
             <div class="buttons">
               <router-link v-if="holiday.approved === 0" :to="{name: 'holiday-update', params: {id: props.id}}" class="button is-white is-small">
                 Edit Holiday
@@ -56,27 +64,34 @@
 </template>
 <script setup>
 import {useHolidayStore} from "../../../stores/holidayStore";
-import {computed, ref, onMounted} from "vue";
+import {useHolidayAdminStore} from "../../../stores/admin/holidayAdminStore";
+import {computed, ref, onMounted, watchEffect} from "vue";
+import {useForm} from 'vee-validate';
+import {number, object} from "yup";
+import {toTypedSchema} from "@vee-validate/yup";
 import {format} from "date-fns"
+import {useRouter} from "vue-router";
 
 const props = defineProps({
   id: {
+    type: String,
     required: true
+  },
+  initialValues: {
+    type: {},
+    default: null
   }
 })
 
+const router = useRouter();
 const holidayStore = useHolidayStore();
+const holidayAdminStore = useHolidayAdminStore()
 const holiday = computed(() => holidayStore.holiday)
 const loading = ref(true)
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return format(date, 'do MMMM yyyy');
 }
-
-onMounted(async () => {
-  await holidayStore.loadHoliday(props.id)
-  loading.value = false
-})
 
 const approvalStatus = computed(() => {
   if (holiday.value?.approved === 2) {
@@ -95,6 +110,43 @@ const statusColour = computed(() => {
     return 'denied'
   } else return 'pending'
 })
+
+const {handleSubmit, defineField, resetForm} = useForm ({
+  validationSchema: toTypedSchema(
+      object({
+        approved: number().default(0)
+      })
+  ),
+  initialValues: props.initialValues ?? {
+    approved: 0
+  }
+})
+
+const [approved] = defineField('approved')
+
+watchEffect(() => {
+  if (props.initialValues) {
+    resetForm({values: props.initialValues});
+  }
+});
+
+const onSubmit = handleSubmit(values => {
+  holidayAdminStore.approveHoliday(props.id, values).then(() => {
+  }).catch((error) => {
+    console.error(error);
+  });
+  router.push({name: 'holiday-dashboard', params: {filter: 'all'}});
+})
+
+onMounted(async () => {
+  await holidayStore.loadHoliday(props.id)
+  loading.value = false
+  const initialValues = {
+    approved: holidayStore.holiday.approved,
+  };
+  resetForm({values: initialValues});
+})
+
 </script>
 
 <style scoped>

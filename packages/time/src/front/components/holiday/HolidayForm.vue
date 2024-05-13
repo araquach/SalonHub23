@@ -25,6 +25,7 @@
       <div v-if="requested">
         <div class="field">
           <p class="is-size-4">Requested: {{ requested }} days</p>
+          <span class="help is-danger">{{ errors.requested }}</span>
         </div>
 
         <div class="field">
@@ -55,7 +56,7 @@ import {useRouter} from "vue-router";
 
 const props = defineProps({
   id: {
-    type: String,
+    type: String
   },
   initialValues: {
     type: Object,
@@ -106,17 +107,25 @@ const {handleSubmit, defineField, errors, setValues, resetForm} = useForm({
       object({
         description: string().required().default(''),
         dateRange: array().of(date().required()).min(2).max(2).required().default([]).test('is-valid-daterange', 'Start date must be before end date', (dates) => dates && dates[0] <= dates[1])
+            .test('is-within-current-year', 'The date range must be within the current year', (dates) => {
+              const currentYear = (new Date()).getFullYear();
+              return (
+                  dates &&
+                  dates[0] instanceof Date && !isNaN(dates[0]) && dates[0].getFullYear() === currentYear
+                  && dates[1] instanceof Date && !isNaN(dates[1]) && dates[1].getFullYear() === currentYear
+              );
+            })
             .test('max-saturdays', 'The range cannot contain more than 3 Saturdays', (dates) => countSaturdays(dates) <= 3)
             .test('is-future-date', 'The date range should not be in the past', (dates) => {
               const today = new Date();
               today.setHours(0, 0, 0, 0);
               return dates && dates[0] >= today;
-            })
-            .maxWorkingDays(14, 'The range cannot have more than 14 working days'),
+            }),
         requested: number().default(0)
-            .test('remaining', 'You don\'t have enough days', (dates) => countWorkingDays(dates) <= 3),
+            .max(14, 'The range cannot have more than 14 working days')
+            .max(holidayStore.holidayDash.remaining_pending,'You don\'t have enough holidays'),
         saturday: number().default(0)
-            .test('saturday-count', 'You donn\'t have enough Saturdays', (dates) => countSaturdays(dates) <= 5)
+            .max(holidayStore.holidayDash.sat_pending, 'You don\'t have enough Saturdays')
       }),
   ),
   initialValues: props.initialValues ?? {
@@ -194,6 +203,8 @@ const onSubmit = handleSubmit(values => {
 });
 
 onMounted(async () => {
+  await holidayStore.loadHolidayDash();
+  await holidayStore.loadHolidays();
   if (props.formType === 'update') {
     const initialValues = {
       description: holidayStore.holiday.description,

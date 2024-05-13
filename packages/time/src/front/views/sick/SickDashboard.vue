@@ -12,6 +12,7 @@
           <div v-else class="column">
             <p class="is-size-3">Total Sick: {{ timeDetails.sick_days }} days</p>
             <span v-if="timeDetails.pending" class="is-size-6">({{ timeDetails.pending }} pending)</span>
+            <p class="is-size-4">Instances: {{ timeDetails.instances }}</p>
           </div>
         </div>
         <div class="buttons">

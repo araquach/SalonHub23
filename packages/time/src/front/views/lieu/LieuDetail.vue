@@ -27,6 +27,13 @@
                 <td>{{ approvalStatus }}</td>
               </tr>
             </table>
+            <form @submit="onSubmit">
+              <label class="label">Approve</label>
+              <div class="buttons has-addons">
+                <button class="button is-small is-approved" @click="approved = 1">Approve</button>
+                <button class="button is-small is-denied" @click="approved = 2">Deny</button>
+              </div>
+            </form>
             <div class="buttons">
               <router-link v-if="lieu.approved === 0" :to="{name: 'lieu-update', params: {id: props.id}}" class="button is-white is-small">
                 Edit Lieu
