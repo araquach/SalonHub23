@@ -1,7 +1,7 @@
 <template>
-    <Header/>
+    <MainHeader/>
     <RouterView />
 </template>
 <script setup>
-import Header from "./front/components/MainHeader.vue"
+import MainHeader from "./front/components/MainHeader.vue"
 </script>

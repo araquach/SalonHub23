@@ -29,6 +29,6 @@ const dashboardStore = useMainDashboardStore()
 const mainStore = useMainStore()
 
 onMounted(() => {
-  mainStore.changeView();
+  mainStore.changeView('personal');
 });
 </script>

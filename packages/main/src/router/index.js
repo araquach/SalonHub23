@@ -6,18 +6,14 @@ import AdminRoutes from "./adminRoutes"
 import PerformanceRoutes from "performance/src/router/performanceRoutes";
 import RecruitmentRoutes from "recruitment/src/router/recruitmentRoutes";
 import AuthRoutes from "auth/src/router/authRoutes";
-import MainDashboard from "../front/views/admin/MainAdminDash.vue";
+import MainDashboard from "../front/views/MainDash.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: '/',
-            name: 'main-index',
             component: MainIndex,
-            meta: {
-                requiresAuth: true
-            },
             children: [
                 {
                     path: '',

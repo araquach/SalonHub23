@@ -35,8 +35,7 @@
                 <td>{{ approvalStatus }}</td>
               </tr>
             </table>
-            <form v-if="mainStore.adminView" @submit="onSubmit">
-              <label class="label">Approval Status:</label>
+            <form v-if="mainStore.selectedView === 'admin'" @submit="onSubmit">
               <div class="buttons has-addons">
                 <button class="button is-small is-approved" @click="approved = 1">Approve</button>
                 <button class="button is-small is-denied" @click="approved = 2">Deny</button>
@@ -47,8 +46,11 @@
               <router-link v-if="holiday.approved === 0" :to="{name: 'holiday-update', params: {id: props.id}}" class="button is-white is-small">
                 Edit Holiday
               </router-link>
-              <router-link :to="{ name: 'holiday-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
+              <router-link v-if="mainStore.selectedView !== 'admin'" :to="{ name: 'holiday-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
                 Back to all Holidays
+              </router-link>
+              <router-link v-else :to="{ name: 'holiday-admin-dashboard'}" class="button is-small is-white">
+                Back to pending
               </router-link>
             </div>
             </div>
@@ -137,7 +139,7 @@ const onSubmit = handleSubmit(values => {
   }).catch((error) => {
     console.error(error);
   });
-  router.push({name: 'holiday-dashboard', params: {filter: 'all'}});
+  router.push({ name: 'holiday-admin-dashboard' });
 })
 
 onMounted(async () => {

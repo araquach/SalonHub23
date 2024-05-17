@@ -29,6 +29,6 @@ const store = useMainDashboardAdminStore()
 const mainStore = useMainStore()
 
 onMounted(() => {
-  mainStore.changeView();
+  mainStore.changeView('admin');
 });
 </script>

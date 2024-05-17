@@ -34,7 +34,7 @@ const props = defineProps(['holiday']);
 const mainStore = useMainStore();
 
 const detailRoute = computed(() => ({
-  name: mainStore.adminView ? 'holiday-admin-detail' : 'holiday-detail',
+  name: mainStore.selectedView === 'admin' ? 'holiday-admin-detail' : 'holiday-detail',
   params: { id: props.holiday.id },
 }));
 

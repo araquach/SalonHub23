@@ -1,5 +1,6 @@
 import LieuAdminIndex from "../../front/views/lieu/admin/LieuAdminIndex.vue"
 import LieuAdminDashboard from "../../front/views/lieu/admin/LieuAdminDashboard.vue";
+import LieuAdminDetail from "../../front/views/lieu/admin/LieuAdminDetail.vue";
 
 export default [
     {
@@ -17,5 +18,14 @@ export default [
                 }
             }
         ]
-    }
+    },
+    {
+        path: 'detail/:id',
+        name: 'lieu-admin-detail',
+        component: LieuAdminDetail,
+        props: true,
+        meta: {
+            requiresAuth: true
+        }
+    },
 ]

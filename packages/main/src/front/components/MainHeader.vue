@@ -50,7 +50,12 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <router-link :to="{name: 'main-dashboard'}" class="button is-holiday">
+              <router-link v-if="authStore.user.admin_level !== 1 && mainStore.selectedView === 'admin'"
+                           :to="{ name: 'main-dashboard' }" class="button is-holiday">
+                Personal
+              </router-link>
+              <router-link v-else-if="authStore.user.admin_level !== 1 && mainStore.selectedView === 'personal'" :to="{ name: 'main-admin-dashboard' }"
+                           class="button is-holiday">
                 Admin
               </router-link>
               <router-link v-if="!authStore.loggedIn" :to="{name: 'login'}" class="button is-light">
@@ -68,9 +73,11 @@
 </template>
 
 <script setup>
-import { useAuthStore } from "auth/src/stores/authStore";
+import {useAuthStore} from "auth/src/stores/authStore";
+import {useMainStore} from "../../stores/mainStore";
 
 const authStore = useAuthStore();
+const mainStore = useMainStore();
 
 const logout = () => {
   authStore.logout();

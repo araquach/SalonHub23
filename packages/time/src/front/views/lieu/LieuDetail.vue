@@ -27,7 +27,7 @@
                 <td>{{ approvalStatus }}</td>
               </tr>
             </table>
-            <form @submit="onSubmit">
+            <form v-if="mainStore.selectedView === 'admin'" @submit="onSubmit">
               <label class="label">Approval Status</label>
               <div class="buttons has-addons">
                 <button class="button is-small is-approved" @click="approved = 1">Approve</button>
@@ -39,8 +39,11 @@
               <router-link v-if="lieu.approved === 0" :to="{name: 'lieu-update', params: {id: props.id}}" class="button is-white is-small">
                 Edit Lieu
               </router-link>
-              <router-link :to="{ name: 'lieu-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
+              <router-link v-if="mainStore.selectedView !== 'admin'" :to="{ name: 'lieu-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
                 Back to all Lieu Requests
+              </router-link>
+              <router-link v-else :to="{ name: 'lieu-admin-dashboard' }" class="button is-small is-white">
+                Back to pending lieu
               </router-link>
             </div>
           </div>
@@ -63,6 +66,7 @@ import {number, object} from "yup";
 import {toTypedSchema} from "@vee-validate/yup";
 import { format } from "date-fns";
 import {useRouter} from "vue-router";
+import {useMainStore} from "main/src/stores/mainStore";
 
 const props = defineProps({
   id: {
@@ -75,6 +79,7 @@ const props = defineProps({
 })
 
 const router = useRouter();
+const mainStore = useMainStore()
 const lieuStore = useLieuStore();
 const lieuAdminStore = useLieuAdminStore()
 const lieu = computed(() => lieuStore.lieuHour);
@@ -127,7 +132,7 @@ const onSubmit = handleSubmit(values => {
   }).catch((error) => {
     console.error(error);
   });
-  router.push({name: 'lieu-dashboard', params: {filter: 'all'}});
+  router.push({name: 'lieu-admin-dashboard', params: {filter: 'all'}});
 })
 
 onMounted(async () => {

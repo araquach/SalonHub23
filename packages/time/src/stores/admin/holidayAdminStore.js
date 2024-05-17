@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
 import holidayAdminService from "../../services/admin/holidayAdminService";
 import {useHolidayStore} from "../holidayStore";
-import {useAuthStore} from "auth/src/stores/authStore";
-import holidayService from "../../services/holidayService";
 
 export const useHolidayAdminStore = defineStore('holidayAdmin', {
     state: () => {
@@ -10,11 +8,9 @@ export const useHolidayAdminStore = defineStore('holidayAdmin', {
             holidayAdminDash: {},
             holidayAdminDashLoading: null,
             holidays: [],
-            holidaysPending: [],
-            holidaysPendingLoading: null,
             holidaysLoading: null,
-            holiday: {},
-            holidayLoading: null
+            holidaysPending: [],
+            holidaysPendingLoading: null
         }
     },
 
@@ -71,30 +67,6 @@ export const useHolidayAdminStore = defineStore('holidayAdmin', {
                 this.holidaysLoading = false;
             }
             return { holidays: this.holidays, holidaysLoading: this.holidaysLoading }
-        },
-
-        async loadHoliday(id) {
-            this.holidayLoading = true
-            try {
-                const response = await holidayAdminService.getHoliday(id)
-                this.holiday = response.data;
-            } catch (error) {
-                console.log(error);
-                throw error;
-            } finally {
-                this.holidayLoading = false;
-            }
-            return { holiday: this.holiday, holidayLoading: this.holidayLoading }
-        },
-
-        async updateHoliday(id, holiday) {
-            try {
-                const updatedHoliday = await holidayService.updateHoliday(id, holiday);
-                this.holidays = this.holidays.map(h => h.id === holiday.id ? updatedHoliday : h);
-                return updatedHoliday;
-            } catch (error) {
-                console.error(error);
-            }
         },
 
         async approveHoliday(id, holiday) {

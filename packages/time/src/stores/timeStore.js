@@ -4,7 +4,6 @@ import {useAuthStore} from "auth/src/stores/authStore";
 import timeService from "../services/timeService";
 
 export const useTimeStore = defineStore('time', {
-    // arrow function recommended for full type inference
     state: () => {
         return {
             timeDash: {},
