@@ -28,12 +28,13 @@
               </tr>
             </table>
             <form @submit="onSubmit">
-              <label class="label">Approve</label>
+              <label class="label">Approval Status</label>
               <div class="buttons has-addons">
                 <button class="button is-small is-approved" @click="approved = 1">Approve</button>
                 <button class="button is-small is-denied" @click="approved = 2">Deny</button>
               </div>
             </form>
+            <br>
             <div class="buttons">
               <router-link v-if="lieu.approved === 0" :to="{name: 'lieu-update', params: {id: props.id}}" class="button is-white is-small">
                 Edit Lieu
@@ -55,27 +56,46 @@
 </template>
 <script setup>
 import {useLieuStore} from "../../../stores/lieuStore";
-import {computed, onMounted, ref} from "vue";
+import {useLieuAdminStore} from "../../../stores/admin/lieuAdminStore";
+import {computed, onMounted, ref, watchEffect} from "vue";
+import {useForm} from 'vee-validate';
+import {number, object} from "yup";
+import {toTypedSchema} from "@vee-validate/yup";
 import { format } from "date-fns";
+import {useRouter} from "vue-router";
 
 const props = defineProps({
   id: {
     required: true
+  },
+  initialValues: {
+    type: {},
+    default: null
   }
 })
 
+const router = useRouter();
 const lieuStore = useLieuStore();
+const lieuAdminStore = useLieuAdminStore()
 const lieu = computed(() => lieuStore.lieuHour);
 const loading = ref(true);
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return format(date, 'do MMMM yyyy');
-};
+}
 
-onMounted(async () => {
-  await lieuStore.loadLieuHour(props.id)
-  loading.value = false
+const {handleSubmit, defineField, resetForm} = useForm ({
+  validationSchema: toTypedSchema(
+      object({
+        approved: number().default(0)
+      })
+  ),
+  initialValues: props.initialValues ?? {
+    approved: 0
+  }
 })
+
+const [approved] = defineField('approved')
 
 // Computed properties
 const approvalStatus = computed(() => {
@@ -95,6 +115,29 @@ const statusColour = computed(() => {
     return 'denied'
   } else return 'pending'
 });
+
+watchEffect(() => {
+  if (props.initialValues) {
+    resetForm({values: props.initialValues});
+  }
+});
+
+const onSubmit = handleSubmit(values => {
+  lieuAdminStore.approveLieu(props.id, values).then(() => {
+  }).catch((error) => {
+    console.error(error);
+  });
+  router.push({name: 'lieu-dashboard', params: {filter: 'all'}});
+})
+
+onMounted(async () => {
+  await lieuStore.loadLieuHour(props.id)
+  loading.value = false
+  const initialValues = {
+    approved: lieuStore.lieuHour.approved,
+  };
+  resetForm({values: initialValues});
+})
 </script>
 
 <style scoped>

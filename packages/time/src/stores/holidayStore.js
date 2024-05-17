@@ -56,7 +56,7 @@ export const useHolidayStore = defineStore('holiday', {
             } finally {
                 this.holidayDashLoading = false;
             }
-            return { holidayDash: this.holidayDash, holidaysDashLoading: this.holidayDashLoading }
+            return { holidayDash: this.holidayDash, holidayDashLoading: this.holidayDashLoading }
         },
 
         setActiveFilter(filter) {

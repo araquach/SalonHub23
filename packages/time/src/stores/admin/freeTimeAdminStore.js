@@ -18,7 +18,7 @@ export const useFreeTimeAdminStore = defineStore('FreeTimeAdmin', {
             try {
                 const approvedFreeTime = await freeTimeAdminService.approveFreeTime(id, freeTime);
                 const freeTimeStore = useFreeTimeStore();
-                freeTimeStore.freeTime = freeTimeStore.freeTime.map(h => h.id === freeTime.id ? approvedFreeTime : h);
+                freeTimeStore.freeTimes = freeTimeStore.freeTimes.map(ft => ft.id === freeTime.ft ? approvedFreeTime : ft);
                 return approvedFreeTime;
             } catch (error) {
                 console.error(error);

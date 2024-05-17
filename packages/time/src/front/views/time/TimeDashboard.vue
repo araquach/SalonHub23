@@ -89,7 +89,7 @@
   </div>
 </template>
 <script setup>
-import {useTimeStore} from "../../stores/timeStore";
+import {useTimeStore} from "../../../stores/timeStore";
 import {computed, onMounted} from "vue";
 
 const timeStore = useTimeStore();

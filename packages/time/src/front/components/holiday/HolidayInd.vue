@@ -1,6 +1,7 @@
 <template>
-  <router-link :to="{ name: 'holiday-detail', params: { id: holiday.id } }" class="column is-6-mobile is-4-tablet is-3-desktop">
+  <router-link :to="detailRoute" class="column is-6-mobile is-4-tablet is-3-desktop">
     <div :class="statusColour" class="box has-background-holiday">
+      <h2 class="title is-4 mb-2">{{ holiday.first_name }} {{ holiday.last_name }}</h2>
       <h2 class="title is-5">{{holiday.description}}</h2>
       <div class="columns">
         <div class="column">
@@ -25,10 +26,17 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed } from "vue";
 import { format } from "date-fns";
+import {useMainStore} from "main/src/stores/mainStore"
 
 const props = defineProps(['holiday']);
+const mainStore = useMainStore();
+
+const detailRoute = computed(() => ({
+  name: mainStore.adminView ? 'holiday-admin-detail' : 'holiday-detail',
+  params: { id: props.holiday.id },
+}));
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);

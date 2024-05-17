@@ -50,6 +50,9 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
+              <router-link :to="{name: 'main-dashboard'}" class="button is-holiday">
+                Admin
+              </router-link>
               <router-link v-if="!authStore.loggedIn" :to="{name: 'login'}" class="button is-light">
                 Log in
               </router-link>

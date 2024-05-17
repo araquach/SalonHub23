@@ -1,12 +1,12 @@
-import {createRouter, createWebHistory} from 'vue-router'
-import MainIndex from '../front/views/MainIndex.vue'
-import FinanceRoutes from "finance/src/router/financeRoutes"
+import {createRouter, createWebHistory} from 'vue-router';
+import MainIndex from '../front/views/MainIndex.vue';
+import FinanceRoutes from "finance/src/router/financeRoutes";
 import TimeRoutes from "time/src/router/timeRoutes";
-import PerformanceRoutes from "performance/src/router/performanceRoutes"
+import AdminRoutes from "./adminRoutes"
+import PerformanceRoutes from "performance/src/router/performanceRoutes";
 import RecruitmentRoutes from "recruitment/src/router/recruitmentRoutes";
 import AuthRoutes from "auth/src/router/authRoutes";
-// import ReviewsRoutes from "../reviews/router"
-// import StockRoutes from "../stock/router"
+import MainDashboard from "../front/views/admin/MainAdminDash.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,15 +17,25 @@ const router = createRouter({
             component: MainIndex,
             meta: {
                 requiresAuth: true
-            }
+            },
+            children: [
+                {
+                    path: '',
+                    name: 'main-dashboard',
+                    component: MainDashboard,
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+                ...TimeRoutes,
+                ...FinanceRoutes,
+                ...PerformanceRoutes,
+                ...RecruitmentRoutes,
+                ...AuthRoutes,
+                ...AdminRoutes
+            ]
         },
-        ...FinanceRoutes,
-        ...TimeRoutes,
-        ...PerformanceRoutes,
-        ...RecruitmentRoutes,
-        ...AuthRoutes
-        // ...ReviewsRoutes,
-        // ...StockRoutes
+
     ]
 })
 

@@ -4,9 +4,9 @@
 </template>
 
 <script setup>
-import HeaderTime from "../../front/components/HeaderTime.vue";
+import HeaderTime from "../../../front/components/time/HeaderTime.vue";
 import {useAuthStore} from "auth/src/stores/authStore";
-import {useTimeStore} from "../../stores/timeStore";
+import {useTimeStore} from "../../../stores/timeStore";
 import {onMounted} from "vue";
 
 const authStore = useAuthStore();

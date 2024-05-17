@@ -35,8 +35,8 @@
                 <td>{{ approvalStatus }}</td>
               </tr>
             </table>
-            <form @submit="onSubmit">
-              <label class="label">Approve</label>
+            <form v-if="mainStore.adminView" @submit="onSubmit">
+              <label class="label">Approval Status:</label>
               <div class="buttons has-addons">
                 <button class="button is-small is-approved" @click="approved = 1">Approve</button>
                 <button class="button is-small is-denied" @click="approved = 2">Deny</button>
@@ -63,6 +63,7 @@
   </div>
 </template>
 <script setup>
+import {useMainStore} from "main/src/stores/mainStore"
 import {useHolidayStore} from "../../../stores/holidayStore";
 import {useHolidayAdminStore} from "../../../stores/admin/holidayAdminStore";
 import {computed, ref, onMounted, watchEffect} from "vue";
@@ -84,6 +85,7 @@ const props = defineProps({
 })
 
 const router = useRouter();
+const mainStore = useMainStore();
 const holidayStore = useHolidayStore();
 const holidayAdminStore = useHolidayAdminStore()
 const holiday = computed(() => holidayStore.holiday)
