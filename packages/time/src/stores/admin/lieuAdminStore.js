@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import {useLieuStore} from "../LieuStore";
 import lieuAdminService from "../../services/admin/lieuAdminService";
-import holidayAdminService from "../../services/admin/holidayAdminService";
 
 export const useLieuAdminStore = defineStore('LieuAdmin', {
     state: () => {
@@ -9,6 +8,7 @@ export const useLieuAdminStore = defineStore('LieuAdmin', {
             lieuAdminDash: {},
             lieuAdminDashLoading: {},
             lieuHours: [],
+            lieuHoursLoading: null,
             lieuHoursPending: [],
             lieuHoursPendingLoading: null,
         }
@@ -20,7 +20,7 @@ export const useLieuAdminStore = defineStore('LieuAdmin', {
 
     actions: {
         async loadLieuAdminDash() {
-            this.lieuAdminDashLoading === true
+            this.lieuAdminDashLoading = true
             try {
                 const response = await lieuAdminService.getLieuAdminDash()
                 this.lieuAdminDash = response.data;

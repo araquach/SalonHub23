@@ -46,7 +46,7 @@ export const useFreeTimeStore = defineStore('freeTime', {
         async loadFreeTimeDash() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
-            this.freeTimeDashLoading === true
+            this.freeTimeDashLoading = true
             try {
                 const response = await freeTimeService.getFreeTimeDash(id)
                 this.freeTimeDash = response.data;

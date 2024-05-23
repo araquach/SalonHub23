@@ -46,7 +46,7 @@ export const useHolidayStore = defineStore('holiday', {
         async loadHolidayDash() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
-            this.holidayDashLoading === true
+            this.holidayDashLoading = true
             try {
                 const response = await holidayService.getHolidayDash(id)
                 this.holidayDash = response.data;

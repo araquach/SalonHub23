@@ -42,7 +42,7 @@ export const useSickStore = defineStore('sick', {
         async loadSickDash() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
-            this.sickDashLoading === true
+            this.sickDashLoading = true
             try {
                 const response = await sickService.getSickDash(id)
                 this.sickDash = response.data;
@@ -50,7 +50,7 @@ export const useSickStore = defineStore('sick', {
                 console.log(error)
                 throw error
             } finally {
-                this.sickDashLoading === false;
+                this.sickDashLoading = false;
             }
             return { sickDash: this.sickDash, sickDashLoading: this.sickDashLoading }
         },
@@ -80,7 +80,7 @@ export const useSickStore = defineStore('sick', {
         },
 
         async loadSickDay(id) {
-            this.sickDayLoading === false
+            this.sickDayLoading = false
             try {
                 const response = await sickService.getSickDay(id)
                 this.sickDay = response.data;
@@ -88,7 +88,7 @@ export const useSickStore = defineStore('sick', {
                 console.log(error)
                 throw error
             } finally {
-                this.sickDayLoading === false;
+                this.sickDayLoading = false;
             }
             return { sickDay: this.sickDay, sickDayLoading: this.sickDayLoading }
         }

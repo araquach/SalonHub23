@@ -2,7 +2,7 @@
   <div class="dashboard section">
     <div class="columns is-mobile is-multiline section">
       <div class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
-        <router-link :to="{ name: 'holiday-admin-dashboard', params: { filter: 'all' } }">
+        <router-link :to="{ name: 'holiday-admin-dashboard'}">
           <div class="box has-background-holiday">
             <div class="level">
               <div class="level-left">
@@ -23,7 +23,7 @@
         </router-link>
       </div>
       <div class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
-        <router-link :to="{ name: 'lieu-admin-dashboard', params: { filter: 'all' } }">
+        <router-link :to="{ name: 'lieu-admin-dashboard' }">
           <div class="box has-background-lieu">
             <div class="level">
               <div class="level-left">
@@ -44,7 +44,7 @@
         </router-link>
       </div>
       <div class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
-        <router-link :to="{ name: 'free-time-admin-dashboard', params: { filter: 'all' } }">
+        <router-link :to="{ name: 'free-time-admin-dashboard'}">
           <div class="box has-background-free-time">
             <div class="level">
               <div class="level-left">
@@ -65,7 +65,7 @@
         </router-link>
       </div>
       <div class="column is-6-mobile is-3-tablet is-3-desktop is-2-widescreen">
-        <router-link :to="{ name: 'sick-admin-dashboard', params: { filter: 'all' } }">
+        <router-link :to="{ name: 'sick-admin-dashboard' }">
           <div class="box has-background-sick">
             <div class="level">
               <div class="level-left">

@@ -8,10 +8,11 @@
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Sick Log</h2>
+            <h3 v-if="mainStore.selectedView === 'admin'" class="title is-3">{{ sick.first_name }} {{ sick.last_name }}</h3>
             <h3 class="title is-4">{{ sick.description }}</h3>
             <table class="table has-background-sick has-text-white is-size-5">
               <tr>
-                <td>Log was made:</td>
+                <td>Log made:</td>
                 <td>{{ formatDate(sick.created_at) }}</td>
               </tr>
               <tr>
@@ -31,7 +32,25 @@
                 <td>{{ deductionStatus }}</td>
               </tr>
             </table>
-            <router-link :to="{ name: 'sick-dashboard', params: {filter: 'all'} }" class="button is-small is-white">Back to All Sick Days</router-link>
+            <form v-if="mainStore.selectedView === 'admin'" @submit="onSubmit">
+              <label class="label">Deduct:</label>
+              <div class="buttons has-addons">
+                <button class="button is-small is-approved" @click="deducted = 1">Yes</button>
+                <button class="button is-small is-denied" @click="deducted = 0">No</button>
+              </div>
+            </form>
+            <br>
+            <div class="buttons">
+              <router-link v-if="sick.approved === 0" :to="{name: 'sick-update', params: {id: props.id}}" class="button is-white is-small">
+                Edit Sick
+              </router-link>
+              <router-link v-if="mainStore.selectedView !== 'admin'" :to="{ name: 'sick-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
+                Back to all Sick Logs
+              </router-link>
+              <router-link v-else :to="{ name: 'sick-admin-dashboard' }" class="button is-small is-white">
+                Back to pending Sick Days
+              </router-link>
+            </div>
           </div>
           <div class="column is-3">
             <figure class="image">
@@ -44,17 +63,30 @@
   </div>
 </template>
 <script setup>
-import {ref, computed, onMounted} from 'vue';
+import {ref, computed, onMounted, watchEffect} from 'vue';
 import { useSickStore } from '../../../stores/sickStore';
 import { format } from 'date-fns';
+import {useSickAdminStore} from "../../../stores/admin/sickAdminStore";
+import {useRouter} from "vue-router";
+import {useMainStore} from "main/src/stores/mainStore";
+import {useForm} from "vee-validate";
+import {toTypedSchema} from "@vee-validate/yup";
+import {number, object} from "yup";
 
 const props = defineProps({
   id: {
     required: true
+  },
+  initialValues: {
+    type: {},
+    default: null
   }
 })
 
+const router = useRouter();
+const mainStore = useMainStore();
 const sickStore = useSickStore();
+const sickAdminStore = useSickAdminStore()
 const sick = computed(() => sickStore.sickDay);
 const loading = ref(true);
 const formatDate = (dateString) => {
@@ -62,9 +94,40 @@ const formatDate = (dateString) => {
   return format(date, 'do MMMM yyyy');
 }
 
+watchEffect(() => {
+  if (props.initialValues) {
+    resetForm({values: props.initialValues});
+  }
+});
+
+const {handleSubmit, defineField, resetForm} = useForm ({
+  validationSchema: toTypedSchema(
+      object({
+        deducted: number().default(0)
+      })
+  ),
+  initialValues: props.initialValues ?? {
+    deducted: 0
+  }
+})
+
+const [deducted] = defineField('deducted')
+
+const onSubmit = handleSubmit(values => {
+  sickAdminStore.deductSickDay(props.id, values).then(() => {
+  }).catch((error) => {
+    console.error(error);
+  });
+  router.push({name: 'sick-admin-dashboard' });
+})
+
 onMounted(async () => {
   await sickStore.loadSickDay(props.id)
   loading.value = false
+  const initialValues = {
+    approved: sickStore.sickDay.deducted,
+  };
+  resetForm({values: initialValues});
 })
 
 const deductionStatus = computed(() => sick.value?.deducted ? 'Yes' : 'No');

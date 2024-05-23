@@ -5,6 +5,7 @@ export const useMainStore = defineStore('main', {
     // arrow function recommended for full type inference
     state: () => {
         return {
+            salon: 1,
             selectedView: localStorage.getItem('selectedView') ? JSON.parse(localStorage.getItem('selectedView')) : 'personal',
             teamMembers: []
         }

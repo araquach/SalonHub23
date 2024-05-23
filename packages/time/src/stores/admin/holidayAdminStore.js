@@ -20,7 +20,7 @@ export const useHolidayAdminStore = defineStore('holidayAdmin', {
 
     actions: {
         async loadHolidayAdminDash() {
-            this.holidayAdminDashLoading === true
+            this.holidayAdminDashLoading = true
             try {
                 const response = await holidayAdminService.getHolidayAdminDash()
                 this.holidayAdminDash = response.data;
@@ -31,14 +31,6 @@ export const useHolidayAdminStore = defineStore('holidayAdmin', {
                 this.holidayAdminDashLoading = false;
             }
             return { holidayAdminDash: this.holidayAdminDash, holidayAdminDashLoading: this.holidayAdminDashLoading }
-        },
-
-        setActiveFilter(filter) {
-            if(filter === 'all') {
-                this.activeFilter = 3;
-            } else {
-                this.activeFilter = parseInt(filter, 10) || 0;
-            }
         },
 
         async loadHolidaysPending() {
@@ -55,10 +47,10 @@ export const useHolidayAdminStore = defineStore('holidayAdmin', {
             return { holidaysPending: this.holidaysPending, holidaysPendingLoading: this.holidaysPendingLoading }
         },
 
-        async loadHolidays() {
+        async loadHolidays(staff_id) {
             this.holidaysLoading = true;
             try {
-                const response = await holidayAdminService.getHolidays()
+                const response = await holidayAdminService.getHolidays(staff_id)
                 this.holidays = response.data;
             } catch (error) {
                 console.log(error);

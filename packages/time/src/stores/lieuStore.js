@@ -46,7 +46,7 @@ export const useLieuStore = defineStore('lieu', {
         async loadLieuDash() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
-            this.lieuDashLoading === true
+            this.lieuDashLoading = true
             try {
                 const response = await lieuService.getLieuDash(id)
                 this.lieuDash = response.data;

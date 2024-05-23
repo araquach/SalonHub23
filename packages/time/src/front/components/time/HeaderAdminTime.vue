@@ -11,25 +11,25 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
         <div class="navbar-item">
-          <router-link :to="{ name: 'holiday-admin-dashboard', params: { filter: 'all' } }"
+          <router-link :to="{ name: 'holiday-admin-dashboard' }"
                        class="navbar-item">
             <p>Holidays</p>
           </router-link>
         </div>
         <div class="navbar-item">
-          <router-link :to="{ name: 'lieu-admin-dashboard', params: { filter: 'all' } }"
+          <router-link :to="{ name: 'lieu-admin-dashboard' }"
                        class="navbar-item">
             <p>Lieu Hours</p>
           </router-link>
         </div>
         <div class="navbar-item">
-          <router-link :to="{ name: 'free-time-admin-dashboard', params: { filter: 'all' } }"
+          <router-link :to="{ name: 'free-time-admin-dashboard' }"
                        class="navbar-item">
             <p>Free Time</p>
           </router-link>
         </div>
         <div class="navbar-item">
-          <router-link :to="{ name: 'sick-admin-dashboard', params: { filter: 'all' } }"
+          <router-link :to="{ name: 'sick-admin-dashboard' }"
                        class="navbar-item">
             <p>Sick Days</p>
           </router-link>

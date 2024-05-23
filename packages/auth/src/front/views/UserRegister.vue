@@ -76,7 +76,7 @@ export default {
     const team_members = ref([]);
 
     const loadTeamMembers = async () => {
-      await mainStore.loadTeamMembers();
+      await mainStore.loadTeamMembers(salon_id);
       team_members.value = mainStore.getFullNamesAndId;
     };
 
@@ -112,7 +112,7 @@ export default {
     async register() {
       try {
         await this.authStore.register(this.user).then(()=>{
-          this.$router.push({name: 'main-index'})
+          this.$router.push({name: 'main-dashboard'})
         })
       } catch (error) {
         // handle the error here

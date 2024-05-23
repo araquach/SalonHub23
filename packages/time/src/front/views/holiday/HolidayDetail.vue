@@ -8,6 +8,7 @@
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Holiday Booking</h2>
+            <h3 v-if="mainStore.selectedView === 'admin'" class="title is-3">{{ holiday.first_name }} {{ holiday.last_name }}</h3>
             <h3 class="title is-4">{{ holiday.description }}</h3>
             <table class="table has-background-holiday has-text-white is-size-5">
               <tr>

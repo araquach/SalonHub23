@@ -14,38 +14,76 @@
           </div>
         </div>
         <div class="navbar is-transparent">
-
+          <div class="dropdown" :class="{ 'is-active': isActive }">
+            <div class="dropdown-trigger">
+              <button @click="toggleActive" class="button is-small is-white" aria-haspopup="true" aria-controls="dropdown-menu">
+                Team Member
+                <span class="icon is-small">
+                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content has-background-holiday">
+                <div v-for="(team_member, index) in teamStore.teamMembers" :key="index" class="dropdown-item">
+                  <a href="#" @click="loadTeamMemberHolidays(team_member.staff_id)">{{ team_member.first_name }} {{ team_member.last_name }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="section">
-      <div v-if="holidayAdminStore.holidaysPendingLoading" class="columns section">
+      <div v-if="holidayAdminStore.holidaysPendingLoading || holidayAdminStore.holidaysLoading" class="columns section">
         <p class="is-size-4">Loading holidays...</p>
       </div>
-      <div v-else-if="holidayAdminStore.holidaysPending" class="columns is-mobile is-multiline">
-        <holidayInd v-for="(holiday, index) in holidayAdminStore.holidaysPending"
+      <div v-else-if="displayedHolidays" class="columns is-mobile is-multiline">
+        <holidayInd v-for="(holiday, index) in displayedHolidays"
                     :key="index"
                     :holiday="holiday"
         />
       </div>
       <div v-else>
-        <p class="is-size-4 has-text-white">There are no pending holidays</p>
+        <p class="is-size-4 has-text-white">There are no holidays to display</p>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
-import {computed, onMounted} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import {useHolidayAdminStore} from "../../../../stores/admin/holidayAdminStore";
 import HolidayInd from "../../../../front/components/holiday/HolidayInd.vue";
+import {useTeamStore} from "team/src/stores/teamStore";
+import {useMainStore} from "main/src/stores/mainStore";
 
+const mainStore = useMainStore();
 const holidayAdminStore = useHolidayAdminStore();
+const teamStore = useTeamStore();
 const timeDetails = computed(() => holidayAdminStore.holidayAdminDash);
+const isActive = ref(false);
+const showPending = ref(true);
 
-onMounted(() => {
-  holidayAdminStore.loadHolidayAdminDash();
-  holidayAdminStore.loadHolidaysPending();
-})
+const toggleActive = () => {
+  isActive.value = !isActive.value;
+};
+
+const loadTeamMemberHolidays = async (staff_id) => {
+  showPending.value = false;
+  isActive.value = false; // Hide the dropdown
+  await holidayAdminStore.loadHolidays(staff_id);
+};
+
+const displayedHolidays = computed(() => {
+  return showPending.value ? holidayAdminStore.holidaysPending : holidayAdminStore.holidays;
+});
+
+onMounted(async () => {
+  await teamStore.loadTeamMembers(mainStore.salon);
+  await holidayAdminStore.loadHolidayAdminDash();
+  await holidayAdminStore.loadHolidaysPending();
+});
 
 </script>
 

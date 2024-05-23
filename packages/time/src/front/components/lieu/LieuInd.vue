@@ -22,7 +22,6 @@ import {format} from "date-fns";
 import {computed} from 'vue';
 import {useMainStore} from "main/src/stores/mainStore"
 
-// Use 'defineProps' to define props
 const props = defineProps(['lieu']);
 const mainStore = useMainStore();
 

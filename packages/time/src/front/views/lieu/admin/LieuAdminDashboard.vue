@@ -10,8 +10,8 @@
             Loading...
           </div>
           <div v-else class="column">
-            <p class="is-size-3">
-              Pending: {{  timeDetails.used  }} hours
+            <p class="is-size-4">
+              <strong>Lieu: {{ timeDetails.pending }} pending approval</strong>
             </p>
           </div>
         </div>

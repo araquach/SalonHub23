@@ -46,43 +46,24 @@
   </div>
 </template>
 
-<script>
-
+<script setup>
 import BaseInput from "main/src/front/components/formBase/BaseInput.vue";
 import {useAuthStore} from "../../stores/authStore";
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default {
-  components: {BaseInput},
-  setup() {
-    const authStore = useAuthStore();
-    return {
-      authStore
-    }
-  },
+const router = useRouter();
+const authStore = useAuthStore();
+const user = reactive({ email: null, password: null });
+const submitStatus = ref(null);
 
-  data() {
-    return {
-      user: {
-        email: null,
-        password: null
-      },
-      submitStatus: null,
-      error: null
-    }
-  },
-
-  methods: {
-      async login() {
-        try {
-          await this.authStore.login(this.user).then(()=>{
-            this.$router.push({name: 'main-index'})
-          })
-        } catch (error) {
-          // handle the error here
-          console.error(error)
-        }
-      }
-    }
-
+const login = async () => {
+  try {
+    await authStore.login(user);
+    await router.push({name: 'main-dashboard'});
+  } catch (error) {
+    // handle the error here
+    console.error(error);
+  }
 }
 </script>

@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', {
             return !!state.user;
         },
         isAdmin(state) {
-            return state.user.admin_level === 2;
+            return state.user.admin_level === 3;
         }
     },
 

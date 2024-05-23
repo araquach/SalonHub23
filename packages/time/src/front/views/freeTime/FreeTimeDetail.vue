@@ -8,6 +8,7 @@
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Free Time Booking</h2>
+            <h3 v-if="mainStore.selectedView === 'admin'" class="title is-3">{{ freeTime.first_name }} {{ freeTime.last_name }}</h3>
             <h3 class="title is-4">{{ freeTime.description }}</h3>
             <table class="table has-background-free-time has-text-white is-size-5">
               <tr>
@@ -27,7 +28,7 @@
                 <td>{{ approvalStatus }}</td>
               </tr>
             </table>
-            <form @submit="onSubmit">
+            <form v-if="mainStore.selectedView === 'admin'" @submit="onSubmit">
               <label class="label">Approval Status</label>
               <div class="buttons has-addons">
                 <button class="button is-small is-approved" @click="approved = 1">Approve</button>
@@ -39,8 +40,11 @@
               <router-link v-if="freeTime.approved === 0" :to="{name: 'free-time-update', params: { id: props.id }}" class="button is-white is-small">
                 Edit Free Time
               </router-link>
-              <router-link :to="{ name: 'free-time-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
+              <router-link v-if="mainStore.selectedView !== 'admin'" :to="{ name: 'free-time-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
                 Back to All Free Time
+              </router-link>
+              <router-link v-else :to="{ name: 'free-time-admin-dashboard' }" class="button is-small is-white">
+                Back to pending Free Time
               </router-link>
             </div>
           </div>
@@ -56,10 +60,11 @@
 </template>
 <script setup>
 import {ref, computed, onMounted, watchEffect} from 'vue';
+import {useMainStore} from "main/src/stores/mainStore";
 import { useFreeTimeStore } from '../../../stores/freeTimeStore';
+import {useFreeTimeAdminStore} from "../../../stores/admin/freeTimeAdminStore";
 import { format } from 'date-fns';
 import {useRouter} from "vue-router";
-import {useFreeTimeAdminStore} from "../../../stores/admin/freeTimeAdminStore";
 import {useForm} from "vee-validate";
 import {toTypedSchema} from "@vee-validate/yup";
 import {number, object} from "yup";
@@ -75,6 +80,7 @@ const props = defineProps({
 })
 
 const router = useRouter();
+const mainStore = useMainStore();
 const freeTimeStore = useFreeTimeStore();
 const freeTimeAdminStore = useFreeTimeAdminStore()
 const freeTime = computed(() => freeTimeStore.freeTime);
@@ -126,7 +132,7 @@ const onSubmit = handleSubmit(values => {
   }).catch((error) => {
     console.error(error);
   });
-  router.push({name: 'free-time-dashboard', params: {filter: 'all'}});
+  router.push({name: 'free-time-admin-dashboard' });
 })
 
 onMounted(async () => {

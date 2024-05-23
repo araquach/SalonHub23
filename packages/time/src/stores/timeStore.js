@@ -21,7 +21,7 @@ export const useTimeStore = defineStore('time', {
         async loadTimeDash() {
             const authStore = useAuthStore()
             const id = authStore.user.staff_id
-            this.timeDashLoading === true
+            this.timeDashLoading = true
             try {
                 const response = await timeService.getTimeDash(id)
                 this.timeDash = response.data;
@@ -29,7 +29,7 @@ export const useTimeStore = defineStore('time', {
                 console.log(error)
                 throw error
             } finally {
-                this.timeDashLoading === false;
+                this.timeDashLoading = false;
             }
             return { timeDash: this.timeDash, timeDashLoading: this.timeDashLoading }
         },

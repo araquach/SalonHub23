@@ -5,13 +5,11 @@ import HolidayAdminDetail from "../../front/views/holiday/admin/HolidayAdminDeta
 export default [
     {
         path: 'holiday',
-        name: 'holiday-admin-index',
         component: HolidayAdminIndex,
         children: [
             {
                 path: '',
                 name: 'holiday-admin-dashboard',
-                props: true,
                 component: HolidayAdminDashboard,
                 meta: {
                     requiresAuth: true

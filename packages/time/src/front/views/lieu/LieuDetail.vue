@@ -8,6 +8,7 @@
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Lieu Request</h2>
+            <h3 v-if="mainStore.selectedView === 'admin'" class="title is-3">{{ lieu.first_name }} {{ lieu.last_name }}</h3>
             <h3 class="title is-4">{{ lieu.description }}</h3>
             <table class="table has-background-lieu has-text-white is-size-5">
               <tr>
@@ -132,7 +133,7 @@ const onSubmit = handleSubmit(values => {
   }).catch((error) => {
     console.error(error);
   });
-  router.push({name: 'lieu-admin-dashboard', params: {filter: 'all'}});
+  router.push({name: 'lieu-admin-dashboard' });
 })
 
 onMounted(async () => {

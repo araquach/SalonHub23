@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import timeAdminService from "../../services/admin/timeAdminService";
 
 export const useTimeAdminStore = defineStore('timeAdmin', {
-    // arrow function recommended for full type inference
     state: () => {
         return {
             timeAdminDash: {},

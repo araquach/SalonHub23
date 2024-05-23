@@ -9,8 +9,8 @@ export default {
         return mainService.get(`/time/admin/holiday/all/pending`)
     },
 
-    getHolidays() {
-        return mainService.get(`/time/admin/holiday/all`)
+    getHolidays(staff_id) {
+        return mainService.get(`/time/admin/holiday/all/${staff_id}`)
     },
 
     async approveHoliday(id, holiday) {
