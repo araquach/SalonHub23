@@ -14,22 +14,36 @@
           </div>
         </div>
         <div class="navbar is-transparent">
-          <div class="dropdown" :class="{ 'is-active': isActive }">
-            <div class="dropdown-trigger">
-              <button @click="toggleActive" class="button is-small is-white" aria-haspopup="true" aria-controls="dropdown-menu">
-                Team Member
-                <span class="icon is-small">
+          <div class="navbar-item">
+            <div class="dropdown" :class="{ 'is-active': isActive }">
+              <div class="dropdown-trigger">
+                <button @click="toggleActive" class="button is-small is-white is-outlined" aria-haspopup="true"
+                        aria-controls="dropdown-menu">
+                  Team Member
+                  <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
                 </span>
-              </button>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content has-background-holiday">
-                <div v-for="(team_member, index) in teamStore.teamMembers" :key="index" class="dropdown-item">
-                  <a href="#" @click="loadTeamMemberHolidays(team_member.staff_id)">{{ team_member.first_name }} {{ team_member.last_name }}</a>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content has-background-holiday">
+                  <router-link
+                      v-for="(team_member, index) in teamStore.teamMembers"
+                      :key="index"
+                      class="dropdown-item"
+                      :to="{ name: 'holidays-by-staff', params: { staff_id: team_member.staff_id } }"
+                      @click="hideDropdown"
+                  >
+                    {{ team_member.first_name }}
+                  </router-link>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="navbar-item">
+            <router-link class="button is-small is-outlined is-white" :to="{ name: 'holiday-admin-dashboard' }">
+              Pending
+            </router-link>
           </div>
         </div>
       </div>
@@ -52,11 +66,12 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {useHolidayAdminStore} from "../../../../stores/admin/holidayAdminStore";
 import HolidayInd from "../../../../front/components/holiday/HolidayInd.vue";
 import {useTeamStore} from "team/src/stores/teamStore";
 import {useMainStore} from "main/src/stores/mainStore";
+import {useRoute} from 'vue-router';
 
 const mainStore = useMainStore();
 const holidayAdminStore = useHolidayAdminStore();
@@ -64,14 +79,18 @@ const teamStore = useTeamStore();
 const timeDetails = computed(() => holidayAdminStore.holidayAdminDash);
 const isActive = ref(false);
 const showPending = ref(true);
+const route = useRoute();
 
 const toggleActive = () => {
   isActive.value = !isActive.value;
 };
 
+const hideDropdown = () => {
+  isActive.value = false;
+};
+
 const loadTeamMemberHolidays = async (staff_id) => {
   showPending.value = false;
-  isActive.value = false; // Hide the dropdown
   await holidayAdminStore.loadHolidays(staff_id);
 };
 
@@ -79,10 +98,21 @@ const displayedHolidays = computed(() => {
   return showPending.value ? holidayAdminStore.holidaysPending : holidayAdminStore.holidays;
 });
 
+const loadHolidaysByRoute = async () => {
+  if (route.params.staff_id) {
+    await loadTeamMemberHolidays(route.params.staff_id);
+  } else {
+    showPending.value = true;
+  }
+};
+
+watch(route, loadHolidaysByRoute, {immediate: true});
+
 onMounted(async () => {
   await teamStore.loadTeamMembers(mainStore.salon);
   await holidayAdminStore.loadHolidayAdminDash();
   await holidayAdminStore.loadHolidaysPending();
+  await loadHolidaysByRoute();
 });
 
 </script>

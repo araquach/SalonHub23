@@ -37,14 +37,11 @@
             </form>
             <br>
             <div class="buttons">
-              <router-link v-if="lieu.approved === 0" :to="{name: 'lieu-update', params: {id: props.id}}" class="button is-white is-small">
+              <router-link v-if="lieu.approved === 0" :to="editLinkRoute" class="button is-white is-small is-outlined">
                 Edit Lieu
               </router-link>
-              <router-link v-if="mainStore.selectedView !== 'admin'" :to="{ name: 'lieu-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
-                Back to all Lieu Requests
-              </router-link>
-              <router-link v-else :to="{ name: 'lieu-admin-dashboard' }" class="button is-small is-white">
-                Back to pending lieu
+              <router-link :to="backLinkRoute" class="button is-small is-white is-outlined">
+                Back
               </router-link>
             </div>
           </div>
@@ -127,6 +124,22 @@ watchEffect(() => {
     resetForm({values: props.initialValues});
   }
 });
+
+const backLinkRoute = computed(() => {
+  if (mainStore.selectedView === 'admin') {
+    return { name: 'lieu-admin-dashboard' };
+  } else {
+    return { name: 'lieu-dashboard', params: { filter: 'all' }};
+  }
+});
+
+const editLinkRoute = computed(() => {
+  if (mainStore.selectedView === 'admin') {
+    return { name: 'lieu-admin-update', params: {id: props.id} }
+  } else {
+    return {name: 'lieu-update', params: {id: props.id}}
+  }
+})
 
 const onSubmit = handleSubmit(values => {
   lieuAdminStore.approveLieu(props.id, values).then(() => {

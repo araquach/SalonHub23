@@ -24,11 +24,14 @@
 import { useMainDashboardAdminStore } from '../../../stores/admin/mainDashboardAdminStore'
 import { useMainStore } from "../../../stores/mainStore";
 import {onMounted} from "vue";
+import {useTeamStore} from "team/src/stores/teamStore";
 
 const store = useMainDashboardAdminStore()
 const mainStore = useMainStore()
+const teamStore = useTeamStore()
 
-onMounted(() => {
+onMounted(async() => {
   mainStore.changeView('admin');
+  await teamStore.loadTeamMembers()
 });
 </script>

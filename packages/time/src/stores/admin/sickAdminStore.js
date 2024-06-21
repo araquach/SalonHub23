@@ -61,6 +61,24 @@ export const useSickAdminStore = defineStore('sickAdmin', {
             return { sickDays: this.sickDays, sickDaysLoading: this.sickDaysLoading }
         },
 
+        async submitSick(sick) {
+            try {
+                await sickAdminService.postSick(sick)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+        async updateSick(id, sick) {
+            try {
+                const updatedSick = await sickAdminService.updateSick(id, sick);
+                this.sickDay = this.sickDays.map(s => s.id === sick.id ? updatedSick : s);
+                return updatedSick;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
         async deductSickDay(id, sick) {
             try {
                 const deductedSickDay = await sickAdminService.deductSickDay(id, sick);

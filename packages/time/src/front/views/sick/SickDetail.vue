@@ -8,7 +8,9 @@
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Sick Log</h2>
-            <h3 v-if="mainStore.selectedView === 'admin'" class="title is-3">{{ sick.first_name }} {{ sick.last_name }}</h3>
+            <h3 v-if="mainStore.selectedView === 'admin'" class="title is-3">{{ sick.first_name }} {{
+                sick.last_name
+              }}</h3>
             <h3 class="title is-4">{{ sick.description }}</h3>
             <table class="table has-background-sick has-text-white is-size-5">
               <tr>
@@ -41,14 +43,12 @@
             </form>
             <br>
             <div class="buttons">
-              <router-link v-if="sick.approved === 0" :to="{name: 'sick-update', params: {id: props.id}}" class="button is-white is-small">
+              <router-link v-if="sick.deducted === 0" :to="{name: 'sick-admin-update', params: {id: props.id}}"
+                           class="button is-white is-small is-outlined">
                 Edit Sick
               </router-link>
-              <router-link v-if="mainStore.selectedView !== 'admin'" :to="{ name: 'sick-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
-                Back to all Sick Logs
-              </router-link>
-              <router-link v-else :to="{ name: 'sick-admin-dashboard' }" class="button is-small is-white">
-                Back to pending Sick Days
+              <router-link :to="backLinkRoute" class="button is-small is-white is-outlined">
+                Back
               </router-link>
             </div>
           </div>
@@ -64,8 +64,8 @@
 </template>
 <script setup>
 import {ref, computed, onMounted, watchEffect} from 'vue';
-import { useSickStore } from '../../../stores/sickStore';
-import { format } from 'date-fns';
+import {useSickStore} from '../../../stores/sickStore';
+import {format} from 'date-fns';
 import {useSickAdminStore} from "../../../stores/admin/sickAdminStore";
 import {useRouter} from "vue-router";
 import {useMainStore} from "main/src/stores/mainStore";
@@ -100,7 +100,7 @@ watchEffect(() => {
   }
 });
 
-const {handleSubmit, defineField, resetForm} = useForm ({
+const {handleSubmit, defineField, resetForm} = useForm({
   validationSchema: toTypedSchema(
       object({
         deducted: number().default(0)
@@ -118,8 +118,16 @@ const onSubmit = handleSubmit(values => {
   }).catch((error) => {
     console.error(error);
   });
-  router.push({name: 'sick-admin-dashboard' });
+  router.push({name: 'sick-admin-dashboard'});
 })
+
+const backLinkRoute = computed(() => {
+  if (mainStore.selectedView === 'admin') {
+    return { name: 'sick-admin-dashboard' };
+  } else {
+    return { name: 'sick-dashboard', params: { filter: 'all' }};
+  }
+});
 
 onMounted(async () => {
   await sickStore.loadSickDay(props.id)

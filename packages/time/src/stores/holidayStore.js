@@ -114,5 +114,6 @@ export const useHolidayStore = defineStore('holiday', {
                 console.error(error);
             }
         }
-    }
+    },
+    persist: true
 })

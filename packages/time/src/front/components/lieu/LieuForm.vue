@@ -31,10 +31,13 @@
       </div>
       <br>
       <div class="field">
-        <div class="control">
+        <div class="control buttons">
           <button class="button is-outlined is-white" type="submit">
             {{ formType === 'update' ? 'Update Lieu' : 'Add/Redeem Lieu' }}
           </button>
+          <router-link :to="backLinkRoute" class="button is-white is-outlined">
+            Back
+          </router-link>
         </div>
       </div>
     </div>
@@ -45,18 +48,15 @@ import {useForm} from 'vee-validate';
 import VueDatePicker from "@vuepic/vue-datepicker";
 import {object, string, number, date} from "yup";
 import {toTypedSchema} from '@vee-validate/yup';
-import {onMounted, watchEffect} from "vue";
+import {computed, onMounted} from "vue";
 import {useLieuStore} from "../../../stores/lieuStore";
 import {useAuthStore} from "auth/src/stores/authStore";
 import {useRouter} from 'vue-router';
+import {useMainStore} from "main/src/stores/mainStore";
 
 const props = defineProps({
   id: {
     type: String,
-  },
-  initialValues: {
-    type: Object,
-    default: null,
   },
   formType: {
     type: String,
@@ -67,6 +67,15 @@ const props = defineProps({
 const router = useRouter();
 const lieuStore = useLieuStore();
 const authStore = useAuthStore();
+const mainStore = useMainStore();
+
+const backLinkRoute = computed(() => {
+  if (mainStore.selectedView === 'admin') {
+    return { name: 'lieu-admin-dashboard' };
+  } else {
+    return { name: 'lieu-dashboard', params: { filter: 'all' }};
+  }
+});
 
 const {handleSubmit, defineField, errors, resetForm} = useForm({
   validationSchema: toTypedSchema(
@@ -76,18 +85,12 @@ const {handleSubmit, defineField, errors, resetForm} = useForm({
         hours: number().required()
       })
   ),
-  initialValues: props.initialValues ?? {
+  initialValues: {
     description: '',
     request_date: {},
     hours: 0
   }
 })
-
-watchEffect(() => {
-  if (props.initialValues) {
-    resetForm({values: props.initialValues});
-  }
-});
 
 const [description, descriptionAttrs] = defineField('description')
 const [request_date, request_dateAttrs] = defineField('request_date')
@@ -105,7 +108,6 @@ const onSubmit = handleSubmit(values => {
       console.error(error);
     });
   } else {
-    console.log(formattedValues)
     lieuStore.updateLieu(props.id, formattedValues).then(() => {
       router.push({name: 'lieu-detail', params: {id: props.id}});
     }).catch((error) => {
@@ -119,7 +121,8 @@ onMounted(async () => {
     const initialValues = {
       description: lieuStore.lieuHour.description,
       request_date: lieuStore.lieuHour.request_date,
-      hours: lieuStore.lieuHour.hours
+      hours: lieuStore.lieuHour.hours,
+      deducted: lieuStore.lieuHour.deducted
     };
     resetForm({values: initialValues});
   }

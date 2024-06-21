@@ -37,14 +37,11 @@
             </form>
             <br>
             <div class="buttons">
-              <router-link v-if="freeTime.approved === 0" :to="{name: 'free-time-update', params: { id: props.id }}" class="button is-white is-small">
+              <router-link v-if="freeTime.approved === 0" :to="editLinkRoute" class="button is-white is-small is-outlined">
                 Edit Free Time
               </router-link>
-              <router-link v-if="mainStore.selectedView !== 'admin'" :to="{ name: 'free-time-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
-                Back to All Free Time
-              </router-link>
-              <router-link v-else :to="{ name: 'free-time-admin-dashboard' }" class="button is-small is-white">
-                Back to pending Free Time
+              <router-link :to="backLinkRoute" class="button is-small is-white is-outlined">
+                Back
               </router-link>
             </div>
           </div>
@@ -126,6 +123,22 @@ watchEffect(() => {
     resetForm({values: props.initialValues});
   }
 });
+
+const backLinkRoute = computed(() => {
+  if (mainStore.selectedView === 'admin') {
+    return { name: 'free-time-admin-dashboard' };
+  } else {
+    return { name: 'free-time-dashboard', params: { filter: 'all' }};
+  }
+});
+
+const editLinkRoute = computed(() => {
+  if (mainStore.selectedView === 'admin') {
+    return { name: 'free-time-admin-update', params: {id: props.id} }
+  } else {
+    return {name: 'free-time-update', params: {id: props.id}}
+  }
+})
 
 const onSubmit = handleSubmit(values => {
   freeTimeAdminStore.approveFreeTime(props.id, values).then(() => {

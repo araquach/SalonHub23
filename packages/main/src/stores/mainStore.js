@@ -6,7 +6,7 @@ export const useMainStore = defineStore('main', {
     state: () => {
         return {
             salon: 1,
-            selectedView: localStorage.getItem('selectedView') ? JSON.parse(localStorage.getItem('selectedView')) : 'personal',
+            selectedView: 'personal',
             teamMembers: []
         }
     },
@@ -40,5 +40,6 @@ export const useMainStore = defineStore('main', {
                 throw error
             }
         }
-    }
+    },
+    persist: true
 })

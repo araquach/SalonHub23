@@ -47,5 +47,6 @@ export const useTimeStore = defineStore('time', {
             }
             return { timeDetails: this.timeDetails, timeDetailsLoading: this.timeDetailsLoading };
         }
-    }
+    },
+    persist: true
 })

@@ -5,6 +5,10 @@ export default {
         return mainService.get(`/time/admin/lieu/dash`)
     },
 
+    getLieuHours(staff_id) {
+        return mainService.get(`/time/admin/lieu/all/${staff_id}`)
+    },
+
     getLieuHoursPending() {
         return mainService.get(`/time/admin/lieu/all/pending`)
     },

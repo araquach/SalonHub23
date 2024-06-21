@@ -24,11 +24,14 @@
 import {useMainDashboardStore} from '../../stores/mainDashboardStore'
 import {useMainStore} from "../../stores/mainStore";
 import {onMounted} from "vue";
+import {useTeamStore} from "team/src/stores/teamStore";
 
 const dashboardStore = useMainDashboardStore()
 const mainStore = useMainStore()
+const teamStore = useTeamStore()
 
-onMounted(() => {
+onMounted(async() => {
+  await teamStore.loadTeamMembers()
   mainStore.changeView('personal');
 });
 </script>

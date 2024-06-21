@@ -8,7 +8,8 @@
         <div class="columns">
           <div class="column">
             <h2 class="title is-3 has-text-white">Holiday Booking</h2>
-            <h3 v-if="mainStore.selectedView === 'admin'" class="title is-3">{{ holiday.first_name }} {{ holiday.last_name }}</h3>
+            <h3 v-if="mainStore.selectedView === 'admin'" class="title is-3">{{ holiday.first_name }}
+              {{ holiday.last_name }}</h3>
             <h3 class="title is-4">{{ holiday.description }}</h3>
             <table class="table has-background-holiday has-text-white is-size-5">
               <tr>
@@ -44,17 +45,15 @@
             </form>
             <br>
             <div class="buttons">
-              <router-link v-if="holiday.approved === 0" :to="{name: 'holiday-update', params: {id: props.id}}" class="button is-white is-small">
+              <router-link v-if="holiday.approved === 0" :to="editLinkRoute"
+                           class="button is-small is-white is-outlined">
                 Edit Holiday
               </router-link>
-              <router-link v-if="mainStore.selectedView !== 'admin'" :to="{ name: 'holiday-dashboard', params: {filter: 'all'} }" class="button is-small is-white">
-                Back to all Holidays
-              </router-link>
-              <router-link v-else :to="{ name: 'holiday-admin-dashboard'}" class="button is-small is-white">
-                Back to pending
+              <router-link :to="backLinkRoute" class="button is-small is-white is-outlined">
+                Back
               </router-link>
             </div>
-            </div>
+          </div>
           <div class="column is-3">
             <figure class="image">
               <img :src="'/dist/img/icons/holiday.svg'" alt="Holiday">
@@ -116,7 +115,7 @@ const statusColour = computed(() => {
   } else return 'pending'
 })
 
-const {handleSubmit, defineField, resetForm} = useForm ({
+const {handleSubmit, defineField, resetForm} = useForm({
   validationSchema: toTypedSchema(
       object({
         approved: number().default(0)
@@ -129,6 +128,22 @@ const {handleSubmit, defineField, resetForm} = useForm ({
 
 const [approved] = defineField('approved')
 
+const backLinkRoute = computed(() => {
+  if (mainStore.selectedView === 'admin') {
+    return { name: 'holiday-admin-dashboard'};
+  } else {
+    return { name: 'holiday-dashboard', params: { filter: 'all' }};
+  }
+});
+
+const editLinkRoute = computed(() => {
+  if (mainStore.selectedView === 'admin') {
+    return { name: 'holiday-admin-update', params: {id: props.id} }
+  } else {
+    return {name: 'holiday-update', params: {id: props.id}}
+  }
+})
+
 watchEffect(() => {
   if (props.initialValues) {
     resetForm({values: props.initialValues});
@@ -140,7 +155,7 @@ const onSubmit = handleSubmit(values => {
   }).catch((error) => {
     console.error(error);
   });
-  router.push({ name: 'holiday-admin-dashboard' });
+  router.push({name: 'holiday-admin-dashboard'});
 })
 
 onMounted(async () => {

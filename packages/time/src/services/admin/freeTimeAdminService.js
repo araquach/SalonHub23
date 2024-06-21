@@ -5,6 +5,10 @@ export default {
         return mainService.get(`/time/admin/free-time/dash`)
     },
 
+    getFreeTimeHours(staff_id) {
+        return mainService.get(`/time/admin/free-time/all/${staff_id}`)
+    },
+
     getFreeTimeHoursPending() {
         return mainService.get(`/time/admin/free-time/all/pending`)
     },

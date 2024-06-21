@@ -22,9 +22,8 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         async register(userCredentials) {
             try {
-                const data = await authService.postRegister(userCredentials)
+                const data = await authService.postRegister(userCredentials);
                 this.user = data;
-                localStorage.setItem('user', JSON.stringify(data));
                 axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             } catch (error) {
                 console.log(error);
@@ -36,7 +35,6 @@ export const useAuthStore = defineStore('auth', {
             try {
                 const data = await authService.postLogin(user);
                 this.user = data;
-                localStorage.setItem('user', JSON.stringify(data));
                 axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             } catch (error) {
                 console.log(error);
@@ -45,12 +43,9 @@ export const useAuthStore = defineStore('auth', {
         },
 
         logout() {
-            localStorage.removeItem('user');
+            this.$reset();
             location.reload();
         },
-
-        setUserData(userData) {
-            this.user = userData
-        }
-    }
+    },
+    persist: true
 });

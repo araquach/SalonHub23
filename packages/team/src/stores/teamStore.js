@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import teamService from "main/src/services/teamService";
+import {useAuthStore} from "auth/src/stores/authStore";
 
 export const useTeamStore = defineStore('team', {
     state: () => {
@@ -13,12 +14,13 @@ export const useTeamStore = defineStore('team', {
 
     },
 
-
     actions: {
-        async loadTeamMembers(salon_id) {
+        async loadTeamMembers() {
             this.teamMembersLoading = true;
+            const authStore = useAuthStore();
+            const salon = authStore.user.salon;
             try {
-                const response = await teamService.getTeamMembers(salon_id)
+                const response = await teamService.getTeamMembers(salon)
                 this.teamMembers = response.data;
             } catch (error) {
                 console.log(error);
@@ -28,5 +30,6 @@ export const useTeamStore = defineStore('team', {
             }
             return { teamMembers: this.teamMembers, teamMembersLoading: this.teamMembersLoading }
         }
-    }
+    },
+    persist: true
 })

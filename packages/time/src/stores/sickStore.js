@@ -92,5 +92,6 @@ export const useSickStore = defineStore('sick', {
             }
             return { sickDay: this.sickDay, sickDayLoading: this.sickDayLoading }
         }
-    }
+    },
+    persist: true
 })

@@ -7,6 +7,7 @@ import PerformanceRoutes from "performance/src/router/performanceRoutes";
 import RecruitmentRoutes from "recruitment/src/router/recruitmentRoutes";
 import AuthRoutes from "auth/src/router/authRoutes";
 import MainDashboard from "../front/views/MainDash.vue";
+import { useAuthStore } from 'auth/src/stores/authStore';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,13 +37,12 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const loggedIn = localStorage.getItem('user')
-
-    if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
-        next('/auth/login')
+    const store = useAuthStore();
+    if (to.matched.some(record => record.meta.requiresAuth) && !store.user) {
+        next('/auth/login');
     } else {
-        next()
+        next();
     }
-})
+});
 
 export default router

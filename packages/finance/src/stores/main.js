@@ -38,9 +38,9 @@ export const useMainStore = defineStore("mainStore", {
   },
 
   actions: {
-    async loadStylists() {
+    async loadStylists(salon) {
       try {
-        const data = await teamService.getTeamMembers()
+        const data = await teamService.getTeamMembers(salon)
         this.teamMembers = data.data;
       } catch (error) {
         alert(error);

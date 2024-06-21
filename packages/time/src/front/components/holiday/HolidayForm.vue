@@ -35,8 +35,11 @@
       </div>
       <br>
       <div class="field">
-        <div class="control">
+        <div class="control buttons">
           <button class="button is-outlined is-white">Submit</button>
+          <router-link :to="backLinkRoute" class="button is-white is-outlined">
+            Back
+          </router-link>
         </div>
       </div>
     </div>
@@ -48,7 +51,8 @@ import {useForm} from 'vee-validate';
 import VueDatePicker from "@vuepic/vue-datepicker";
 import {object, string, array, number, date, addMethod} from "yup";
 import {toTypedSchema} from '@vee-validate/yup';
-import {onMounted, watch, watchEffect} from "vue";
+import {computed, onMounted, watch} from "vue";
+import {useMainStore} from "main/src/stores/mainStore"
 import {useHolidayStore} from "../../../stores/holidayStore";
 import {useAuthStore} from "auth/src/stores/authStore";
 import {useTimeStore} from "../../../stores/timeStore";
@@ -57,10 +61,6 @@ import {useRouter} from "vue-router";
 const props = defineProps({
   id: {
     type: String
-  },
-  initialValues: {
-    type: Object,
-    default: null,
   },
   formType: {
     type: String,
@@ -72,6 +72,7 @@ const router = useRouter();
 const holidayStore = useHolidayStore();
 const timeStore = useTimeStore();
 const authStore = useAuthStore();
+const mainStore = useMainStore()
 
 function countWorkingDays(dates) {
   let schedule = timeStore.timeDetails.schedule
@@ -128,18 +129,12 @@ const {handleSubmit, defineField, errors, setValues, resetForm} = useForm({
             .max(holidayStore.holidayDash.sat_pending, 'You don\'t have enough Saturdays')
       }),
   ),
-  initialValues: props.initialValues ?? {
+  initialValues: {
     description: '',
     dateRange: [],
     requested: 0,
     saturday: 0
   },
-});
-
-watchEffect(() => {
-  if (props.initialValues) {
-    resetForm({values: props.initialValues});
-  }
 });
 
 function getDayKey(date) {
@@ -178,6 +173,14 @@ watch(dateRange, (newDateRange) => {
   setValues({saturday: saturdayCount})
 });
 
+const backLinkRoute = computed(() => {
+  if (mainStore.selectedView === 'admin') {
+    return { name: 'holiday-admin-dashboard' };
+  } else {
+    return { name: 'holiday-dashboard', params: { filter: 'all' }};
+  }
+});
+
 const onSubmit = handleSubmit(values => {
   const [date_from, date_to] = values.dateRange || [];
   const formattedValues = {
@@ -186,7 +189,7 @@ const onSubmit = handleSubmit(values => {
     date_to,
     staff_id: authStore.user.staff_id,
   }
-  delete formattedValues.dateRange;
+
   if (props.formType === 'create') {
     holidayStore.submitHoliday(formattedValues).then(() => {
       router.push({name: 'holiday-dashboard', params: {filter: 'all'}});
@@ -203,15 +206,15 @@ const onSubmit = handleSubmit(values => {
 });
 
 onMounted(async () => {
-  await holidayStore.loadHolidayDash();
-  await holidayStore.loadHolidays();
   if (props.formType === 'update') {
     const initialValues = {
       description: holidayStore.holiday.description,
       dateRange: [
         new Date(holidayStore.holiday.date_from),
         new Date(holidayStore.holiday.date_to)
-      ]
+      ],
+      requested: holidayStore.holiday.requested,
+      saturday: holidayStore.holiday.saturday
     };
     resetForm({values: initialValues});
   }

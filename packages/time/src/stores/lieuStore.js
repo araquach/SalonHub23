@@ -114,5 +114,6 @@ export const useLieuStore = defineStore('lieu', {
                 console.error(error);
             }
         }
-    }
+    },
+    persist: true
 })

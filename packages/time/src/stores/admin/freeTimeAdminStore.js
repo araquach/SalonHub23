@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import {useFreeTimeStore} from "../freeTimeStore";
 import freeTimeAdminService from "../../services/admin/freeTimeAdminService"
+import holidayAdminService from "../../services/admin/holidayAdminService";
 
 export const useFreeTimeAdminStore = defineStore('FreeTimeAdmin', {
     state: () => {
@@ -45,6 +46,20 @@ export const useFreeTimeAdminStore = defineStore('FreeTimeAdmin', {
                 this.freeTimeHoursPendingLoading = false;
             }
             return { freeTimeHoursPending: this.freeTimeHoursPending, freeTimeHoursPendingLoading: this.freeTimeHoursPendingLoading }
+        },
+
+        async loadFreeTimeHours(staff_id) {
+            this.freeTimeHoursLoading = true;
+            try {
+                const response = await freeTimeAdminService.getFreeTimeHours(staff_id)
+                this.freeTimeHours = response.data;
+            } catch (error) {
+                console.log(error);
+                throw error
+            } finally {
+                this.freeTimeHoursLoading = false;
+            }
+            return { freeTimeHours: this.freeTimeHours, freeTimeHoursLoading: this.freeTimeHoursLoading }
         },
 
         async approveFreeTime(id, freeTime) {

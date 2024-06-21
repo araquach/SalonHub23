@@ -52,7 +52,7 @@ import { useTakingsStore } from "../../../stores/takings";
 
 const mainStore = useMainStore();
 const takingsStore = useTakingsStore();
-mainStore.loadStylists();
+mainStore.loadStylists("all");
 takingsStore.loadStylistTakingsMonthByMonth();
 
 let toggledView = ref(true);

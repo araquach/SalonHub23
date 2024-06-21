@@ -114,5 +114,6 @@ export const useFreeTimeStore = defineStore('freeTime', {
                 console.error(error);
             }
         }
-    }
+    },
+    persist: true
 })
